@@ -68,11 +68,9 @@ export default function ContactPage() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
       {/* Header */}
       <div className="text-center max-w-2xl mx-auto space-y-3">
-        <span className="text-xs uppercase font-bold tracking-widest text-brand-green">
-          HARVEST CONCIERGE & SUPPORT
-        </span>
-        <h1 className="font-serif font-black text-3xl sm:text-5xl text-brand-dark">
-          WE&apos;D LOVE TO HEAR FROM YOU.
+        <p className="eyebrow">Concierge & support</p>
+        <h1 className="font-serif font-medium text-4xl sm:text-5xl text-brand-dark">
+          We&apos;d love to hear from you
         </h1>
         <p className="text-sm text-brand-muted font-sans leading-relaxed">
           Whether you have inquiries about bulk corporate gifting, origin traceability, or custom dietary boxes, our specialists are here to assist.
@@ -211,10 +209,10 @@ export default function ContactPage() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="bg-brand-green hover:bg-brand-green-dark text-white font-bold text-xs px-8 py-3.5 rounded-xl shadow-sm transition-all flex items-center justify-center gap-2"
+              className="btn-primary"
             >
               <Send className="w-4 h-4" />
-              <span>{isSubmitting ? "Sending Message..." : "SEND MESSAGE"}</span>
+              <span>{isSubmitting ? "Sending..." : "Send message"}</span>
             </button>
           </form>
         </div>

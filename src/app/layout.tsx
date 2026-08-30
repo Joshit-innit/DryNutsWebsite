@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Cormorant_Garamond, Outfit } from "next/font/google";
 import "./globals.css";
 import { StoreProvider } from "@/context/StoreContext";
 import { Toaster } from "sonner";
@@ -6,6 +7,21 @@ import PortalSwitcher from "@/components/layout/PortalSwitcher";
 import SmoothScroll from "@/components/animations/SmoothScroll";
 import CartDrawer from "@/components/cart/CartDrawer";
 import ProductQuickView from "@/components/products/ProductQuickView";
+
+const sans = Outfit({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-sans",
+  display: "swap",
+});
+
+const serif = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  style: ["normal", "italic"],
+  variable: "--font-serif",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "NutriNation — Nourish Naturally | Premium Dry Fruits",
@@ -28,7 +44,7 @@ export const metadata: Metadata = {
     siteName: "NutriNation",
     images: [
       {
-        url: "https://images.unsplash.com/photo-1599785209707-a456fc1337bb?auto=format&fit=crop&w=1200&q=80",
+        url: "https://images.unsplash.com/photo-1606923829579-0cb981a83e2e?auto=format&fit=crop&w=1200&q=80",
         width: 1200,
         height: 630,
         alt: "NutriNation Luxury Dry Fruits",
@@ -45,8 +61,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className="min-h-screen bg-brand-cream text-brand-dark antialiased">
+    <html lang="en" className={`${sans.variable} ${serif.variable}`}>
+      <body className="min-h-screen bg-brand-cream text-brand-dark antialiased font-sans">
         <StoreProvider>
           <SmoothScroll>
             <PortalSwitcher />
@@ -57,11 +73,11 @@ export default function RootLayout({
               position="top-right"
               toastOptions={{
                 style: {
-                  background: "#FFFFFF",
-                  color: "#202020",
-                  border: "1px solid #E9E9E9",
-                  boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
-                  borderRadius: "12px",
+                  background: "#FBF7F1",
+                  color: "#1A1612",
+                  border: "1px solid #E5DCD0",
+                  boxShadow: "0 18px 40px rgba(26,22,18,0.08)",
+                  borderRadius: "16px",
                   fontFamily: "var(--font-sans)",
                 },
               }}

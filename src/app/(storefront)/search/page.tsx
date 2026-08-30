@@ -55,11 +55,9 @@ export default function SearchPage() {
       {/* Search Input Bar */}
       <div className="max-w-3xl mx-auto space-y-4">
         <div className="text-center space-y-2">
-          <span className="text-xs uppercase font-bold tracking-widest text-brand-green">
-            INSTANT HARVEST DISCOVERY
-          </span>
-          <h1 className="font-serif font-black text-3xl sm:text-4xl text-brand-dark">
-            SEARCH NUTRINATION
+          <p className="eyebrow">Instant discovery</p>
+          <h1 className="font-serif font-medium text-4xl sm:text-5xl text-brand-dark">
+            Search the harvest
           </h1>
         </div>
 

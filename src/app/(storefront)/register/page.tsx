@@ -93,11 +93,9 @@ export default function RegisterPage() {
         {/* Right Form */}
         <div className="lg:col-span-7 p-8 sm:p-12 space-y-6">
           <div>
-            <span className="text-xs uppercase font-bold tracking-widest text-brand-green">
-              NEW MEMBER REGISTRATION
-            </span>
-            <h1 className="font-serif font-black text-2xl sm:text-3xl text-brand-dark mt-1">
-              JOIN THE NUTRINATION FAMILY
+            <p className="eyebrow">New member</p>
+            <h1 className="font-serif font-medium text-3xl sm:text-4xl text-brand-dark mt-1">
+              Join the family
             </h1>
             <p className="text-xs text-brand-muted mt-1">
               Create an account to start your customized wellness journey.

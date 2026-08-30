@@ -53,11 +53,9 @@ export default function CartPage() {
       {/* Header */}
       <div className="border-b border-brand-border pb-6 flex items-center justify-between">
         <div>
-          <span className="text-xs font-bold uppercase tracking-widest text-brand-green block mb-1">
-            SHOPPING BAG
-          </span>
-          <h1 className="font-serif font-black text-3xl sm:text-4xl text-brand-dark">
-            YOUR HARVEST BAG ({cart.reduce((s, i) => s + i.quantity, 0)})
+          <p className="eyebrow mb-2">Shopping bag</p>
+          <h1 className="font-serif font-medium text-3xl sm:text-4xl text-brand-dark">
+            Your bag ({cart.reduce((s, i) => s + i.quantity, 0)})
           </h1>
         </div>
         <Link

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Product, WeightVariant } from "@/types";
 import { formatPrice, calculateDiscount } from "@/lib/utils";
 import { useStore } from "@/context/StoreContext";
-import { Heart, Eye, ShoppingBag, Star, Sparkles, Check } from "lucide-react";
+import { Heart, Eye, ShoppingBag, Star, Check } from "lucide-react";
 
 interface ProductCardProps {
   product: Product;
@@ -46,148 +46,103 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
     <div
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className="group bg-white rounded-2xl border border-brand-border/80 overflow-hidden shadow-subtle hover:shadow-hover hover:border-brand-green/30 transition-all duration-300 flex flex-col h-full"
+      className="group flex flex-col h-full"
     >
-      {/* Image & Badges Container */}
-      <div className="relative aspect-square w-full bg-brand-cream overflow-hidden">
-        {/* Product Image */}
+      <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl bg-brand-beige">
         <Link href={`/products/${product.slug}`} className="block w-full h-full">
           <img
             src={isHovered && product.images[1] ? product.images[1] : product.images[0]}
             alt={product.name}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
             loading={priority ? "eager" : "lazy"}
           />
         </Link>
 
-        {/* Top Badges */}
         <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10 pointer-events-none">
           {product.isBestSeller && (
-            <span className="bg-brand-orange text-white text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full shadow-sm">
-              Best Seller
-            </span>
-          )}
-          {product.grade && (
-            <span className="bg-brand-dark/80 backdrop-blur-sm text-brand-cream text-[10px] font-medium px-2 py-0.5 rounded-full">
-              {product.grade}
+            <span className="bg-brand-dark/85 backdrop-blur-sm text-brand-saffron text-[10px] tracking-[0.14em] uppercase px-2.5 py-1 rounded-full">
+              Favorite
             </span>
           )}
           {discountPercent > 0 && (
-            <span className="bg-brand-green text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
-              {discountPercent}% OFF
+            <span className="bg-white/90 text-brand-green text-[10px] font-medium px-2.5 py-1 rounded-full">
+              {discountPercent}% off
             </span>
           )}
         </div>
 
-        {/* Top Right Action Icons */}
         <div className="absolute top-3 right-3 flex flex-col gap-2 z-10">
           <button
             onClick={handleWishlist}
             aria-label="Wishlist"
-            className={`w-8 h-8 rounded-full flex items-center justify-center transition-all shadow-sm ${
-              wishlisted
-                ? "bg-red-50 text-red-500 scale-110"
-                : "bg-white/90 text-brand-dark hover:text-red-500 hover:bg-white"
+            className={`w-9 h-9 rounded-full flex items-center justify-center backdrop-blur-md transition-all ${
+              wishlisted ? "bg-white text-red-500" : "bg-white/80 text-brand-dark hover:bg-white"
             }`}
           >
             <Heart className={`w-4 h-4 ${wishlisted ? "fill-red-500" : ""}`} />
           </button>
-
           <button
             onClick={handleQuickView}
             aria-label="Quick preview"
-            className="w-8 h-8 rounded-full bg-white/90 text-brand-dark hover:text-brand-green hover:bg-white flex items-center justify-center transition-all shadow-sm opacity-0 group-hover:opacity-100 translate-x-2 group-hover:translate-x-0"
+            className="w-9 h-9 rounded-full bg-white/80 text-brand-dark hover:bg-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
           >
             <Eye className="w-4 h-4" />
           </button>
         </div>
       </div>
 
-      {/* Product Content Details */}
-      <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between">
-        <div>
-          {/* Category & Rating */}
-          <div className="flex items-center justify-between text-xs text-brand-muted mb-1.5">
-            <span className="uppercase tracking-wider font-semibold text-[11px] text-brand-green">
-              {product.categoryName}
-            </span>
-            <div className="flex items-center gap-1 bg-brand-cream px-1.5 py-0.5 rounded text-brand-dark font-semibold text-[11px]">
-              <Star className="w-3 h-3 fill-brand-saffron text-brand-saffron" />
-              <span>{product.rating.toFixed(1)}</span>
-              <span className="text-brand-muted text-[10px]">({product.reviewCount})</span>
-            </div>
-          </div>
-
-          {/* Product Title */}
-          <Link href={`/products/${product.slug}`}>
-            <h3 className="font-serif font-bold text-sm sm:text-base text-brand-dark hover:text-brand-green transition-colors line-clamp-2 mb-1">
-              {product.name}
-            </h3>
-          </Link>
-
-          {/* Short tagline or origin */}
-          <p className="text-xs text-brand-muted line-clamp-1 mb-3">
-            Origin: {product.origin.split(",")[0]}
-          </p>
-
-          {/* Weight Variant Selector Pills */}
-          {product.variants.length > 1 && (
-            <div className="flex flex-wrap gap-1.5 mb-4">
-              {product.variants.map((v, idx) => (
-                <button
-                  key={v.id}
-                  onClick={() => setSelectedVariantIndex(idx)}
-                  className={`text-xs px-2 py-0.5 rounded-md font-medium border transition-all ${
-                    selectedVariantIndex === idx
-                      ? "bg-brand-green text-white border-brand-green shadow-xs"
-                      : "bg-white text-brand-dark border-brand-border hover:border-brand-muted"
-                  }`}
-                >
-                  {v.weight}
-                </button>
-              ))}
-            </div>
-          )}
+      <div className="pt-4 flex-1 flex flex-col">
+        <div className="flex items-center justify-between text-[11px] text-brand-muted mb-1">
+          <span className="tracking-[0.16em] uppercase">{product.categoryName}</span>
+          <span className="inline-flex items-center gap-1">
+            <Star className="w-3 h-3 fill-brand-saffron text-brand-saffron" />
+            {product.rating.toFixed(1)}
+          </span>
         </div>
 
-        {/* Pricing & Add to Cart Button */}
-        <div className="pt-3 border-t border-brand-border/60 flex items-center justify-between gap-2 mt-auto">
+        <Link href={`/products/${product.slug}`}>
+          <h3 className="font-serif text-xl font-medium text-brand-dark group-hover:text-brand-green transition-colors line-clamp-2 leading-snug">
+            {product.name}
+          </h3>
+        </Link>
+        <p className="text-xs text-brand-muted mt-1 line-clamp-1">{product.origin.split(",")[0]}</p>
+
+        {product.variants.length > 1 && (
+          <div className="flex flex-wrap gap-1.5 mt-3">
+            {product.variants.map((v, idx) => (
+              <button
+                key={v.id}
+                onClick={() => setSelectedVariantIndex(idx)}
+                className={`text-[11px] px-2.5 py-1 rounded-full border transition-all ${
+                  selectedVariantIndex === idx
+                    ? "bg-brand-green text-white border-brand-green"
+                    : "bg-transparent text-brand-muted border-brand-border hover:border-brand-muted"
+                }`}
+              >
+                {v.weight}
+              </button>
+            ))}
+          </div>
+        )}
+
+        <div className="mt-auto pt-4 flex items-center justify-between gap-2">
           <div>
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-base sm:text-lg font-bold text-brand-dark">
-                {formatPrice(currentVariant.price)}
-              </span>
+            <div className="flex items-baseline gap-2">
+              <span className="text-lg font-medium">{formatPrice(currentVariant.price)}</span>
               {currentVariant.mrp > currentVariant.price && (
                 <span className="text-xs text-brand-muted line-through">
                   {formatPrice(currentVariant.mrp)}
                 </span>
               )}
             </div>
-            <span className="text-[10px] text-brand-green font-medium block">
-              {currentVariant.stock > 0 ? "In Stock • Ships in 24h" : "Out of Stock"}
-            </span>
           </div>
-
           <button
             onClick={handleAddToCart}
             disabled={currentVariant.stock <= 0}
-            className={`flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-semibold transition-all duration-200 ${
-              isAdded
-                ? "bg-brand-green-dark text-white"
-                : "bg-brand-green hover:bg-brand-green-dark text-white shadow-xs hover:shadow-sm"
-            }`}
+            className="w-10 h-10 rounded-full bg-brand-green text-[#F7F1E8] flex items-center justify-center hover:bg-brand-green-dark transition-colors"
+            aria-label="Add to bag"
           >
-            {isAdded ? (
-              <>
-                <Check className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Added</span>
-              </>
-            ) : (
-              <>
-                <ShoppingBag className="w-3.5 h-3.5" />
-                <span>Add</span>
-              </>
-            )}
+            {isAdded ? <Check className="w-4 h-4" /> : <ShoppingBag className="w-4 h-4" />}
           </button>
         </div>
       </div>

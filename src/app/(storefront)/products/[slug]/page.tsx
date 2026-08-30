@@ -215,7 +215,7 @@ export default function ProductDetailPage() {
               </div>
             </div>
 
-            <h1 className="font-serif font-black text-2xl sm:text-4xl text-brand-dark mb-2">
+            <h1 className="font-serif font-medium text-3xl sm:text-5xl text-brand-dark mb-2 leading-tight">
               {product.name}
             </h1>
 
@@ -293,7 +293,7 @@ export default function ProductDetailPage() {
               <button
                 onClick={handleAddToCart}
                 disabled={currentVariant.stock <= 0}
-                className={`flex-1 py-3.5 px-6 rounded-xl font-bold text-sm text-white shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 ${
+              className={`flex-1 py-3.5 px-6 rounded-full font-medium text-sm text-white shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 ${
                   isAdded ? "bg-brand-green-dark" : "bg-brand-green hover:bg-brand-green-dark"
                 }`}
               >

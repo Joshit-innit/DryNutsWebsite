@@ -56,19 +56,17 @@ export default function LoginPage() {
         <div className="lg:col-span-5 relative bg-brand-dark text-white p-8 sm:p-10 flex flex-col justify-between overflow-hidden min-h-[280px] lg:min-h-[500px]">
           <div className="absolute inset-0 z-0 opacity-40">
             <img
-              src="https://images.unsplash.com/photo-1563227812-0ea4c22e6cc8?auto=format&fit=crop&w=800&q=80"
-              alt="NutriNation King Cashews"
+              src="https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&w=800&q=80"
+              alt="King cashews"
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/70 to-transparent" />
           </div>
 
           <div className="relative z-10 space-y-2">
-            <span className="text-[10px] uppercase font-bold tracking-widest text-brand-saffron">
-              NOURISH NATURALLY
-            </span>
-            <h3 className="font-serif font-bold text-2xl text-white">
-              Everyday Wellness in Every Harvest.
+            <p className="eyebrow">Nourish naturally</p>
+            <h3 className="font-serif font-medium text-3xl text-white leading-tight">
+              Everyday wellness in every harvest.
             </h3>
           </div>
 
@@ -80,11 +78,9 @@ export default function LoginPage() {
         {/* Right Form */}
         <div className="lg:col-span-7 p-8 sm:p-12 space-y-6">
           <div>
-            <span className="text-xs uppercase font-bold tracking-widest text-brand-green">
-              CUSTOMER ACCESS
-            </span>
-            <h1 className="font-serif font-black text-2xl sm:text-3xl text-brand-dark mt-1">
-              WELCOME BACK
+            <p className="eyebrow">Member access</p>
+            <h1 className="font-serif font-medium text-3xl sm:text-4xl text-brand-dark mt-1">
+              Welcome back
             </h1>
             <p className="text-xs text-brand-muted mt-1">
               Sign in to manage your orders and subscription boxes.
@@ -139,9 +135,9 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full bg-brand-green hover:bg-brand-green-dark text-white font-bold text-xs py-3.5 rounded-xl shadow-sm transition-all flex items-center justify-center gap-2"
+              className="w-full btn-primary"
             >
-              <span>{isSubmitting ? "Signing In..." : "SIGN IN TO ACCOUNT"}</span>
+              <span>{isSubmitting ? "Signing in..." : "Sign in"}</span>
               <ArrowRight className="w-4 h-4" />
             </button>
           </form>

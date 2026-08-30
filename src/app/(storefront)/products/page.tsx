@@ -76,11 +76,9 @@ function ProductsContent() {
       <div className="mb-8 border-b border-brand-border pb-6">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div>
-            <span className="text-xs font-bold uppercase tracking-widest text-brand-green block mb-1">
-              THE COMPLETE COLLECTION
-            </span>
-            <h1 className="font-serif font-black text-3xl sm:text-4xl text-brand-dark">
-              ALL DRY FRUITS & COMBOS
+            <p className="eyebrow mb-2">The complete collection</p>
+            <h1 className="font-serif font-medium text-4xl sm:text-5xl text-brand-dark">
+              All dry fruits & combos
             </h1>
             <p className="text-xs sm:text-sm text-brand-muted mt-1">
               Showing {products.length} hand-selected premium dry fruits and gift boxes.

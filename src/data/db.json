@@ -1,0 +1,1383 @@
+{
+  "products": [
+    {
+      "id": "prod-cashew-1",
+      "name": "Royal Jumbo Cashews W-180 (King Size)",
+      "slug": "royal-jumbo-cashews-w180",
+      "category": "cashews",
+      "categoryName": "Cashews",
+      "tagline": "The largest, creamiest grade of whole Indian cashews.",
+      "shortDescription": "Hand-selected Grade W-180 cashews offering a buttery crunch and rich naturally sweet profile.",
+      "description": "NutriNation Royal Jumbo Cashews represent the top 2% of the Mangalore cashew harvest. Graded as W-180 (meaning only 180 whole nuts make up a pound), these king-size nuts are slow-cured and vacuum-sealed to preserve their natural sweetness, ivory color, and signature silky texture.",
+      "origin": "Mangalore, Karnataka, India",
+      "grade": "W-180 Jumbo King",
+      "images": [
+        "https://images.unsplash.com/photo-1563227812-0ea4c22e6cc8?auto=format&fit=crop&w=1000&q=80",
+        "https://images.unsplash.com/photo-1509722747041-616f39b57569?auto=format&fit=crop&w=1000&q=80",
+        "https://images.unsplash.com/photo-1599785209707-a456fc1337bb?auto=format&fit=crop&w=1000&q=80"
+      ],
+      "variants": [
+        {
+          "id": "v-cashew-1-250",
+          "weight": "250g",
+          "price": 449,
+          "mrp": 549,
+          "stock": 45,
+          "sku": "NN-CSH-W180-250"
+        },
+        {
+          "id": "v-cashew-1-500",
+          "weight": "500g",
+          "price": 849,
+          "mrp": 1049,
+          "stock": 68,
+          "sku": "NN-CSH-W180-500"
+        },
+        {
+          "id": "v-cashew-1-1000",
+          "weight": "1kg",
+          "price": 1599,
+          "mrp": 1999,
+          "stock": 32,
+          "sku": "NN-CSH-W180-1KG"
+        }
+      ],
+      "rating": 4.9,
+      "reviewCount": 342,
+      "status": "published",
+      "isFeatured": true,
+      "isBestSeller": true,
+      "isNew": false,
+      "tags": [
+        "Jumbo",
+        "Raw",
+        "King Size",
+        "Bestseller",
+        "Mangalore"
+      ],
+      "benefits": [
+        "Rich in monounsaturated fats for cardiovascular health",
+        "Excellent source of magnesium, copper, and plant zinc",
+        "Zero cholesterol, gluten-free, and 100% vegan"
+      ],
+      "storageInfo": "Store in a cool, airtight glass jar away from direct sunlight. Refrigerate after opening to preserve crunch.",
+      "nutrition": {
+        "servingSize": "30g (approx 15 nuts)",
+        "calories": "165 kcal",
+        "protein": "5.2g",
+        "healthyFats": "13.1g",
+        "carbs": "8.6g",
+        "fiber": "1.1g",
+        "calcium": "14mg",
+        "iron": "1.9mg"
+      },
+      "ingredients": "100% Raw Whole Cashew Nuts (Grade W-180).",
+      "faqs": [
+        {
+          "question": "What does W-180 grade mean?",
+          "answer": "W-180 is the highest standard in cashew grading, known as the 'King of Cashews'. Only 180 whole kernels make up one pound, guaranteeing the largest size and maximum creaminess."
+        },
+        {
+          "question": "Are these roasted or raw?",
+          "answer": "These are unroasted, raw sun-cured kernels, allowing you to enjoy their natural delicate sweetness or roast them to your liking."
+        }
+      ]
+    },
+    {
+      "id": "prod-cashew-2",
+      "name": "Slow-Roasted & Salted Cashews W-240",
+      "slug": "slow-roasted-salted-cashews-w240",
+      "category": "cashews",
+      "categoryName": "Cashews",
+      "tagline": "Air-roasted to golden crispness with Himalayan pink salt.",
+      "shortDescription": "Crunchy roasted Grade W-240 cashews delicately seasoned with pure rock salt.",
+      "description": "Our slow-roasted cashews are batch-roasted in small drum roasters without a single drop of added palm or refined oil. Lightly dusted with micro-ground Himalayan pink crystal salt to highlight their creamy, nutty undertone.",
+      "origin": "Panaji, Goa, India",
+      "grade": "W-240 Premium Roasted",
+      "images": [
+        "https://images.unsplash.com/photo-1509722747041-616f39b57569?auto=format&fit=crop&w=1000&q=80",
+        "https://images.unsplash.com/photo-1563227812-0ea4c22e6cc8?auto=format&fit=crop&w=1000&q=80"
+      ],
+      "variants": [
+        {
+          "id": "v-cashew-2-250",
+          "weight": "250g",
+          "price": 399,
+          "mrp": 499,
+          "stock": 54,
+          "sku": "NN-CSH-RST-250"
+        },
+        {
+          "id": "v-cashew-2-500",
+          "weight": "500g",
+          "price": 749,
+          "mrp": 949,
+          "stock": 40,
+          "sku": "NN-CSH-RST-500"
+        },
+        {
+          "id": "v-cashew-2-1000",
+          "weight": "1kg",
+          "price": 1449,
+          "mrp": 1799,
+          "stock": 18,
+          "sku": "NN-CSH-RST-1KG"
+        }
+      ],
+      "rating": 4.8,
+      "reviewCount": 215,
+      "status": "published",
+      "isFeatured": false,
+      "isBestSeller": true,
+      "isNew": false,
+      "tags": [
+        "Roasted",
+        "Himalayan Salt",
+        "Oil-Free",
+        "Snack"
+      ],
+      "benefits": [
+        "Zero added oils — 100% dry air roasted",
+        "Himalayan salt provides 84 trace minerals",
+        "Satisfying high-protein snack for tea time"
+      ],
+      "storageInfo": "Keep sealed in NutriNation tin container. Best consumed within 6 months.",
+      "nutrition": {
+        "servingSize": "30g",
+        "calories": "170 kcal",
+        "protein": "5.4g",
+        "healthyFats": "13.5g",
+        "carbs": "8.1g",
+        "fiber": "1.0g"
+      },
+      "ingredients": "Whole Cashew Nuts, Himalayan Pink Rock Salt (1.2%)."
+    },
+    {
+      "id": "prod-pista-1",
+      "name": "Iranian Akbari Roasted Long Pistachios",
+      "slug": "iranian-akbari-roasted-long-pistachios",
+      "category": "pistachios",
+      "categoryName": "Pistachios",
+      "tagline": "Naturally wide-smiling long shells with vibrant purple-green kernels.",
+      "shortDescription": "Authentic Iranian Akbari variety with easy-open natural split shells and gentle salt seasoning.",
+      "description": "Akbari pistachios are revered globally as the most luxurious long-pod pistachio cultivar. Grown in the arid mountain valleys of Rafsanjan, Iran, each nut splits open naturally on the tree under desert sunshine, revealing an elongated emerald green kernel with exquisite aroma.",
+      "origin": "Rafsanjan, Kerman, Iran",
+      "grade": "Super Long Akbari (20/22 Count)",
+      "images": [
+        "https://images.unsplash.com/photo-1616684000067-36952fde56ec?auto=format&fit=crop&w=1000&q=80",
+        "https://images.unsplash.com/photo-1599785209707-a456fc1337bb?auto=format&fit=crop&w=1000&q=80"
+      ],
+      "variants": [
+        {
+          "id": "v-pista-1-250",
+          "weight": "250g",
+          "price": 499,
+          "mrp": 599,
+          "stock": 38,
+          "sku": "NN-PST-AKB-250"
+        },
+        {
+          "id": "v-pista-1-500",
+          "weight": "500g",
+          "price": 949,
+          "mrp": 1149,
+          "stock": 52,
+          "sku": "NN-PST-AKB-500"
+        },
+        {
+          "id": "v-pista-1-1000",
+          "weight": "1kg",
+          "price": 1799,
+          "mrp": 2199,
+          "stock": 24,
+          "sku": "NN-PST-AKB-1KG"
+        }
+      ],
+      "rating": 4.9,
+      "reviewCount": 189,
+      "status": "published",
+      "isFeatured": true,
+      "isBestSeller": true,
+      "isNew": false,
+      "tags": [
+        "Iranian",
+        "Akbari",
+        "Long Shell",
+        "Pink Salt",
+        "Gourmet"
+      ],
+      "benefits": [
+        "Complete plant protein with all 9 essential amino acids",
+        "Lutein and Zeaxanthin antioxidants protect eye health",
+        "Easy natural tree-split shells require no nutcrackers"
+      ],
+      "storageInfo": "Store in a cool dry pantry. Ensure lid is tightly fastened to prevent humidity absorption.",
+      "nutrition": {
+        "servingSize": "30g with shells (approx 15g kernels)",
+        "calories": "85 kcal (kernels)",
+        "protein": "3.2g",
+        "healthyFats": "7.1g",
+        "carbs": "4.2g",
+        "fiber": "1.5g"
+      },
+      "ingredients": "In-shell Iranian Pistachios, Himalayan Rock Salt (1%)."
+    },
+    {
+      "id": "prod-pista-2",
+      "name": "Raw Raw Emerald Pistachio Kernels (Shell-Less)",
+      "slug": "raw-emerald-pistachio-kernels",
+      "category": "pistachios",
+      "categoryName": "Pistachios",
+      "tagline": "100% pure unsalted peeled green kernels for baking & sweets.",
+      "shortDescription": "Premium shelled raw green pistachios perfect for Indian mithai, baklava, and gourmet cooking.",
+      "description": "Hand-shelled and sort-selected to remove all shell fragments, these raw emerald green kernels bring an intense floral nuttiness to Kulfi, Kheer, Baklava, and artisanal granolas.",
+      "origin": "California, USA",
+      "grade": "Grade A Emerald Raw",
+      "images": [
+        "https://images.unsplash.com/photo-1616684000067-36952fde56ec?auto=format&fit=crop&w=1000&q=80"
+      ],
+      "variants": [
+        {
+          "id": "v-pista-2-250",
+          "weight": "250g",
+          "price": 649,
+          "mrp": 799,
+          "stock": 20,
+          "sku": "NN-PST-KRN-250"
+        },
+        {
+          "id": "v-pista-2-500",
+          "weight": "500g",
+          "price": 1249,
+          "mrp": 1499,
+          "stock": 15,
+          "sku": "NN-PST-KRN-500"
+        }
+      ],
+      "rating": 4.7,
+      "reviewCount": 94,
+      "status": "published",
+      "isFeatured": false,
+      "isBestSeller": false,
+      "isNew": true,
+      "tags": [
+        "Shelled",
+        "Raw",
+        "Culinary",
+        "Unsalted",
+        "Baking"
+      ],
+      "benefits": [
+        "Zero salt, raw and ready to eat or cook",
+        "Extremely dense in Vitamin B6 and thiamine",
+        "Vibrant natural green chlorophyll color"
+      ],
+      "storageInfo": "Refrigeration recommended to protect volatile aromatic oils.",
+      "nutrition": {
+        "servingSize": "30g",
+        "calories": "168 kcal",
+        "protein": "6.0g",
+        "healthyFats": "13.6g",
+        "carbs": "8.2g",
+        "fiber": "3.1g"
+      },
+      "ingredients": "100% Raw Pistachio Kernels."
+    },
+    {
+      "id": "prod-almond-1",
+      "name": "Kashmiri Organic Mamra Giri Almonds",
+      "slug": "kashmiri-organic-mamra-giri-almonds",
+      "category": "almonds",
+      "categoryName": "Almonds",
+      "tagline": "The crown jewel of almonds with 45%+ natural oil content.",
+      "shortDescription": "Wild-harvested Kashmiri Mamra kernels with distinct concave curved shape and intense therapeutic value.",
+      "description": "Kashmiri Mamra is ancient, wild-pollinated almond royalty. Unlike commercial California varieties that undergo mechanical pasteurization, our Mamra Giri is 100% natural, non-hybridized, and cold cracked. Packed with over 45% natural cold-pressed almond oil, it is traditional Ayurvedic gold for memory, eyesight, and vitality.",
+      "origin": "Pulwama Valley, Kashmir, India",
+      "grade": "Original Kashmiri Mamra Giri",
+      "images": [
+        "https://images.unsplash.com/photo-1508061253366-f7da158b6d46?auto=format&fit=crop&w=1000&q=80",
+        "https://images.unsplash.com/photo-1568271679468-8e30ae044191?auto=format&fit=crop&w=1000&q=80"
+      ],
+      "variants": [
+        {
+          "id": "v-almond-1-250",
+          "weight": "250g",
+          "price": 899,
+          "mrp": 1099,
+          "stock": 35,
+          "sku": "NN-ALM-MMR-250"
+        },
+        {
+          "id": "v-almond-1-500",
+          "weight": "500g",
+          "price": 1699,
+          "mrp": 2099,
+          "stock": 42,
+          "sku": "NN-ALM-MMR-500"
+        },
+        {
+          "id": "v-almond-1-1000",
+          "weight": "1kg",
+          "price": 3299,
+          "mrp": 3999,
+          "stock": 16,
+          "sku": "NN-ALM-MMR-1KG"
+        }
+      ],
+      "rating": 5,
+      "reviewCount": 412,
+      "status": "published",
+      "isFeatured": true,
+      "isBestSeller": true,
+      "isNew": false,
+      "tags": [
+        "Mamra",
+        "Kashmiri",
+        "Ayurvedic",
+        "High-Oil",
+        "Superfood"
+      ],
+      "benefits": [
+        "Contains 45-50% natural almond oil vs 25% in regular almonds",
+        "Traditional Ayurvedic rasayana for cognitive memory enhancement",
+        "Naturally non-GMO and 100% unpasteurized"
+      ],
+      "storageInfo": "Soak 5-6 kernels overnight in freshwater and consume peeled every morning.",
+      "nutrition": {
+        "servingSize": "30g",
+        "calories": "178 kcal",
+        "protein": "6.4g",
+        "healthyFats": "15.8g",
+        "carbs": "5.6g",
+        "fiber": "3.7g",
+        "calcium": "78mg",
+        "iron": "1.2mg"
+      },
+      "ingredients": "100% Pure Kashmiri Mamra Almond Kernels."
+    },
+    {
+      "id": "prod-almond-2",
+      "name": "California Supreme Whole Almonds",
+      "slug": "california-supreme-whole-almonds",
+      "category": "almonds",
+      "categoryName": "Almonds",
+      "tagline": "Crunchy, uniform golden kernels for wholesome daily snacking.",
+      "shortDescription": "Sweet, crunchy California Nonpareil whole almonds carefully sorted for uniform size and pristine skin.",
+      "description": "NutriNation California Supreme almonds feature the celebrated Nonpareil variety known for its smooth skin, pleasant sweet flavor, and satisfying audible crunch. Perfect for on-the-go snacking, homemade almond milk, or gym fuel.",
+      "origin": "Central Valley, California, USA",
+      "grade": "Nonpareil Extra #1",
+      "images": [
+        "https://images.unsplash.com/photo-1508061253366-f7da158b6d46?auto=format&fit=crop&w=1000&q=80"
+      ],
+      "variants": [
+        {
+          "id": "v-almond-2-250",
+          "weight": "250g",
+          "price": 329,
+          "mrp": 429,
+          "stock": 80,
+          "sku": "NN-ALM-CAL-250"
+        },
+        {
+          "id": "v-almond-2-500",
+          "weight": "500g",
+          "price": 599,
+          "mrp": 799,
+          "stock": 110,
+          "sku": "NN-ALM-CAL-500"
+        },
+        {
+          "id": "v-almond-2-1000",
+          "weight": "1kg",
+          "price": 1149,
+          "mrp": 1499,
+          "stock": 55,
+          "sku": "NN-ALM-CAL-1KG"
+        }
+      ],
+      "rating": 4.8,
+      "reviewCount": 280,
+      "status": "published",
+      "isFeatured": false,
+      "isBestSeller": true,
+      "isNew": false,
+      "tags": [
+        "California",
+        "Nonpareil",
+        "Crunchy",
+        "Daily Health"
+      ],
+      "benefits": [
+        "Rich in Vitamin E (over 50% RDA per serving)",
+        "Helps regulate cholesterol balance",
+        "Low glycemic index keeps hunger at bay"
+      ],
+      "storageInfo": "Store in a cool dry place. Keep pouch sealed.",
+      "nutrition": {
+        "servingSize": "30g",
+        "calories": "162 kcal",
+        "protein": "6.0g",
+        "healthyFats": "14.2g",
+        "carbs": "6.1g",
+        "fiber": "3.5g"
+      },
+      "ingredients": "100% Whole California Almonds."
+    },
+    {
+      "id": "prod-walnut-1",
+      "name": "Kashmir Snow White Walnut Kernels (Halves)",
+      "slug": "kashmir-snow-white-walnut-kernels",
+      "category": "walnuts",
+      "categoryName": "Walnuts",
+      "tagline": "Extra-light butterfly halves, 100% bitter-free and buttery.",
+      "shortDescription": "Freshly cracked Kashmiri Kagzi walnut halves with pristine ivory tone and sweet buttery taste.",
+      "description": "Harvested from organic century-old walnut orchards in Pahalgam, Kashmir, our Snow White Halves undergo rigorous nitrogen-flushed sorting to prevent rancidity. Zero bitterness, high natural moisture, and overflowing with brain-nourishing Omega-3 ALA.",
+      "origin": "Pahalgam Valley, Kashmir, India",
+      "grade": "Extra Light Halves (80%+ Butterfly)",
+      "images": [
+        "https://images.unsplash.com/photo-1568271679468-8e30ae044191?auto=format&fit=crop&w=1000&q=80",
+        "https://images.unsplash.com/photo-1508061253366-f7da158b6d46?auto=format&fit=crop&w=1000&q=80"
+      ],
+      "variants": [
+        {
+          "id": "v-walnut-1-250",
+          "weight": "250g",
+          "price": 499,
+          "mrp": 629,
+          "stock": 40,
+          "sku": "NN-WLN-KSH-250"
+        },
+        {
+          "id": "v-walnut-1-500",
+          "weight": "500g",
+          "price": 949,
+          "mrp": 1199,
+          "stock": 55,
+          "sku": "NN-WLN-KSH-500"
+        },
+        {
+          "id": "v-walnut-1-1000",
+          "weight": "1kg",
+          "price": 1799,
+          "mrp": 2299,
+          "stock": 25,
+          "sku": "NN-WLN-KSH-1KG"
+        }
+      ],
+      "rating": 4.9,
+      "reviewCount": 310,
+      "status": "published",
+      "isFeatured": true,
+      "isBestSeller": true,
+      "isNew": false,
+      "tags": [
+        "Kashmiri",
+        "Omega-3",
+        "Snow White",
+        "Brain Food",
+        "Halves"
+      ],
+      "benefits": [
+        "Highest plant Omega-3 ALA concentration of any edible nut (2.5g per 30g)",
+        "Supports cognitive performance, sleep regulation, and heart elasticity",
+        "Zero bitterness — smooth creamy mouthfeel"
+      ],
+      "storageInfo": "Walnuts contain sensitive polyunsaturated oils. Keep refrigerated in airtight containers for optimal freshness.",
+      "nutrition": {
+        "servingSize": "30g",
+        "calories": "196 kcal",
+        "protein": "4.5g",
+        "healthyFats": "19.5g",
+        "carbs": "3.8g",
+        "fiber": "2.0g"
+      },
+      "ingredients": "100% Kashmiri Extra Light Walnut Kernels (Halves)."
+    },
+    {
+      "id": "prod-raisin-1",
+      "name": "Afghan Sun-Dried Black Kishmish (Seedless)",
+      "slug": "afghan-sun-dried-black-kishmish",
+      "category": "raisins",
+      "categoryName": "Raisins",
+      "tagline": "Velvety dark, succulent raisins loaded with bioavailable iron.",
+      "shortDescription": "Jumbo seedless Afghan black raisins sun-cured naturally on traditional earthen beds.",
+      "description": "Renowned in traditional wellness systems for hemoglobin purification, our seedless black raisins come from the grape valleys of Kandahar. Soft, plump, naturally sweet without any added sulfur or sugar syrup.",
+      "origin": "Kandahar, Afghanistan",
+      "grade": "Jumbo Seedless Black Grade A",
+      "images": [
+        "https://images.unsplash.com/photo-1595411425732-e69c1abe2763?auto=format&fit=crop&w=1000&q=80"
+      ],
+      "variants": [
+        {
+          "id": "v-raisin-1-250",
+          "weight": "250g",
+          "price": 249,
+          "mrp": 329,
+          "stock": 60,
+          "sku": "NN-RSN-BLK-250"
+        },
+        {
+          "id": "v-raisin-1-500",
+          "weight": "500g",
+          "price": 449,
+          "mrp": 599,
+          "stock": 75,
+          "sku": "NN-RSN-BLK-500"
+        },
+        {
+          "id": "v-raisin-1-1000",
+          "weight": "1kg",
+          "price": 849,
+          "mrp": 1099,
+          "stock": 35,
+          "sku": "NN-RSN-BLK-1KG"
+        }
+      ],
+      "rating": 4.8,
+      "reviewCount": 165,
+      "status": "published",
+      "isFeatured": false,
+      "isBestSeller": true,
+      "isNew": false,
+      "tags": [
+        "Black Raisins",
+        "Afghan",
+        "Iron-Rich",
+        "Seedless",
+        "Ayurveda"
+      ],
+      "benefits": [
+        "Rich in bioavailable iron and copper to combat fatigue",
+        "Natural antioxidant anthocyanins support skin clarity",
+        "Natural sugar source with gentle low GI release"
+      ],
+      "storageInfo": "Store in a cool dry pantry. Do not expose to moisture.",
+      "nutrition": {
+        "servingSize": "30g",
+        "calories": "89 kcal",
+        "protein": "1.0g",
+        "healthyFats": "0.2g",
+        "carbs": "22.5g",
+        "fiber": "1.9g",
+        "iron": "1.8mg"
+      },
+      "ingredients": "100% Natural Afghan Black Seedless Raisins."
+    },
+    {
+      "id": "prod-raisin-2",
+      "name": "Golden Long Sangli Raisins",
+      "slug": "golden-long-sangli-raisins",
+      "category": "raisins",
+      "categoryName": "Raisins",
+      "tagline": "Slender honey-sweet green grapes naturally dried in shade.",
+      "shortDescription": "Sweet elongated golden-green raisins from the grape capital of India, Sangli.",
+      "description": "Hand-harvested Thompson Seedless grapes shade-dried in traditional ventilated mud sheds to retain their amber translucence and floral aroma.",
+      "origin": "Sangli, Maharashtra, India",
+      "grade": "Sangli Golden Super Long",
+      "images": [
+        "https://images.unsplash.com/photo-1595411425732-e69c1abe2763?auto=format&fit=crop&w=1000&q=80"
+      ],
+      "variants": [
+        {
+          "id": "v-raisin-2-250",
+          "weight": "250g",
+          "price": 199,
+          "mrp": 269,
+          "stock": 90,
+          "sku": "NN-RSN-GLD-250"
+        },
+        {
+          "id": "v-raisin-2-500",
+          "weight": "500g",
+          "price": 369,
+          "mrp": 499,
+          "stock": 120,
+          "sku": "NN-RSN-GLD-500"
+        },
+        {
+          "id": "v-raisin-2-1000",
+          "weight": "1kg",
+          "price": 689,
+          "mrp": 899,
+          "stock": 50,
+          "sku": "NN-RSN-GLD-1KG"
+        }
+      ],
+      "rating": 4.7,
+      "reviewCount": 140,
+      "status": "published",
+      "isFeatured": false,
+      "isBestSeller": false,
+      "isNew": false,
+      "tags": [
+        "Golden",
+        "Sangli",
+        "Sweet",
+        "Pudding",
+        "Energy"
+      ],
+      "benefits": [
+        "Natural energy booster for active lifestyles",
+        "Rich in boron for joint flexibility",
+        "Delicious natural topping for porridge and yogurt"
+      ],
+      "storageInfo": "Store in airtight jar.",
+      "nutrition": {
+        "servingSize": "30g",
+        "calories": "92 kcal",
+        "protein": "0.9g",
+        "healthyFats": "0.1g",
+        "carbs": "23.1g",
+        "fiber": "1.4g"
+      },
+      "ingredients": "100% Golden Raisins."
+    },
+    {
+      "id": "prod-date-1",
+      "name": "Royal Jumbo Medjool Dates (King of Dates)",
+      "slug": "royal-jumbo-medjool-dates",
+      "category": "dates",
+      "categoryName": "Dates",
+      "tagline": "Soft, pillowy caramel flesh with royal desert pedigree.",
+      "shortDescription": "Gourmet large Medjool dates with melt-in-mouth honey-caramel consistency and thin delicate skin.",
+      "description": "Medjool dates are universally known as the royalty of desert fruit. Freshly flown from the fertile Jordan Valley oasis, each date is hand-inspected for skin tightness, moisture, and caramel richness. Perfect paired with black coffee or stuffed with walnuts.",
+      "origin": "Jordan River Valley",
+      "grade": "Super Jumbo Premium Grade",
+      "images": [
+        "https://images.unsplash.com/photo-1593105544559-ecb03bf76f82?auto=format&fit=crop&w=1000&q=80",
+        "https://images.unsplash.com/photo-1596704017254-9b121068fb31?auto=format&fit=crop&w=1000&q=80"
+      ],
+      "variants": [
+        {
+          "id": "v-date-1-250",
+          "weight": "250g",
+          "price": 499,
+          "mrp": 649,
+          "stock": 30,
+          "sku": "NN-DTE-MDJ-250"
+        },
+        {
+          "id": "v-date-1-500",
+          "weight": "500g",
+          "price": 949,
+          "mrp": 1199,
+          "stock": 45,
+          "sku": "NN-DTE-MDJ-500"
+        },
+        {
+          "id": "v-date-1-1000",
+          "weight": "1kg",
+          "price": 1799,
+          "mrp": 2299,
+          "stock": 20,
+          "sku": "NN-DTE-MDJ-1KG"
+        }
+      ],
+      "rating": 4.9,
+      "reviewCount": 390,
+      "status": "published",
+      "isFeatured": true,
+      "isBestSeller": true,
+      "isNew": false,
+      "tags": [
+        "Medjool",
+        "Caramel",
+        "Jumbo",
+        "Energy",
+        "Sweet"
+      ],
+      "benefits": [
+        "Rich in natural potassium to regulate fluid balance",
+        "Natural pre-workout energy without sugar crash",
+        "Soft and juicy without any artificial syrup glazes"
+      ],
+      "storageInfo": "Refrigerate upon arrival to maintain plump softness. Serve at room temperature.",
+      "nutrition": {
+        "servingSize": "2 dates (approx 48g)",
+        "calories": "133 kcal",
+        "protein": "0.9g",
+        "healthyFats": "0.2g",
+        "carbs": "36.0g",
+        "fiber": "3.2g",
+        "calcium": "32mg"
+      },
+      "ingredients": "100% Whole Medjool Dates."
+    },
+    {
+      "id": "prod-date-2",
+      "name": "Organic Kimia Wet Dates (Bam City)",
+      "slug": "organic-kimia-wet-dates",
+      "category": "dates",
+      "categoryName": "Dates",
+      "tagline": "Silky, dark, luscious dates that dissolve on your palate.",
+      "shortDescription": "Original Bam Mazafati black wet dates packed fresh in temperature-controlled wooden trays.",
+      "description": "Also known as Mazafati or Kimia, these iconic dates from the ancient city of Bam are beloved for their velvety black exterior and juicy, soft nectar-like center. 100% unpasteurized and non-chemically treated.",
+      "origin": "Bam Oasis, Kerman Province, Iran",
+      "grade": "Mazafati Grade 1 Export",
+      "images": [
+        "https://images.unsplash.com/photo-1593105544559-ecb03bf76f82?auto=format&fit=crop&w=1000&q=80"
+      ],
+      "variants": [
+        {
+          "id": "v-date-2-500",
+          "weight": "500g",
+          "price": 349,
+          "mrp": 449,
+          "stock": 70,
+          "sku": "NN-DTE-KMA-500"
+        },
+        {
+          "id": "v-date-2-1000",
+          "weight": "1kg",
+          "price": 649,
+          "mrp": 849,
+          "stock": 40,
+          "sku": "NN-DTE-KMA-1KG"
+        }
+      ],
+      "rating": 4.8,
+      "reviewCount": 220,
+      "status": "published",
+      "isFeatured": false,
+      "isBestSeller": true,
+      "isNew": false,
+      "tags": [
+        "Kimia",
+        "Mazafati",
+        "Juicy",
+        "Natural"
+      ],
+      "benefits": [
+        "Instant energy recovery",
+        "Zero added sugar",
+        "Soft texture suitable for toddlers and elders"
+      ],
+      "storageInfo": "Always keep refrigerated at 0-5°C.",
+      "nutrition": {
+        "servingSize": "30g",
+        "calories": "82 kcal",
+        "protein": "0.8g",
+        "healthyFats": "0.1g",
+        "carbs": "21.0g",
+        "fiber": "2.1g"
+      },
+      "ingredients": "100% Fresh Mazafati Dates."
+    },
+    {
+      "id": "prod-apricot-1",
+      "name": "Turkish Sun-Dried Golden Whole Apricots",
+      "slug": "turkish-sun-dried-golden-whole-apricots",
+      "category": "dried-apricots",
+      "categoryName": "Dried Apricots",
+      "tagline": "Plump, tangy-sweet Mediterranean sunshine in every bite.",
+      "shortDescription": "Succulent, tender Turkish whole apricots naturally sun-cured in the orchards of Malatya.",
+      "description": "Malatya, Turkey supplies 85% of the world's most prized apricots. Our whole pitted apricots are hand-inspected for plumpness and soft chew. Their vibrant orange color and sweet-tart balance make them an irresistible daily fiber powerhouse.",
+      "origin": "Malatya, Turkey",
+      "grade": "Jumbo Size #1 Whole Pitted",
+      "images": [
+        "https://images.unsplash.com/photo-1608797178974-15b35a65a363?auto=format&fit=crop&w=1000&q=80"
+      ],
+      "variants": [
+        {
+          "id": "v-apricot-1-250",
+          "weight": "250g",
+          "price": 349,
+          "mrp": 449,
+          "stock": 35,
+          "sku": "NN-APR-TRK-250"
+        },
+        {
+          "id": "v-apricot-1-500",
+          "weight": "500g",
+          "price": 649,
+          "mrp": 829,
+          "stock": 45,
+          "sku": "NN-APR-TRK-500"
+        },
+        {
+          "id": "v-apricot-1-1000",
+          "weight": "1kg",
+          "price": 1199,
+          "mrp": 1549,
+          "stock": 20,
+          "sku": "NN-APR-TRK-1KG"
+        }
+      ],
+      "rating": 4.8,
+      "reviewCount": 145,
+      "status": "published",
+      "isFeatured": true,
+      "isBestSeller": false,
+      "isNew": false,
+      "tags": [
+        "Turkish",
+        "Apricot",
+        "Pitted",
+        "Vitamin A",
+        "Digestive"
+      ],
+      "benefits": [
+        "Rich in Beta-Carotene Vitamin A for skin vitality and vision",
+        "Contains dietary insoluble fiber to nourish beneficial gut flora",
+        "Naturally low fat and cholesterol free"
+      ],
+      "storageInfo": "Store in a cool dry pantry. Ensure pouch zipper is fully closed.",
+      "nutrition": {
+        "servingSize": "30g (approx 4 pieces)",
+        "calories": "72 kcal",
+        "protein": "1.0g",
+        "healthyFats": "0.1g",
+        "carbs": "18.8g",
+        "fiber": "2.2g"
+      },
+      "ingredients": "100% Pitted Turkish Dried Apricots."
+    },
+    {
+      "id": "prod-fig-1",
+      "name": "Afghani Premium Sun-Dried Anjeer (Figs)",
+      "slug": "afghani-premium-sun-dried-anjeer",
+      "category": "dry-figs",
+      "categoryName": "Dry Figs",
+      "tagline": "Large threaded rings of mineral-dense sweet mountain figs.",
+      "shortDescription": "Stringed large Afghani figs sun-dried naturally, offering a sweet pulp and crunchy mineral seeds.",
+      "description": "Cultivated in the arid mountain orchards of Kandahar, these figs are traditionally threaded on cotton strings to sun-dry without artificial heat. Deeply nourishing in calcium, iron, and prebiotic fibers.",
+      "origin": "Kandahar, Afghanistan",
+      "grade": "Grade 1 Jumbo Stringed Anjeer",
+      "images": [
+        "https://images.unsplash.com/photo-1596704017254-9b121068fb31?auto=format&fit=crop&w=1000&q=80",
+        "https://images.unsplash.com/photo-1593105544559-ecb03bf76f82?auto=format&fit=crop&w=1000&q=80"
+      ],
+      "variants": [
+        {
+          "id": "v-fig-1-250",
+          "weight": "250g",
+          "price": 549,
+          "mrp": 699,
+          "stock": 40,
+          "sku": "NN-FIG-AFG-250"
+        },
+        {
+          "id": "v-fig-1-500",
+          "weight": "500g",
+          "price": 1049,
+          "mrp": 1299,
+          "stock": 50,
+          "sku": "NN-FIG-AFG-500"
+        },
+        {
+          "id": "v-fig-1-1000",
+          "weight": "1kg",
+          "price": 1999,
+          "mrp": 2499,
+          "stock": 22,
+          "sku": "NN-FIG-AFG-1KG"
+        }
+      ],
+      "rating": 4.9,
+      "reviewCount": 298,
+      "status": "published",
+      "isFeatured": true,
+      "isBestSeller": true,
+      "isNew": false,
+      "tags": [
+        "Anjeer",
+        "Afghani",
+        "Calcium-Rich",
+        "Bone Health",
+        "Digestion"
+      ],
+      "benefits": [
+        "Highest plant calcium concentration among all dried fruits (162mg per 100g)",
+        "Traditional Ayurvedic remedy for gentle gut regulation when soaked overnight",
+        "Rich in polyphenolic antioxidants"
+      ],
+      "storageInfo": "Soak 2-3 pieces in 100ml water overnight for effortless morning digestion.",
+      "nutrition": {
+        "servingSize": "30g (approx 3 pieces)",
+        "calories": "74 kcal",
+        "protein": "1.0g",
+        "healthyFats": "0.3g",
+        "carbs": "19.0g",
+        "fiber": "2.9g",
+        "calcium": "48mg",
+        "iron": "1.1mg"
+      },
+      "ingredients": "100% Natural Afghan Dried Figs (Anjeer)."
+    },
+    {
+      "id": "prod-prune-1",
+      "name": "California Pitted Tender Sun Prunes",
+      "slug": "california-pitted-tender-sun-prunes",
+      "category": "prunes",
+      "categoryName": "Prunes",
+      "tagline": "Deeply succulent, juicy pitted prunes for digestive wellness.",
+      "shortDescription": "Gently steam-tenderized French d'Agen variety Californian prunes, pitted for hassle-free snacking.",
+      "description": "NutriNation California Prunes come from the lush orchards of the Sacramento Valley. Naturally rich in sorbitol, chlorogenic acid, and bone-building boron, these plump pitted prunes are moist, soft, and delicious.",
+      "origin": "Sacramento Valley, California, USA",
+      "grade": "Tenderized Pitted Size 40/50",
+      "images": [
+        "https://images.unsplash.com/photo-1596547609652-9cf5d8d76921?auto=format&fit=crop&w=1000&q=80"
+      ],
+      "variants": [
+        {
+          "id": "v-prune-1-250",
+          "weight": "250g",
+          "price": 349,
+          "mrp": 449,
+          "stock": 35,
+          "sku": "NN-PRN-CAL-250"
+        },
+        {
+          "id": "v-prune-1-500",
+          "weight": "500g",
+          "price": 649,
+          "mrp": 799,
+          "stock": 45,
+          "sku": "NN-PRN-CAL-500"
+        },
+        {
+          "id": "v-prune-1-1000",
+          "weight": "1kg",
+          "price": 1249,
+          "mrp": 1549,
+          "stock": 18,
+          "sku": "NN-PRN-CAL-1KG"
+        }
+      ],
+      "rating": 4.8,
+      "reviewCount": 112,
+      "status": "published",
+      "isFeatured": false,
+      "isBestSeller": false,
+      "isNew": false,
+      "tags": [
+        "Prunes",
+        "California",
+        "Pitted",
+        "Digestive",
+        "Boron"
+      ],
+      "benefits": [
+        "Proven gut health champion with natural soluble sorbitol",
+        "High in Vitamin K and Boron for bone mineral density",
+        "Zero added sugar and 100% fat-free"
+      ],
+      "storageInfo": "Refrigerate after opening to preserve juicy tenderness.",
+      "nutrition": {
+        "servingSize": "30g (approx 4 prunes)",
+        "calories": "72 kcal",
+        "protein": "0.7g",
+        "healthyFats": "0.1g",
+        "carbs": "19.2g",
+        "fiber": "2.1g",
+        "potassium": "220mg"
+      },
+      "ingredients": "Pitted Dried California Plums (Prunes)."
+    },
+    {
+      "id": "prod-combo-1",
+      "name": "NutriNation 7-in-1 Daily Wellness Box",
+      "slug": "nutrination-7-in-1-daily-wellness-box",
+      "category": "combos",
+      "categoryName": "Curated Combos",
+      "tagline": "The quintessential daily nutrient cocktail of 7 super fruits & nuts.",
+      "shortDescription": "A balanced harmony of Jumbo Cashews, Mamra Almonds, Kashmiri Walnuts, Iranian Pistachios, Afghan Figs, Medjool Dates & Black Raisins.",
+      "description": "Designed in collaboration with holistic nutritionists, the 7-in-1 Daily Wellness Box offers pre-portioned power snacks designed to meet your daily micronutrient, Omega-3, and plant protein benchmarks in one wholesome package.",
+      "origin": "Artisan Blended in Mumbai, India",
+      "images": [
+        "https://images.unsplash.com/photo-1599785209707-a456fc1337bb?auto=format&fit=crop&w=1000&q=80",
+        "https://images.unsplash.com/photo-1508061253366-f7da158b6d46?auto=format&fit=crop&w=1000&q=80"
+      ],
+      "variants": [
+        {
+          "id": "v-combo-1-500",
+          "weight": "500g Box",
+          "price": 999,
+          "mrp": 1299,
+          "stock": 60,
+          "sku": "NN-CMB-WEL-500"
+        },
+        {
+          "id": "v-combo-1-1000",
+          "weight": "1kg Box",
+          "price": 1899,
+          "mrp": 2499,
+          "stock": 35,
+          "sku": "NN-CMB-WEL-1KG"
+        }
+      ],
+      "rating": 5,
+      "reviewCount": 512,
+      "status": "published",
+      "isFeatured": true,
+      "isBestSeller": true,
+      "isNew": false,
+      "tags": [
+        "Wellness",
+        "Combo",
+        "7-in-1",
+        "Bestseller",
+        "Superfood"
+      ],
+      "benefits": [
+        "Complete 360-degree daily nutrition in every handful",
+        "Combines brain-boosting walnuts with energy-dense dates and crunchy cashews",
+        "Air-tight partition divider keeps individual textures distinct"
+      ],
+      "storageInfo": "Keep box sealed in a dry cool area.",
+      "nutrition": {
+        "servingSize": "35g daily portion",
+        "calories": "165 kcal",
+        "protein": "5.1g",
+        "healthyFats": "12.8g",
+        "carbs": "11.2g",
+        "fiber": "2.8g"
+      },
+      "ingredients": "Cashews (15%), Almonds (20%), Walnuts (15%), Pistachios (10%), Anjeer (15%), Dates (15%), Black Raisins (10%)."
+    },
+    {
+      "id": "prod-combo-2",
+      "name": "Royal Cashew & Almond Connoisseur Duo",
+      "slug": "royal-cashew-and-almond-connoisseur-duo",
+      "category": "combos",
+      "categoryName": "Curated Combos",
+      "tagline": "The twin pillars of gourmet nut luxury in elegant twin jars.",
+      "shortDescription": "A matched pair of Royal King Cashews W-180 and Kashmiri Mamra Giri Almonds.",
+      "description": "Two matching luxury glass jars filled with the pinnacle of Indian dry fruit craftsmanship: Jumbo W-180 Mangalore Cashews and Pulwama Valley Kashmiri Mamra Almonds.",
+      "origin": "India",
+      "images": [
+        "https://images.unsplash.com/photo-1508061253366-f7da158b6d46?auto=format&fit=crop&w=1000&q=80"
+      ],
+      "variants": [
+        {
+          "id": "v-combo-2-500",
+          "weight": "2 x 250g Jars",
+          "price": 1299,
+          "mrp": 1599,
+          "stock": 40,
+          "sku": "NN-CMB-DUO-500"
+        },
+        {
+          "id": "v-combo-2-1000",
+          "weight": "2 x 500g Jars",
+          "price": 2499,
+          "mrp": 2999,
+          "stock": 25,
+          "sku": "NN-CMB-DUO-1KG"
+        }
+      ],
+      "rating": 4.9,
+      "reviewCount": 178,
+      "status": "published",
+      "isFeatured": false,
+      "isBestSeller": true,
+      "isNew": false,
+      "tags": [
+        "Duo",
+        "Cashew",
+        "Mamra",
+        "Luxury Jars"
+      ],
+      "benefits": [
+        "Twin glass jars preserve crispness",
+        "Ideal executive gift or daily health pairing",
+        "Supreme oil and protein balance"
+      ],
+      "storageInfo": "Store in cool dark cupboard.",
+      "nutrition": {
+        "servingSize": "30g",
+        "calories": "172 kcal",
+        "protein": "5.8g",
+        "healthyFats": "14.5g",
+        "carbs": "7.1g",
+        "fiber": "2.4g"
+      },
+      "ingredients": "50% Grade W-180 Cashews, 50% Kashmiri Mamra Almonds."
+    },
+    {
+      "id": "prod-gift-1",
+      "name": "The Royal Nizam Handcrafted Festive Hamper",
+      "slug": "the-royal-nizam-handcrafted-festive-hamper",
+      "category": "gift-boxes",
+      "categoryName": "Gift & Festival Boxes",
+      "tagline": "Handmade velvet-lined wooden chest with gold filigree accents.",
+      "shortDescription": "An opulent gift collection featuring 6 premium varieties: King Cashews, Iranian Pistachios, Mamra Almonds, Kashmiri Walnuts, Afghan Anjeer & Medjool Dates.",
+      "description": "Crafted to commemorate weddings, Diwali, Eid, and landmark corporate milestones, The Royal Nizam Box features a velvet-lined solid wood casket with gold-leaf detailing and 6 hermetically sealed crystal jars containing our top 1% harvest.",
+      "origin": "Artisan Box Crafted in Rajasthan, India",
+      "images": [
+        "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=1000&q=80",
+        "https://images.unsplash.com/photo-1599785209707-a456fc1337bb?auto=format&fit=crop&w=1000&q=80"
+      ],
+      "variants": [
+        {
+          "id": "v-gift-1-1200",
+          "weight": "1.2kg (6 x 200g)",
+          "price": 2999,
+          "mrp": 3999,
+          "stock": 25,
+          "sku": "NN-GFT-NZM-1200"
+        },
+        {
+          "id": "v-gift-1-2400",
+          "weight": "2.4kg (6 x 400g)",
+          "price": 5499,
+          "mrp": 6999,
+          "stock": 12,
+          "sku": "NN-GFT-NZM-2400"
+        }
+      ],
+      "rating": 5,
+      "reviewCount": 184,
+      "status": "published",
+      "isFeatured": true,
+      "isBestSeller": true,
+      "isNew": true,
+      "tags": [
+        "Festive",
+        "Luxury Gift",
+        "Diwali",
+        "Wedding",
+        "Corporate"
+      ],
+      "benefits": [
+        "Presented in a reusable keepsake heirloom wooden casket",
+        "Includes personalized gold calligraphy message card",
+        "Top 1% grade selection guaranteed across all 6 varieties"
+      ],
+      "storageInfo": "Keep jars closed when not in use.",
+      "nutrition": {
+        "servingSize": "Assorted",
+        "calories": "168 kcal / 30g",
+        "protein": "5.3g",
+        "healthyFats": "13.9g",
+        "carbs": "9.2g",
+        "fiber": "2.2g"
+      },
+      "ingredients": "King Cashews, Iranian Pistachios, Kashmiri Mamra Almonds, Snow White Walnuts, Afghan Anjeer, Medjool Dates."
+    }
+  ],
+  "categories": [
+    {
+      "id": "cat-1",
+      "name": "Cashews",
+      "slug": "cashews",
+      "tagline": "Rich, creamy and naturally satisfying.",
+      "description": "Jumbo King W-180 and roasted premium cashews harvested from the finest orchards of Mangalore and Goa.",
+      "image": "https://images.unsplash.com/photo-1563227812-0ea4c22e6cc8?auto=format&fit=crop&w=800&q=80",
+      "bannerImage": "https://images.unsplash.com/photo-1563227812-0ea4c22e6cc8?auto=format&fit=crop&w=1600&q=80",
+      "itemCount": 6,
+      "benefits": [
+        "Rich in heart-healthy monounsaturated fats",
+        "Packed with magnesium for nerve and muscle support",
+        "Zero cholesterol and naturally vegan"
+      ],
+      "originHighlight": "Mangalore & Goa, India"
+    },
+    {
+      "id": "cat-2",
+      "name": "Pistachios",
+      "slug": "pistachios",
+      "tagline": "Vibrant emerald crunch with delicate natural salt.",
+      "description": "Premium long-shell Iranian and Californian pistachios, slow roasted to perfection with Himalayan pink salt.",
+      "image": "https://images.unsplash.com/photo-1616684000067-36952fde56ec?auto=format&fit=crop&w=800&q=80",
+      "bannerImage": "https://images.unsplash.com/photo-1616684000067-36952fde56ec?auto=format&fit=crop&w=1600&q=80",
+      "itemCount": 4,
+      "benefits": [
+        "One of the lowest-calorie snack nuts",
+        "High in Vitamin B6 and Potassium",
+        "Promotes healthy gut microbiome"
+      ],
+      "originHighlight": "Kerman, Iran & Central Valley, California"
+    },
+    {
+      "id": "cat-3",
+      "name": "Almonds",
+      "slug": "almonds",
+      "tagline": "Golden kernels brimming with natural vitamin E.",
+      "description": "Cold-harvested Kashmiri Mamra and California Nonpareil almonds packed with pristine natural crunch.",
+      "image": "https://images.unsplash.com/photo-1508061253366-f7da158b6d46?auto=format&fit=crop&w=800&q=80",
+      "bannerImage": "https://images.unsplash.com/photo-1508061253366-f7da158b6d46?auto=format&fit=crop&w=1600&q=80",
+      "itemCount": 5,
+      "benefits": [
+        "Abundant in natural Vitamin E for radiant skin",
+        "Improves cognitive clarity and memory retention",
+        "Excellent source of clean plant-based protein"
+      ],
+      "originHighlight": "Kashmir, India & California, USA"
+    },
+    {
+      "id": "cat-4",
+      "name": "Walnuts",
+      "slug": "walnuts",
+      "tagline": "Brain-boosting halves from the snow valleys of Kashmir.",
+      "description": "Kashmiri Kagzi walnuts with extra-light halves, rich in plant-derived Omega-3 alpha-linolenic acid.",
+      "image": "https://images.unsplash.com/photo-1568271679468-8e30ae044191?auto=format&fit=crop&w=800&q=80",
+      "bannerImage": "https://images.unsplash.com/photo-1568271679468-8e30ae044191?auto=format&fit=crop&w=1600&q=80",
+      "itemCount": 4,
+      "benefits": [
+        "Supreme source of plant-based Omega-3 ALA",
+        "Supports cardiovascular vitality and brain function",
+        "Natural antioxidant powerhouse"
+      ],
+      "originHighlight": "Pahalgam & Sopore, Kashmir"
+    },
+    {
+      "id": "cat-5",
+      "name": "Raisins",
+      "slug": "raisins",
+      "tagline": "Naturally sun-cured sweet drops of golden sunshine.",
+      "description": "Long green Sangli raisins and seedless Afghan black kishmish, sun-dried without added sulfur or artificial sweeteners.",
+      "image": "https://images.unsplash.com/photo-1595411425732-e69c1abe2763?auto=format&fit=crop&w=800&q=80",
+      "bannerImage": "https://images.unsplash.com/photo-1595411425732-e69c1abe2763?auto=format&fit=crop&w=1600&q=80",
+      "itemCount": 4,
+      "benefits": [
+        "Instant, non-refined bioavailable energy",
+        "Rich in iron and copper for hemoglobin support",
+        "Dietary fiber supports regular digestion"
+      ],
+      "originHighlight": "Sangli, Maharashtra & Kandahar, Afghanistan"
+    },
+    {
+      "id": "cat-6",
+      "name": "Dates",
+      "slug": "dates",
+      "tagline": "Caramel-soft royal Medjool and organic Kimia dates.",
+      "description": "Succulent, melt-in-mouth Medjool and Bam Kimia dates hand-picked at peak ripeness.",
+      "image": "https://images.unsplash.com/photo-1593105544559-ecb03bf76f82?auto=format&fit=crop&w=800&q=80",
+      "bannerImage": "https://images.unsplash.com/photo-1593105544559-ecb03bf76f82?auto=format&fit=crop&w=1600&q=80",
+      "itemCount": 4,
+      "benefits": [
+        "Natural alternative to refined sugars",
+        "High potassium content supports electrolyte balance",
+        "Nourishing source of active polyphenols"
+      ],
+      "originHighlight": "Jordan Valley & Bam, Iran"
+    },
+    {
+      "id": "cat-7",
+      "name": "Dried Apricots",
+      "slug": "dried-apricots",
+      "tagline": "Golden sun-kissed Turkish apricots with tangy sweetness.",
+      "description": "Unsulfured whole Turkish apricots with a velvety soft texture and natural citrus undertones.",
+      "image": "https://images.unsplash.com/photo-1608797178974-15b35a65a363?auto=format&fit=crop&w=800&q=80",
+      "bannerImage": "https://images.unsplash.com/photo-1608797178974-15b35a65a363?auto=format&fit=crop&w=1600&q=80",
+      "itemCount": 3,
+      "benefits": [
+        "Rich in Provitamin A beta-carotene for eyesight",
+        "Promotes collagen synthesis and skin elasticity",
+        "High in soluble prebiotic dietary fiber"
+      ],
+      "originHighlight": "Malatya, Turkey & Ladakh, India"
+    },
+    {
+      "id": "cat-8",
+      "name": "Dry Figs",
+      "slug": "dry-figs",
+      "tagline": "Plump Afghani Anjeer stringed and sun-cured naturally.",
+      "description": "Selected large-disc Afghani Anjeer bursting with crunchy mineral-rich seeds and velvety sweet flesh.",
+      "image": "https://images.unsplash.com/photo-1596704017254-9b121068fb31?auto=format&fit=crop&w=800&q=80",
+      "bannerImage": "https://images.unsplash.com/photo-1596704017254-9b121068fb31?auto=format&fit=crop&w=1600&q=80",
+      "itemCount": 3,
+      "benefits": [
+        "Exceptional plant calcium for bone density",
+        "Gentle natural digestive aid and gut cleanser",
+        "Regulates blood glucose spikes naturally"
+      ],
+      "originHighlight": "Kandahar, Afghanistan"
+    },
+    {
+      "id": "cat-9",
+      "name": "Prunes",
+      "slug": "prunes",
+      "tagline": "Plump, tender Californian pitted sun prunes.",
+      "description": "Premium French d'Agen variety Californian prunes, pitted and steam-tenderized for everyday digestive wellness.",
+      "image": "https://images.unsplash.com/photo-1596547609652-9cf5d8d76921?auto=format&fit=crop&w=800&q=80",
+      "bannerImage": "https://images.unsplash.com/photo-1596547609652-9cf5d8d76921?auto=format&fit=crop&w=1600&q=80",
+      "itemCount": 3,
+      "benefits": [
+        "Clinically proven to promote digestive motility",
+        "Rich in Boron and Vitamin K for skeletal health",
+        "Zero saturated fat and high in soluble sorbitol"
+      ],
+      "originHighlight": "Sutter County, California"
+    },
+    {
+      "id": "cat-10",
+      "name": "Curated Combos",
+      "slug": "combos",
+      "tagline": "Harmonious daily wellness blends of 9 dry fruits.",
+      "description": "Artisan blends crafted for daily energy, workout recovery, and royal family snacking.",
+      "image": "https://images.unsplash.com/photo-1599785209707-a456fc1337bb?auto=format&fit=crop&w=800&q=80",
+      "bannerImage": "https://images.unsplash.com/photo-1599785209707-a456fc1337bb?auto=format&fit=crop&w=1600&q=80",
+      "itemCount": 4,
+      "benefits": [
+        "Balanced macronutrient and micronutrient profiles",
+        "Convenient daily portion control",
+        "Maximum variety of crunch and sweetness"
+      ],
+      "originHighlight": "Handcrafted in Mumbai, India"
+    },
+    {
+      "id": "cat-11",
+      "name": "Gift & Festival Boxes",
+      "slug": "gift-boxes",
+      "tagline": "Handcrafted luxury hampers for festive celebrations.",
+      "description": "Royal brass-finish and wooden gift caskets filled with the top 1% harvest of dry fruits.",
+      "image": "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=800&q=80",
+      "bannerImage": "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=1600&q=80",
+      "itemCount": 4,
+      "benefits": [
+        "Bespoke luxury packaging with satin ribbons",
+        "Includes personalized gold-foil greeting card",
+        "Nitrogen-sealed freshness guarantee"
+      ],
+      "originHighlight": "Artisan Packaging, India"
+    }
+  ],
+  "coupons": [
+    {
+      "code": "FIRSTBUY",
+      "description": "Flat 15% discount on your first order",
+      "discountType": "percentage",
+      "discountValue": 15,
+      "minOrderValue": 999,
+      "maxDiscount": 500,
+      "expiryDate": "2026-12-31",
+      "usageCount": 1420,
+      "status": "active"
+    },
+    {
+      "code": "NUTS100",
+      "description": "Flat ₹100 OFF on orders above ₹1499",
+      "discountType": "fixed",
+      "discountValue": 100,
+      "minOrderValue": 1499,
+      "expiryDate": "2026-12-31",
+      "usageCount": 890,
+      "status": "active"
+    },
+    {
+      "code": "FESTIVE25",
+      "description": "Royal 25% discount on Curated Combos & Gift Hampers",
+      "discountType": "percentage",
+      "discountValue": 25,
+      "minOrderValue": 2499,
+      "maxDiscount": 1000,
+      "expiryDate": "2026-11-30",
+      "usageCount": 430,
+      "status": "active"
+    },
+    {
+      "code": "WELLNESS15",
+      "description": "Special 15% OFF for health enthusiasts",
+      "discountType": "percentage",
+      "discountValue": 15,
+      "minOrderValue": 1199,
+      "maxDiscount": 400,
+      "expiryDate": "2026-10-31",
+      "usageCount": 312,
+      "status": "active"
+    }
+  ],
+  "lastUpdated": "2026-08-23T06:16:47.745Z"
+}

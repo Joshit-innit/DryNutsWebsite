@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Sparkles, X, Truck } from "lucide-react";
+import { X } from "lucide-react";
 
 export default function AnnouncementBar() {
   const [visible, setVisible] = useState(true);
@@ -9,20 +9,18 @@ export default function AnnouncementBar() {
   if (!visible) return null;
 
   return (
-    <div className="bg-brand-green text-white text-xs py-2 px-4 relative z-40 transition-all">
-      <div className="max-w-7xl mx-auto flex items-center justify-between">
-        <div className="flex-1 flex items-center justify-center gap-2 text-center">
-          <Truck className="w-3.5 h-3.5 text-brand-saffron hidden sm:inline" />
-          <span className="font-medium tracking-wide">
-            Freshly packed 2026 harvest • <strong>FREE express delivery</strong> across India on orders over ₹999
-          </span>
-          <span className="hidden md:inline-flex items-center gap-1 bg-white/15 px-2 py-0.5 rounded text-[11px] font-semibold text-brand-cream">
-            <Sparkles className="w-3 h-3 text-brand-saffron" /> Code: FIRSTBUY for 15% OFF
-          </span>
-        </div>
+    <div className="bg-brand-green text-[#F7F1E8] text-[11px] sm:text-xs py-2.5 px-4 relative z-40">
+      <div className="max-w-7xl mx-auto flex items-center justify-center gap-3 text-center">
+        <p className="tracking-wide font-light">
+          2026 harvest now packed · Free express over{" "}
+          <span className="font-medium text-brand-saffron">₹999</span>
+          <span className="hidden sm:inline"> · Code </span>
+          <span className="hidden sm:inline font-medium tracking-[0.14em]">FIRSTBUY</span>
+          <span className="hidden sm:inline"> for 15% off</span>
+        </p>
         <button
           onClick={() => setVisible(false)}
-          className="text-white/70 hover:text-white transition-colors p-0.5 ml-2"
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-white/50 hover:text-white"
           aria-label="Dismiss announcement"
         >
           <X className="w-3.5 h-3.5" />

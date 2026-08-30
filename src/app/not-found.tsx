@@ -13,11 +13,9 @@ export default function NotFound() {
         </div>
 
         <div className="space-y-2">
-          <span className="text-xs uppercase font-bold tracking-widest text-brand-orange">
-            PAGE NOT FOUND (404)
-          </span>
-          <h1 className="font-serif font-black text-3xl sm:text-4xl text-brand-dark">
-            Lost in the Orchard?
+          <p className="eyebrow text-brand-orange">Page not found</p>
+          <h1 className="font-serif font-medium text-3xl sm:text-4xl text-brand-dark">
+            Lost in the orchard?
           </h1>
           <p className="text-xs sm:text-sm text-brand-muted max-w-sm mx-auto leading-relaxed">
             The dry fruit page or product you are looking for has been harvested or moved to another grove.

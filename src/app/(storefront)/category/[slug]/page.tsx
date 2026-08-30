@@ -54,14 +54,14 @@ export default function CategoryPage() {
     <div className="space-y-12 pb-16">
       {/* Category Hero Banner */}
       {category && (
-        <section className="relative bg-brand-dark text-white py-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
-          <div className="absolute inset-0 z-0 opacity-25">
+        <section className="relative bg-brand-dark text-white py-20 sm:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden min-h-[22rem] flex items-end">
+          <div className="absolute inset-0 z-0">
             <img
               src={category.bannerImage || category.image}
               alt={category.name}
               className="w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-brand-dark via-brand-dark/95 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/70 to-brand-dark/20" />
           </div>
 
           <div className="max-w-7xl mx-auto relative z-10">
@@ -75,12 +75,12 @@ export default function CategoryPage() {
             </div>
 
             <div className="max-w-3xl space-y-4">
-              <span className="inline-flex items-center gap-1.5 bg-brand-saffron/20 border border-brand-saffron/40 text-brand-saffron px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
-                <Sparkles className="w-3.5 h-3.5" /> Origin: {category.originHighlight}
+              <span className="eyebrow text-brand-saffron inline-flex items-center gap-2">
+                <Sparkles className="w-3.5 h-3.5" /> {category.originHighlight}
               </span>
 
-              <h1 className="font-serif font-black text-3xl sm:text-5xl text-white tracking-tight">
-                {category.name.toUpperCase()}
+              <h1 className="font-serif font-medium text-4xl sm:text-6xl text-white tracking-tight">
+                {category.name}
               </h1>
 
               <p className="text-base sm:text-lg text-white/80 font-sans leading-relaxed">
