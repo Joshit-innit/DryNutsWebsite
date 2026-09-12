@@ -1,4 +1,5 @@
 import { Product, CategorySlug } from "@/types";
+import { PRODUCTS } from "@/data/mockData";
 
 export interface ProductFilterOptions {
   category?: CategorySlug | "all";
@@ -39,7 +40,7 @@ export const productService = {
       const json = await res.json();
       return json.data as Product[];
     } catch {
-      return [];
+      return filterProducts(PRODUCTS, filters);
     }
   },
 
@@ -50,7 +51,7 @@ export const productService = {
       const json = await res.json();
       return json.data as Product;
     } catch {
-      return null;
+      return PRODUCTS.find((product) => product.slug === slug) || null;
     }
   },
 
@@ -69,3 +70,46 @@ export const productService = {
     return all.filter((p) => p.slug !== currentSlug).slice(0, 4);
   },
 };
+
+function filterProducts(products: Product[], filters?: ProductFilterOptions): Product[] {
+  let result = [...products];
+
+  if (filters?.category && filters.category !== "all") {
+    result = result.filter((product) => product.category === filters.category);
+  }
+  if (filters?.minPrice !== undefined) {
+    result = result.filter((product) => product.variants.some((variant) => variant.price >= filters.minPrice!));
+  }
+  if (filters?.maxPrice !== undefined) {
+    result = result.filter((product) => product.variants.some((variant) => variant.price <= filters.maxPrice!));
+  }
+  if (filters?.rating) {
+    result = result.filter((product) => product.rating >= filters.rating!);
+  }
+  if (filters?.inStockOnly) {
+    result = result.filter((product) => product.variants.some((variant) => variant.stock > 0));
+  }
+  if (filters?.search) {
+    const query = filters.search.toLowerCase();
+    result = result.filter((product) => `${product.name} ${product.tagline}`.toLowerCase().includes(query));
+  }
+
+  switch (filters?.sortBy) {
+    case "price-asc":
+      result.sort((a, b) => a.variants[0].price - b.variants[0].price);
+      break;
+    case "price-desc":
+      result.sort((a, b) => b.variants[0].price - a.variants[0].price);
+      break;
+    case "rating":
+      result.sort((a, b) => b.rating - a.rating);
+      break;
+    case "discount":
+      result.sort((a, b) => (b.variants[0].mrp - b.variants[0].price) - (a.variants[0].mrp - a.variants[0].price));
+      break;
+    default:
+      result.sort((a, b) => Number(b.isBestSeller) - Number(a.isBestSeller));
+  }
+
+  return result;
+}
