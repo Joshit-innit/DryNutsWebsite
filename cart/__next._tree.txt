@@ -1,0 +1,4 @@
+:HL["/DryNutsWebsite/_next/static/media/636a5ac981f94f8b-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/DryNutsWebsite/_next/static/media/a273567b21a7c318-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/DryNutsWebsite/_next/static/css/6c0b294fbc390c6b.css","style"]
+0:{"tree":{"name":"","param":null,"prefetchHints":4176,"slots":{"children":{"name":"(storefront)","param":null,"prefetchHints":4192,"slots":{"children":{"name":"cart","param":null,"prefetchHints":4192,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}}}},"staleTime":300,"buildId":"jn0ohOxX0qCwuukvSNuuo"}
