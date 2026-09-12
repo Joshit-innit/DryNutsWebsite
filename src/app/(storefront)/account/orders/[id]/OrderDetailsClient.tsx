@@ -21,6 +21,10 @@ import {
   Sparkles,
 } from "lucide-react";
 
+export function generateStaticParams() {
+  return SAMPLE_ORDERS.map((order) => ({ id: order.id }));
+}
+
 export default function OrderDetailsPage() {
   const params = useParams();
   const id = params?.id as string;

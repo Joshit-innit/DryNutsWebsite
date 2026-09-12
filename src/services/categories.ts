@@ -1,5 +1,4 @@
 import { Category, CategorySlug } from "@/types";
-import { CATEGORIES } from "@/data/mockData";
 
 const CORE_CATEGORY_SLUGS: CategorySlug[] = [
   "cashews", "pistachios", "almonds", "walnuts", "raisins",
@@ -14,7 +13,7 @@ export const categoryService = {
       const json = await res.json();
       return json.data as Category[];
     } catch {
-      return CATEGORIES;
+      return [];
     }
   },
 

@@ -65,7 +65,7 @@ export default function Navbar() {
             </div>
             <div className="hidden sm:flex flex-col">
               <span className="font-display text-base font-bold tracking-[0.1em] uppercase leading-none text-brand-dark group-hover:text-brand-saffron transition-colors">
-                NutriNation
+                NutHub
               </span>
               <span className="text-[8.5px] font-bold tracking-[0.24em] uppercase text-brand-saffron mt-1">
                 Artisan Dry Fruits

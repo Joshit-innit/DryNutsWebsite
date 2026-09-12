@@ -4,6 +4,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { Product, CartItem, WeightVariant, Coupon, UserSession } from "@/types";
 import { toast } from "sonner";
 import { couponService } from "@/services/coupons";
+import { getProductImage } from "@/lib/product-images";
 
 interface StoreContextType {
   // Cart
@@ -120,7 +121,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
           weight: selectedVariant.weight,
           price: selectedVariant.price,
           mrp: selectedVariant.mrp,
-          image: product.images[0] || "",
+          image: getProductImage(product),
           quantity,
           sku: selectedVariant.sku,
         };

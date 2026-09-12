@@ -64,6 +64,17 @@ function readDB(): DBSchema {
       parsed.coupons = Array.isArray(parsed.coupons) ? parsed.coupons : seed.coupons;
       writeDB(parsed);
     }
+    const seed = getSeedData();
+    const productIds = new Set(parsed.products.map((product) => product.id));
+    const categoryIds = new Set(parsed.categories.map((category) => category.id));
+    const missingSeedProducts = seed.products.filter((product) => !productIds.has(product.id));
+    const missingSeedCategories = seed.categories.filter((category) => !categoryIds.has(category.id));
+
+    if (missingSeedProducts.length || missingSeedCategories.length) {
+      parsed.products = [...parsed.products, ...missingSeedProducts];
+      parsed.categories = [...parsed.categories, ...missingSeedCategories];
+      writeDB(parsed);
+    }
     return parsed;
   } catch {
     const seed = getSeedData();

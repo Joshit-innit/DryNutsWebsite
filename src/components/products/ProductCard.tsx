@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { Product, WeightVariant } from "@/types";
 import { formatPrice, calculateDiscount } from "@/lib/utils";
+import { getProductImage } from "@/lib/product-images";
 import { useStore } from "@/context/StoreContext";
 import { Heart, Eye, ShoppingBag, Star, Check } from "lucide-react";
 
@@ -21,6 +22,8 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
   const currentVariant: WeightVariant = product.variants[selectedVariantIndex] || product.variants[0];
   const discountPercent = calculateDiscount(currentVariant.mrp, currentVariant.price);
   const wishlisted = isInWishlist(product.id);
+  const primaryImage = getProductImage(product);
+  const hoverImage = getProductImage(product, 1);
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -51,10 +54,13 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
       <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl bg-brand-beige">
         <Link href={`/products/${product.slug}`} className="block w-full h-full">
           <img
-            src={isHovered && product.images[1] ? product.images[1] : product.images[0]}
+            src={isHovered ? hoverImage : primaryImage}
             alt={product.name}
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
             loading={priority ? "eager" : "lazy"}
+            onError={(event) => {
+              event.currentTarget.src = primaryImage;
+            }}
           />
         </Link>
 
@@ -101,11 +107,11 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
         </div>
 
         <Link href={`/products/${product.slug}`}>
-          <h3 className="font-serif text-xl font-medium text-brand-dark group-hover:text-brand-green transition-colors line-clamp-2 leading-snug">
+          <h3 className="text-lg sm:text-xl font-bold text-brand-dark group-hover:text-brand-green transition-colors line-clamp-2 leading-snug">
             {product.name}
           </h3>
         </Link>
-        <p className="text-xs text-brand-muted mt-1 line-clamp-1">{product.origin.split(",")[0]}</p>
+        <p className="text-xs text-brand-muted mt-1 line-clamp-2">{product.shortDescription}</p>
 
         {product.variants.length > 1 && (
           <div className="flex flex-wrap gap-1.5 mt-3">

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { toast } from "sonner";
 import { ArrowLeft, Save, Plus, X, Loader2 } from "lucide-react";
+import { getCategoryImages } from "@/lib/product-images";
 
 const CATEGORY_OPTIONS = [
   { slug: "cashews", name: "Cashews" },
@@ -66,6 +67,11 @@ export default function AdminNewProductPage() {
 
   // Images (comma-separated URLs)
   const [imageUrls, setImageUrls] = useState("");
+  const previewImages = imageUrls
+    .split(",")
+    .map((u) => u.trim())
+    .filter(Boolean);
+  const visiblePreviewImages = previewImages.length ? previewImages : getCategoryImages(categorySlug);
 
   const handleVariantChange = (index: number, field: keyof Variant, value: string) => {
     const updated = [...variants];
@@ -322,7 +328,7 @@ export default function AdminNewProductPage() {
             2. Product Images
           </h3>
           <p className="text-xs text-brand-muted">
-            Paste comma-separated direct image URLs (Unsplash, Pexels, or your CDN). Leave blank to use a default category image.
+            Paste comma-separated direct image URLs. Leave blank to use polished category images automatically.
           </p>
           <textarea
             rows={2}
@@ -331,6 +337,20 @@ export default function AdminNewProductPage() {
             placeholder="https://images.unsplash.com/..., https://images.pexels.com/..."
             className="w-full p-3 bg-slate-50 border border-brand-border rounded-xl text-xs focus:outline-none focus:border-brand-green font-mono"
           />
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
+            {visiblePreviewImages.slice(0, 4).map((image, index) => (
+              <div key={`${image}-${index}`} className="aspect-[4/3] rounded-2xl overflow-hidden border border-brand-border bg-brand-cream">
+                <img
+                  src={image}
+                  alt={`Product preview ${index + 1}`}
+                  className="h-full w-full object-cover"
+                  onError={(event) => {
+                    event.currentTarget.src = getCategoryImages(categorySlug)[0];
+                  }}
+                />
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Section 3: Weight Variants & Pricing */}

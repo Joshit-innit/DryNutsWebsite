@@ -5,6 +5,6 @@ export function generateStaticParams() {
   return PRODUCTS.map((product) => ({ slug: product.slug }));
 }
 
-export default function ProductDetailPage() {
+export default function ProductPage() {
   return <ProductDetailClient />;
 }

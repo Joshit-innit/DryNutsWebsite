@@ -8,9 +8,9 @@ import { reviewService } from "@/services/reviews";
 import { Product, WeightVariant, Review } from "@/types";
 import { useStore } from "@/context/StoreContext";
 import { formatPrice, calculateDiscount } from "@/lib/utils";
+import { getProductImage } from "@/lib/product-images";
 import ProductCard from "@/components/products/ProductCard";
 import { toast } from "sonner";
-import { PRODUCTS } from "@/data/mockData";
 import {
   Star,
   ShoppingBag,
@@ -102,6 +102,7 @@ export default function ProductDetailPage() {
   const currentVariant = product.variants[selectedVariantIndex] || product.variants[0];
   const discountPercent = calculateDiscount(currentVariant.mrp, currentVariant.price);
   const wishlisted = isInWishlist(product.id);
+  const activeImage = getProductImage(product, activeImageIndex);
 
   const handleAddToCart = () => {
     addToCart(product, currentVariant, quantity);
@@ -166,9 +167,12 @@ export default function ProductDetailPage() {
         <div className="lg:col-span-6 space-y-4">
           <div className="aspect-square rounded-3xl overflow-hidden bg-white border border-brand-border shadow-card relative group">
             <img
-              src={product.images[activeImageIndex] || product.images[0]}
+              src={activeImage}
               alt={product.name}
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              onError={(event) => {
+                event.currentTarget.src = getProductImage(product);
+              }}
             />
             {discountPercent > 0 && (
               <span className="absolute top-4 left-4 bg-brand-green text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">
@@ -195,7 +199,14 @@ export default function ProductDetailPage() {
                       : "border-brand-border opacity-70 hover:opacity-100"
                   }`}
                 >
-                  <img src={img} alt="" className="w-full h-full object-cover" />
+                  <img
+                    src={img}
+                    alt=""
+                    className="w-full h-full object-cover"
+                    onError={(event) => {
+                      event.currentTarget.src = getProductImage(product);
+                    }}
+                  />
                 </button>
               ))}
             </div>

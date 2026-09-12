@@ -8,7 +8,6 @@ import { productService } from "@/services/products";
 import { Category, Product, CategorySlug } from "@/types";
 import ProductCard from "@/components/products/ProductCard";
 import { ChevronRight, Sparkles, CheckCircle2, ShieldCheck, ArrowUpDown } from "lucide-react";
-import { CATEGORIES } from "@/data/mockData";
 
 export default function CategoryPage() {
   const params = useParams();

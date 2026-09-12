@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { adminService } from "@/services/admin";
 import { Product } from "@/types";
+import { getProductImage } from "@/lib/product-images";
 import { formatPrice } from "@/lib/utils";
 import { toast } from "sonner";
 import {
@@ -161,7 +162,14 @@ export default function AdminProductsPage() {
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-3">
                           <div className="w-12 h-12 rounded-xl bg-brand-cream overflow-hidden border border-brand-border flex-shrink-0">
-                            <img src={p.images[0]} alt={p.name} className="w-full h-full object-cover" />
+                            <img
+                              src={getProductImage(p)}
+                              alt={p.name}
+                              className="w-full h-full object-cover"
+                              onError={(event) => {
+                                event.currentTarget.src = getProductImage(p);
+                              }}
+                            />
                           </div>
                           <div>
                             <span className="font-serif font-bold text-xs text-brand-dark block line-clamp-1">

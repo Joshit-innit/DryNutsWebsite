@@ -64,9 +64,9 @@ const config: Config = {
       },
       letterSpacing: {
         luxury: "0.25em",
-        tightest: "-0.04em",
-        tighter: "-0.025em",
-        tight: "-0.015em",
+        tightest: "0",
+        tighter: "0",
+        tight: "0",
         wide: "0.04em",
         widest: "0.18em",
       },

@@ -12,6 +12,10 @@ import { PRODUCTS } from "@/data/mockData";
 import { Product, CategorySlug } from "@/types";
 import { ArrowLeft, Save, Trash2, CheckCircle2 } from "lucide-react";
 
+export function generateStaticParams() {
+  return PRODUCTS.map((product) => ({ id: product.id }));
+}
+
 const productEditSchema = z.object({
   name: z.string().min(3, "Product name is required"),
   tagline: z.string().min(5, "Tagline is required"),

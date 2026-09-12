@@ -10,6 +10,10 @@ import { toast } from "sonner";
 import { SAMPLE_ORDERS } from "@/data/mockData";
 import { ArrowLeft, CheckCircle2, Truck, Package, MapPin, Printer } from "lucide-react";
 
+export function generateStaticParams() {
+  return SAMPLE_ORDERS.map((order) => ({ id: order.id }));
+}
+
 export default function AdminOrderInspectPage() {
   const params = useParams();
   const id = params?.id as string;

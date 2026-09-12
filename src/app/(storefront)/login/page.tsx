@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { toast } from "sonner";
 import { useStore } from "@/context/StoreContext";
-import { ArrowRight, Lock, Mail, Sparkles } from "lucide-react";
+import { Apple, ArrowRight, Chrome, Lock, Mail, ShieldCheck, Sparkles } from "lucide-react";
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -50,41 +50,72 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center p-4 sm:p-6 lg:p-8">
-      <div className="bg-white rounded-3xl border border-brand-border shadow-card overflow-hidden max-w-4xl w-full grid grid-cols-1 lg:grid-cols-12">
-        {/* Left Editorial Visual */}
-        <div className="lg:col-span-5 relative bg-brand-dark text-white p-8 sm:p-10 flex flex-col justify-between overflow-hidden min-h-[280px] lg:min-h-[500px]">
-          <div className="absolute inset-0 z-0 opacity-40">
+    <div className="min-h-[86vh] bg-[radial-gradient(circle_at_top_left,#FBF6EC,transparent_34%),linear-gradient(180deg,#FFFFFF,#FBFBFA)] px-4 py-8 sm:px-6 lg:px-8">
+      <div className="mx-auto grid w-full max-w-6xl grid-cols-1 overflow-hidden rounded-3xl border border-brand-border bg-white shadow-card lg:grid-cols-12">
+        <div className="relative min-h-[320px] overflow-hidden bg-brand-dark p-7 text-white sm:p-10 lg:col-span-6 lg:min-h-[640px]">
+          <div className="absolute inset-0 z-0">
             <img
-              src="https://images.unsplash.com/photo-1508747703725-719777637510?auto=format&fit=crop&w=800&q=80"
-              alt="King cashews"
+              src="https://images.unsplash.com/photo-1606923829579-0cb981a83e2e?auto=format&fit=crop&w=1400&q=85"
+              alt="Assorted dry fruits in bowls"
               className="w-full h-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/70 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/70 to-brand-dark/20" />
           </div>
 
-          <div className="relative z-10 space-y-2">
-            <p className="eyebrow">Nourish naturally</p>
-            <h3 className="font-serif font-medium text-3xl text-white leading-tight">
-              Everyday wellness in every harvest.
-            </h3>
-          </div>
+          <div className="relative z-10 flex h-full flex-col justify-between">
+            <div className="inline-flex w-fit items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-[11px] font-bold uppercase tracking-widest text-brand-saffron backdrop-blur-md">
+              <Sparkles className="h-3.5 w-3.5" />
+              NutriNation Members
+            </div>
 
-          <div className="relative z-10 text-xs text-white/70">
-            <p>Access your saved harvest wishlist, tracked shipments, and exclusive connoisseur perks.</p>
+            <div className="max-w-md space-y-5">
+              <h2 className="font-serif text-4xl font-semibold leading-tight text-white sm:text-5xl">
+                Your harvest shelf, saved beautifully.
+              </h2>
+              <p className="text-sm leading-relaxed text-white/75 sm:text-base">
+                Sign in to revisit wishlists, repeat clean snack orders, and track premium dry fruit boxes from packing to doorstep.
+              </p>
+              <div className="grid grid-cols-3 gap-3 border-t border-white/15 pt-5 text-xs text-white/70">
+                <span>Wishlist</span>
+                <span>Orders</span>
+                <span>Rewards</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Right Form */}
-        <div className="lg:col-span-7 p-8 sm:p-12 space-y-6">
+        <div className="p-7 sm:p-10 lg:col-span-6 lg:p-14">
           <div>
-            <p className="eyebrow">Member access</p>
-            <h1 className="font-serif font-medium text-3xl sm:text-4xl text-brand-dark mt-1">
+            <p className="eyebrow text-brand-saffron">Member access</p>
+            <h1 className="mt-2 text-3xl font-bold text-brand-dark sm:text-4xl">
               Welcome back
             </h1>
-            <p className="text-xs text-brand-muted mt-1">
-              Sign in to manage your orders and subscription boxes.
+            <p className="mt-2 text-sm leading-relaxed text-brand-muted">
+              Use demo credentials for now, or connect Google/Apple later when authentication is ready.
             </p>
+          </div>
+
+          <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <button
+              type="button"
+              className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-brand-border bg-white text-xs font-bold text-brand-dark shadow-xs hover:border-brand-dark hover:bg-brand-cream"
+            >
+              <Chrome className="h-4 w-4" />
+              Continue with Google
+            </button>
+            <button
+              type="button"
+              className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-brand-dark bg-brand-dark text-xs font-bold text-white shadow-xs hover:bg-brand-green-light"
+            >
+              <Apple className="h-4 w-4" />
+              Continue with Apple
+            </button>
+          </div>
+
+          <div className="my-7 flex items-center gap-3 text-[11px] font-bold uppercase tracking-widest text-brand-muted">
+            <span className="h-px flex-1 bg-brand-border" />
+            or use email
+            <span className="h-px flex-1 bg-brand-border" />
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -96,7 +127,7 @@ export default function LoginPage() {
                   {...register("email")}
                   type="email"
                   placeholder="name@example.com"
-                  className="w-full text-xs pl-10 pr-4 py-3 bg-brand-cream/30 border border-brand-border rounded-xl focus:outline-none focus:border-brand-green"
+                  className="w-full rounded-2xl border border-brand-border bg-brand-cream/40 py-3.5 pl-10 pr-4 text-sm text-brand-dark focus:outline-none focus:border-brand-green"
                 />
               </div>
               {errors.email && <p className="text-xs text-red-500 mt-1">{errors.email.message}</p>}
@@ -115,7 +146,7 @@ export default function LoginPage() {
                   {...register("password")}
                   type="password"
                   placeholder="••••••••"
-                  className="w-full text-xs pl-10 pr-4 py-3 bg-brand-cream/30 border border-brand-border rounded-xl focus:outline-none focus:border-brand-green"
+                  className="w-full rounded-2xl border border-brand-border bg-brand-cream/40 py-3.5 pl-10 pr-4 text-sm text-brand-dark focus:outline-none focus:border-brand-green"
                 />
               </div>
               {errors.password && <p className="text-xs text-red-500 mt-1">{errors.password.message}</p>}
@@ -142,9 +173,18 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <div className="text-center pt-2 border-t border-brand-border text-xs text-brand-muted">
+          <div className="mt-7 rounded-2xl border border-brand-border bg-brand-cream/50 p-4 text-xs text-brand-muted">
+            <div className="flex gap-2">
+              <ShieldCheck className="mt-0.5 h-4 w-4 flex-shrink-0 text-brand-green" />
+              <p>
+                Google and Apple are visual placeholders right now. The email form keeps the current demo sign-in behavior.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-6 text-center text-xs text-brand-muted">
             <span>New to NutriNation? </span>
-            <Link href="/register" className="text-brand-green font-bold hover:underline">
+            <Link href="/register" className="font-bold text-brand-green hover:underline">
               Create an Account
             </Link>
           </div>
