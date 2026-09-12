@@ -60,13 +60,13 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
 
         <div className="absolute top-3 left-3 flex flex-col gap-1.5 z-10 pointer-events-none">
           {product.isBestSeller && (
-            <span className="bg-brand-dark/85 backdrop-blur-sm text-brand-saffron text-[10px] tracking-[0.14em] uppercase px-2.5 py-1 rounded-full">
-              Favorite
+            <span className="bg-brand-dark/90 backdrop-blur-md text-brand-saffron text-[9.5px] font-bold tracking-[0.16em] uppercase px-2.5 py-1 rounded-full shadow-sm border border-brand-saffron/20">
+              Connoisseur Choice
             </span>
           )}
           {discountPercent > 0 && (
-            <span className="bg-white/90 text-brand-green text-[10px] font-medium px-2.5 py-1 rounded-full">
-              {discountPercent}% off
+            <span className="bg-brand-green text-brand-cream text-[9.5px] font-bold tracking-wider uppercase px-2.5 py-1 rounded-full shadow-sm">
+              {discountPercent}% OFF
             </span>
           )}
         </div>
@@ -125,10 +125,10 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
           </div>
         )}
 
-        <div className="mt-auto pt-4 flex items-center justify-between gap-2">
+        <div className="mt-auto pt-4 flex items-center justify-between gap-2 border-t border-brand-border/60">
           <div>
             <div className="flex items-baseline gap-2">
-              <span className="text-lg font-medium">{formatPrice(currentVariant.price)}</span>
+              <span className="text-lg font-bold tracking-tight text-brand-dark font-sans">{formatPrice(currentVariant.price)}</span>
               {currentVariant.mrp > currentVariant.price && (
                 <span className="text-xs text-brand-muted line-through">
                   {formatPrice(currentVariant.mrp)}
@@ -139,7 +139,11 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
           <button
             onClick={handleAddToCart}
             disabled={currentVariant.stock <= 0}
-            className="w-10 h-10 rounded-full bg-brand-green text-[#F7F1E8] flex items-center justify-center hover:bg-brand-green-dark transition-colors"
+            className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 shadow-sm ${
+              isAdded
+                ? "bg-brand-saffron text-brand-dark scale-105"
+                : "bg-brand-green text-brand-cream hover:bg-brand-green-light hover:scale-105 active:scale-95"
+            }`}
             aria-label="Add to bag"
           >
             {isAdded ? <Check className="w-4 h-4" /> : <ShoppingBag className="w-4 h-4" />}

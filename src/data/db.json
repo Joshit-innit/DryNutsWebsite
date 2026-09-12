@@ -1379,5 +1379,202 @@
       "status": "active"
     }
   ],
-  "lastUpdated": "2026-08-23T06:16:47.745Z"
+  "lastUpdated": "2026-09-06T11:28:57.185Z",
+  "orders": [
+    {
+      "id": "ord-8921",
+      "orderNumber": "NN-2026-8921",
+      "date": "2026-08-18",
+      "items": [
+        {
+          "productId": "prod-cashew-1",
+          "variantId": "v-cashew-1-500",
+          "name": "Royal Jumbo Cashews W-180 (King Size)",
+          "slug": "royal-jumbo-cashews-w180",
+          "category": "Cashews",
+          "weight": "500g",
+          "price": 849,
+          "mrp": 1049,
+          "image": "https://images.unsplash.com/photo-1563227812-0ea4c22e6cc8?auto=format&fit=crop&w=600&q=80",
+          "quantity": 2,
+          "sku": "NN-CSH-W180-500"
+        },
+        {
+          "productId": "prod-almond-1",
+          "variantId": "v-almond-1-500",
+          "name": "Kashmiri Organic Mamra Giri Almonds",
+          "slug": "kashmiri-organic-mamra-giri-almonds",
+          "category": "Almonds",
+          "weight": "500g",
+          "price": 1699,
+          "mrp": 2099,
+          "image": "https://images.unsplash.com/photo-1508061253366-f7da158b6d46?auto=format&fit=crop&w=600&q=80",
+          "quantity": 1,
+          "sku": "NN-ALM-MMR-500"
+        }
+      ],
+      "subtotal": 3397,
+      "discount": 340,
+      "deliveryFee": 0,
+      "total": 3057,
+      "status": "Out for Delivery",
+      "paymentMethod": "UPI",
+      "paymentStatus": "Paid",
+      "shippingAddress": {
+        "id": "addr-1",
+        "name": "Chandu Tammana",
+        "phone": "+91 98765 43210",
+        "street": "Flat 402, Silver Oak Residency, 14th Main, Indiranagar",
+        "landmark": "Near 100ft Road Club",
+        "city": "Bengaluru",
+        "state": "Karnataka",
+        "pincode": "560038",
+        "isDefault": true,
+        "type": "home"
+      },
+      "estimatedDelivery": "2026-08-24",
+      "trackingNumber": "BLUEDART-84920194",
+      "timeline": [
+        {
+          "status": "Pending",
+          "label": "Order Placed",
+          "description": "Order received and payment verified via UPI",
+          "timestamp": "18 Aug 2026, 09:30 AM",
+          "isCompleted": true,
+          "isCurrent": false
+        },
+        {
+          "status": "Confirmed",
+          "label": "Confirmed",
+          "description": "Harvest inventory allocated and quality approved",
+          "timestamp": "18 Aug 2026, 10:15 AM",
+          "isCompleted": true,
+          "isCurrent": false
+        },
+        {
+          "status": "Packed",
+          "label": "Packed in Clean Room",
+          "description": "Nitrogen flushed and packed in hermetic tin caskets",
+          "timestamp": "19 Aug 2026, 02:40 PM",
+          "isCompleted": true,
+          "isCurrent": false
+        },
+        {
+          "status": "Shipped",
+          "label": "Shipped via Air Express",
+          "description": "Handed over to BlueDart logistics hub",
+          "timestamp": "20 Aug 2026, 06:10 AM",
+          "isCompleted": true,
+          "isCurrent": false
+        },
+        {
+          "status": "Out for Delivery",
+          "label": "Out for Delivery",
+          "description": "Courier executive is en route to your delivery address",
+          "timestamp": "23 Aug 2026, 08:45 AM",
+          "isCompleted": true,
+          "isCurrent": true
+        },
+        {
+          "status": "Delivered",
+          "label": "Delivered",
+          "description": "Package safely delivered to recipient",
+          "timestamp": "Estimated by 4:00 PM today",
+          "isCompleted": false,
+          "isCurrent": false
+        }
+      ]
+    },
+    {
+      "id": "ord-8874",
+      "orderNumber": "NN-2026-8874",
+      "date": "2026-07-29",
+      "items": [
+        {
+          "productId": "prod-gift-1",
+          "variantId": "v-gift-1-1200",
+          "name": "The Royal Nizam Handcrafted Festive Hamper",
+          "slug": "the-royal-nizam-handcrafted-festive-hamper",
+          "category": "Gift Boxes",
+          "weight": "1.2kg (6 x 200g)",
+          "price": 2999,
+          "mrp": 3999,
+          "image": "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=600&q=80",
+          "quantity": 1,
+          "sku": "NN-GFT-NZM-1200"
+        }
+      ],
+      "subtotal": 2999,
+      "discount": 500,
+      "deliveryFee": 0,
+      "total": 2499,
+      "status": "Delivered",
+      "paymentMethod": "Card",
+      "paymentStatus": "Paid",
+      "shippingAddress": {
+        "id": "addr-1",
+        "name": "Chandu Tammana",
+        "phone": "+91 98765 43210",
+        "street": "Flat 402, Silver Oak Residency, 14th Main, Indiranagar",
+        "landmark": "Near 100ft Road Club",
+        "city": "Bengaluru",
+        "state": "Karnataka",
+        "pincode": "560038",
+        "isDefault": true,
+        "type": "home"
+      },
+      "estimatedDelivery": "2026-08-01",
+      "trackingNumber": "DELHIVERY-99201948",
+      "timeline": [
+        {
+          "status": "Pending",
+          "label": "Order Placed",
+          "description": "Order received",
+          "timestamp": "29 Jul 2026",
+          "isCompleted": true,
+          "isCurrent": false
+        },
+        {
+          "status": "Confirmed",
+          "label": "Confirmed",
+          "description": "Order confirmed",
+          "timestamp": "29 Jul 2026",
+          "isCompleted": true,
+          "isCurrent": false
+        },
+        {
+          "status": "Packed",
+          "label": "Packed",
+          "description": "Gift casket prepared",
+          "timestamp": "30 Jul 2026",
+          "isCompleted": true,
+          "isCurrent": false
+        },
+        {
+          "status": "Shipped",
+          "label": "Shipped",
+          "description": "Dispatched",
+          "timestamp": "30 Jul 2026",
+          "isCompleted": true,
+          "isCurrent": false
+        },
+        {
+          "status": "Out for Delivery",
+          "label": "Out for Delivery",
+          "description": "Out for delivery",
+          "timestamp": "01 Aug 2026",
+          "isCompleted": true,
+          "isCurrent": false
+        },
+        {
+          "status": "Delivered",
+          "label": "Delivered",
+          "description": "Delivered with signature",
+          "timestamp": "01 Aug 2026, 03:20 PM",
+          "isCompleted": true,
+          "isCurrent": true
+        }
+      ]
+    }
+  ]
 }

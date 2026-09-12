@@ -106,15 +106,16 @@ export default function AdminNewProductPage() {
 
     const payload = {
       name,
-      categorySlug,
+      category: categorySlug,           // matches Product.category field
       categoryName: cat?.name || categorySlug,
+      tagline: shortDescription,
       shortDescription,
       description,
       ingredients,
       originCountry,
       originRegion,
+      storageInfo: storageInstructions, // matches Product.storageInfo field
       shelfLife,
-      storageInstructions,
       packagingType,
       isOrganic,
       isBestSeller,
@@ -131,7 +132,7 @@ export default function AdminNewProductPage() {
         stock: Number(v.stock),
         sku: v.sku || `${name.toUpperCase().replace(/\s+/g, "-").slice(0, 8)}-${v.weight.toUpperCase()}`,
       })),
-      nutritionInfo: {
+      nutrition: {                       // matches Product.nutrition field
         servingSize: "30g",
         calories,
         protein,

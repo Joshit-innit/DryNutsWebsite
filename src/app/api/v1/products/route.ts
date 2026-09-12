@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/server/db";
-import { CategorySlug, Product } from "@/types";
+import { Product } from "@/types";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const category = searchParams.get("category") as CategorySlug | null;
+  const category = searchParams.get("category");
   const search = (searchParams.get("search") || "").toLowerCase();
   const minPrice = searchParams.get("minPrice") ? Number(searchParams.get("minPrice")) : undefined;
   const maxPrice = searchParams.get("maxPrice") ? Number(searchParams.get("maxPrice")) : undefined;
@@ -16,10 +16,10 @@ export async function GET(request: NextRequest) {
 
   let products = db.getProducts();
 
-  // Category filter
+  // Category filter — Product type uses `category` field
   if (category && category !== "all") {
     products = products.filter(
-      (p) => p.categorySlug === category || p.categoryName?.toLowerCase() === category
+      (p) => p.category === category || p.categoryName?.toLowerCase() === category.toLowerCase()
     );
   }
 
@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
     products = products.filter(
       (p) =>
         p.name.toLowerCase().includes(search) ||
-        p.description.toLowerCase().includes(search) ||
+        p.description?.toLowerCase().includes(search) ||
         p.categoryName.toLowerCase().includes(search) ||
         p.tags?.some((t) => t.toLowerCase().includes(search))
     );
@@ -73,7 +73,7 @@ export async function GET(request: NextRequest) {
       });
       break;
     case "newest":
-      // Preserve insertion order (newest first from db.createProduct which unshifts)
+      // Newest first (db.createProduct unshifts, so first item is newest)
       break;
     default: // popularity
       products.sort((a, b) => (b.reviewCount || 0) - (a.reviewCount || 0));
@@ -91,14 +91,14 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    if (!body.name || !body.categorySlug) {
+    if (!body.name || !body.category) {
       return NextResponse.json(
-        { status: 422, message: "Validation: Product name and categorySlug are required." },
+        { status: 422, message: "Validation: Product name and category are required." },
         { status: 422 }
       );
     }
 
-    // Generate slug and ID if not provided
+    // Generate slug from name
     const slug =
       body.slug ||
       body.name
@@ -106,18 +106,24 @@ export async function POST(request: NextRequest) {
         .replace(/[^a-z0-9]+/g, "-")
         .replace(/(^-|-$)/g, "");
 
+    // Build a product that matches the Product interface exactly
     const product: Product = {
       id: body.id || `prod-${Date.now()}`,
       slug,
       name: body.name,
-      categoryName: body.categoryName || body.categorySlug,
-      categorySlug: body.categorySlug,
+      category: body.category,
+      categoryName: body.categoryName || body.category,
+      tagline: body.tagline || body.shortDescription || "",
       shortDescription: body.shortDescription || "",
       description: body.description || "",
       ingredients: body.ingredients || "",
-      images: body.images?.length ? body.images : [
-        "https://images.unsplash.com/photo-1563227812-0ea4c22e6cc8?auto=format&fit=crop&w=800&q=80",
-      ],
+      origin: body.originRegion
+        ? `${body.originRegion}, ${body.originCountry || "India"}`
+        : body.originCountry || "India",
+      grade: body.grade,
+      images: body.images?.length
+        ? body.images
+        : ["https://images.unsplash.com/photo-1563227812-0ea4c22e6cc8?auto=format&fit=crop&w=800&q=80"],
       variants: body.variants?.length
         ? body.variants
         : [
@@ -131,24 +137,22 @@ export async function POST(request: NextRequest) {
           ],
       rating: body.rating || 4.5,
       reviewCount: body.reviewCount || 0,
-      isOrganic: body.isOrganic || false,
-      isBestSeller: body.isBestSeller || false,
+      status: body.status || "published",
       isFeatured: body.isFeatured || false,
-      originCountry: body.originCountry || "India",
-      originRegion: body.originRegion || "",
-      tags: body.tags || [body.categorySlug],
+      isBestSeller: body.isBestSeller || false,
+      isNew: true,
+      tags: body.tags || [body.category],
       benefits: body.benefits || [],
-      nutritionInfo: body.nutritionInfo || {
+      storageInfo: body.storageInstructions || body.storageInfo || "Store in a cool, dry place.",
+      nutrition: body.nutrition || body.nutritionInfo || {
         servingSize: "30g",
-        calories: "160 kcal",
-        protein: "5g",
-        healthyFats: "12g",
-        carbs: "9g",
-        fiber: "1g",
+        calories: body.calories || "160 kcal",
+        protein: body.protein || "5g",
+        healthyFats: body.healthyFats || "12g",
+        carbs: body.carbs || "9g",
+        fiber: body.fiber || "1g",
       },
-      shelfLife: body.shelfLife || "12 months",
-      storageInstructions: body.storageInstructions || "Store in a cool, dry place.",
-      packagingType: body.packagingType || "Nitrogen-Flushed Zip-Lock Pouch",
+      faqs: body.faqs || [],
     };
 
     const saved = db.createProduct(product);

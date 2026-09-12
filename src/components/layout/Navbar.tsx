@@ -60,15 +60,15 @@ export default function Navbar() {
           </div>
 
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-9 h-9 rounded-full bg-brand-green flex items-center justify-center">
-              <span className="font-serif italic text-lg text-brand-saffron leading-none">N</span>
+            <div className="w-9 h-9 rounded-full bg-brand-dark flex items-center justify-center transition-transform duration-300 group-hover:scale-105 shadow-sm border border-brand-border">
+              <span className="font-display text-sm font-bold text-brand-saffron tracking-tighter leading-none">N</span>
             </div>
             <div className="hidden sm:flex flex-col">
-              <span className="font-serif text-xl tracking-wide leading-none text-brand-dark">
+              <span className="font-display text-base font-bold tracking-[0.1em] uppercase leading-none text-brand-dark group-hover:text-brand-saffron transition-colors">
                 NutriNation
               </span>
-              <span className="text-[9px] tracking-[0.28em] uppercase text-brand-saffron mt-1">
-                Nourish naturally
+              <span className="text-[8.5px] font-bold tracking-[0.24em] uppercase text-brand-saffron mt-1">
+                Artisan Dry Fruits
               </span>
             </div>
           </Link>

@@ -52,11 +52,11 @@ export default function CartDrawer() {
   return (
     <div className="fixed inset-0 z-50 overflow-hidden bg-black/50 backdrop-blur-xs transition-opacity animate-in fade-in duration-200">
       <div className="absolute inset-y-0 right-0 max-w-full flex pl-10">
-        <div className="w-screen max-w-md bg-[#FBF7F1] shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
-          <div className="p-5 border-b border-brand-border flex items-center justify-between">
+        <div className="w-screen max-w-md bg-brand-cream border-l border-brand-border shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
+          <div className="p-5 border-b border-brand-border flex items-center justify-between bg-white/60">
             <div className="flex items-center gap-2">
               <ShoppingBag className="w-5 h-5 text-brand-green" />
-              <h2 className="font-serif font-medium text-2xl text-brand-dark">
+              <h2 className="font-serif font-bold text-2xl text-brand-dark tracking-tight">
                 Your bag ({cart.reduce((s, i) => s + i.quantity, 0)})
               </h2>
             </div>
@@ -70,24 +70,24 @@ export default function CartDrawer() {
           </div>
 
           {/* Free Shipping Progress Bar */}
-          <div className="px-5 py-3 bg-brand-beige/40 border-b border-brand-border">
+          <div className="px-5 py-3 bg-brand-saffron-soft/60 border-b border-brand-border">
             <div className="flex items-center justify-between text-xs font-semibold mb-1.5">
               <span>
                 {remainingForFreeDelivery === 0 ? (
-                  <span className="text-brand-green flex items-center gap-1">
+                  <span className="text-brand-green font-bold flex items-center gap-1">
                     <Check className="w-3.5 h-3.5" /> FREE Express Delivery Unlocked!
                   </span>
                 ) : (
                   <span>
-                    Add <strong className="text-brand-dark">{formatPrice(remainingForFreeDelivery)}</strong> more for FREE delivery
+                    Add <strong className="text-brand-dark font-bold">{formatPrice(remainingForFreeDelivery)}</strong> more for FREE delivery
                   </span>
                 )}
               </span>
-              <span className="text-brand-muted">{Math.round(progressPercent)}%</span>
+              <span className="text-brand-muted text-[11px] font-mono">{Math.round(progressPercent)}%</span>
             </div>
-            <div className="w-full bg-brand-border h-2 rounded-full overflow-hidden">
+            <div className="w-full bg-brand-border/80 h-1.5 rounded-full overflow-hidden">
               <div
-                className="bg-brand-green h-full rounded-full transition-all duration-500"
+                className="bg-brand-saffron h-full rounded-full transition-all duration-500"
                 style={{ width: `${progressPercent}%` }}
               />
             </div>
@@ -242,7 +242,7 @@ export default function CartDrawer() {
                 <Link
                   href="/checkout"
                   onClick={() => setIsCartOpen(false)}
-                  className="w-full bg-brand-green hover:bg-brand-green-dark text-white font-semibold text-sm py-3.5 rounded-xl shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 group"
+                  className="w-full bg-brand-green hover:bg-brand-green-light text-brand-cream font-bold text-sm py-3.5 rounded-xl shadow-md hover:shadow-hover transition-all flex items-center justify-center gap-2 group"
                 >
                   <span>Proceed to Checkout</span>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -251,7 +251,7 @@ export default function CartDrawer() {
                 <Link
                   href="/cart"
                   onClick={() => setIsCartOpen(false)}
-                  className="w-full bg-white hover:bg-brand-cream text-brand-dark border border-brand-border font-medium text-xs py-2.5 rounded-xl transition-colors block text-center"
+                  className="w-full bg-white hover:bg-brand-beige/50 text-brand-dark border border-brand-border font-semibold text-xs py-2.5 rounded-xl transition-colors block text-center"
                 >
                   View Full Cart & Details
                 </Link>

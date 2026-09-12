@@ -3,78 +3,120 @@
 @tailwind utilities;
 
 :root {
-  --font-sans: "Outfit", system-ui, sans-serif;
-  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-serif: "Cinzel", Georgia, serif;
 
-  --brand-green: #2f4a38;
-  --brand-green-light: #5c7a62;
-  --brand-saffron: #c4a574;
-  --brand-orange: #b86a45;
-  --brand-cream: #f7f1e8;
-  --brand-beige: #ede4d6;
-  --brand-dark: #1a1612;
-  --brand-muted: #6f675d;
-  --brand-border: #e5dcd0;
+  --brand-green: #0C1811;
+  --brand-green-light: #1B3425;
+  --brand-saffron: #C69234;
+  --brand-orange: #B25E2B;
+  --brand-cream: #FBFBFA;
+  --brand-beige: #F5F5F3;
+  --brand-dark: #0A0A0A;
+  --brand-muted: #737373;
+  --brand-border: #EAEAEA;
 }
 
 html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 body {
-  background-color: var(--brand-cream);
-  background-image:
-    radial-gradient(ellipse 80% 50% at 10% -10%, rgba(196, 165, 116, 0.12), transparent),
-    radial-gradient(ellipse 60% 40% at 100% 0%, rgba(47, 74, 56, 0.08), transparent);
-  color: var(--brand-dark);
+  background-color: #FBFBFA;
+  color: #0A0A0A;
   overflow-x: hidden;
   font-family: var(--font-sans);
   font-weight: 400;
-  letter-spacing: 0.01em;
+  line-height: 1.6;
+  letter-spacing: -0.012em;
 }
 
-h1, h2, h3, h4, .font-serif {
+/* Modern Luxury Typography:
+   Headings default to sleek, confident, tight modern sans!
+   Serif is reserved for prestige display branding. */
+h1, h2, h3, h4 {
+  font-family: var(--font-sans);
+  letter-spacing: -0.025em;
+  font-weight: 700;
+  color: #0A0A0A;
+}
+
+.font-serif, .font-display {
   font-family: var(--font-serif);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.01em;
 }
 
+/* Tabular numbers for clean prices and metrics */
+.font-mono, .price-num {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Global Silky-Smooth Transition Physics (Apple / Vercel Spring Curve) */
+a, button, input, select, textarea, .transition-smooth {
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  transition-duration: 280ms;
+}
+
+/* Sleek Minimal 5px Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #ede4d6;
+  background: #FBFBFA;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #c4a574;
-  border-radius: 4px;
+  background: #DCDCDC;
+  border-radius: 9999px;
+  transition: background 0.2s ease;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #2f4a38;
+  background: #0A0A0A;
 }
 
 ::selection {
-  background-color: #2f4a38;
-  color: #f7f1e8;
+  background-color: #0C1811;
+  color: #FBF6EC;
 }
 
+/* Glass Panels: Pure, Frosted, High-End Clarity */
 .glass-panel {
-  background: rgba(251, 247, 241, 0.78);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  border: 1px solid rgba(229, 220, 208, 0.8);
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(234, 234, 234, 0.95);
 }
 
 .glass-dark {
-  background: rgba(26, 22, 18, 0.82);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(196, 165, 116, 0.18);
+  background: rgba(10, 10, 10, 0.94);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Luxury Card Smooth Hover Physics */
+.card-hover {
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.3s ease;
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+/* Image Smooth Zoom */
+.img-smooth {
+  transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.group:hover .img-smooth {
+  transform: scale(1.05);
 }
 
 .line-clamp-1 {
@@ -98,19 +140,6 @@ h1, h2, h3, h4, .font-serif {
   overflow: hidden;
 }
 
-@keyframes floatSlow {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-.animate-float-slow {
-  animation: floatSlow 7s ease-in-out infinite;
-}
-
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
@@ -119,65 +148,81 @@ h1, h2, h3, h4, .font-serif {
   scrollbar-width: none;
 }
 
+/* Luxury Tag / Eyebrow */
 .eyebrow {
   font-family: var(--font-sans);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.28em;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: #c4a574;
 }
 
+/* Modern Luxury Buttons with Buttery Spring States */
 .btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  background: #2f4a38;
-  color: #fbf7f1;
+  gap: 0.625rem;
+  background: #0A0A0A;
+  color: #FFFFFF;
   font-size: 0.8125rem;
-  font-weight: 500;
-  letter-spacing: 0.12em;
+  font-weight: 600;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  padding: 1rem 1.75rem;
-  border-radius: 999px;
-  transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  padding: 0.9375rem 2rem;
+  border-radius: 9999px;
+  border: 1px solid #0A0A0A;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
 }
 
 .btn-primary:hover {
-  background: #1f3327;
-  box-shadow: 0 16px 40px rgba(47, 74, 56, 0.22);
-  transform: translateY(-1px);
+  background: #1A1A1A;
+  border-color: #1A1A1A;
+  box-shadow: 0 12px 28px -6px rgba(0, 0, 0, 0.25);
+  transform: translateY(-2px);
+}
+
+.btn-primary:active {
+  transform: scale(0.98) translateY(0);
 }
 
 .btn-ghost {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
+  gap: 0.625rem;
   background: transparent;
   color: inherit;
   border: 1px solid currentColor;
   font-size: 0.8125rem;
-  font-weight: 500;
-  letter-spacing: 0.12em;
+  font-weight: 600;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  padding: 1rem 1.75rem;
-  border-radius: 999px;
-  transition: background 0.3s ease, color 0.3s ease;
+  padding: 0.9375rem 2rem;
+  border-radius: 9999px;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .btn-ghost:hover {
   background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-2px);
 }
 
+.btn-ghost:active {
+  transform: scale(0.98);
+}
+
+/* Input Fields */
 input, select, textarea {
   font-family: var(--font-sans);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 input:focus, select:focus, textarea:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(196, 165, 116, 0.28);
+  box-shadow: 0 0 0 2px #0A0A0A;
+  border-color: #0A0A0A !important;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -62,10 +62,10 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 py-14 border-b border-white/10">
           <div className="lg:col-span-2 space-y-5">
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-full bg-brand-green-light/20 flex items-center justify-center">
-                <span className="font-serif italic text-lg text-brand-saffron">N</span>
+              <div className="w-9 h-9 rounded-full bg-white/10 border border-white/10 flex items-center justify-center">
+                <span className="font-display text-sm font-bold text-brand-saffron">N</span>
               </div>
-              <span className="font-serif text-2xl">NutriNation</span>
+              <span className="font-display text-lg font-bold tracking-[0.1em] uppercase text-white">NutriNation</span>
             </div>
             <p className="text-sm text-white/55 leading-relaxed max-w-sm font-light">
               Dry fruit from the highest orchards of Kashmir, Mangalore, Jordan, and Malatya — packed

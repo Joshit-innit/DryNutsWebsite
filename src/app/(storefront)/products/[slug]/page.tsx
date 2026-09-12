@@ -284,7 +284,7 @@ export default function ProductDetailPage() {
                 <span className="w-10 text-center text-sm font-bold">{quantity}</span>
                 <button
                   onClick={() => setQuantity((q) => q + 1)}
-                  className="w-10 h-12 flex items-center justify-center text-brand-dark hover:bg-brand-cream font-bold"
+                  className="w-10 h-12 flex items-center justify-center text-brand-dark hover:bg-brand-beige font-bold"
                 >
                   +
                 </button>
@@ -293,8 +293,8 @@ export default function ProductDetailPage() {
               <button
                 onClick={handleAddToCart}
                 disabled={currentVariant.stock <= 0}
-              className={`flex-1 py-3.5 px-6 rounded-full font-medium text-sm text-white shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 ${
-                  isAdded ? "bg-brand-green-dark" : "bg-brand-green hover:bg-brand-green-dark"
+                className={`flex-1 py-3.5 px-6 rounded-full font-bold text-sm text-brand-cream shadow-md hover:shadow-hover transition-all flex items-center justify-center gap-2 ${
+                  isAdded ? "bg-brand-saffron text-brand-dark" : "bg-brand-green hover:bg-brand-green-light"
                 }`}
               >
                 {isAdded ? (
@@ -312,10 +312,10 @@ export default function ProductDetailPage() {
 
               <button
                 onClick={() => toggleWishlist(product)}
-                className={`w-12 h-12 rounded-xl border flex items-center justify-center transition-colors ${
+                className={`w-12 h-12 rounded-full border flex items-center justify-center transition-colors ${
                   wishlisted
                     ? "bg-red-50 border-red-200 text-red-500"
-                    : "border-brand-border bg-white text-brand-dark hover:bg-brand-cream"
+                    : "border-brand-border bg-white text-brand-dark hover:bg-brand-beige"
                 }`}
                 aria-label="Wishlist"
               >
@@ -325,9 +325,9 @@ export default function ProductDetailPage() {
 
             <button
               onClick={handleBuyNow}
-              className="w-full py-3.5 bg-brand-orange hover:bg-brand-orange-dark text-white font-bold text-sm rounded-xl shadow-sm transition-colors"
+              className="w-full py-3.5 bg-brand-saffron hover:bg-brand-saffron-light text-brand-dark font-bold text-sm rounded-full shadow-sm hover:shadow-md transition-all"
             >
-              Instant Buy Now
+              Instant Express Checkout
             </button>
           </div>
 

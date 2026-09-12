@@ -1,14 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-
-// ---------------------------------------------------------------------------
-// Admin credentials — single authoritative source
-// ---------------------------------------------------------------------------
-const ADMIN_USERNAME = "JoshitAdmin";
-const ADMIN_PASSWORD = "Joshit@123";
-
-// Simple signed token (in production use JWT with a secret)
-export const ADMIN_TOKEN = "nutrination_admin_session_joshit_2026";
-export const ADMIN_TOKEN_COOKIE = "nn_admin_token";
+import {
+  ADMIN_USERNAME,
+  ADMIN_PASSWORD,
+  ADMIN_TOKEN,
+  ADMIN_TOKEN_COOKIE,
+} from "@/lib/auth-constants";
 
 export async function POST(request: NextRequest) {
   try {
