@@ -1,4 +1,5 @@
 import { Category, CategorySlug } from "@/types";
+import { backendApi, unwrapData } from "@/lib/api/axios";
 
 const CORE_CATEGORY_SLUGS: CategorySlug[] = [
   "cashews", "pistachios", "almonds", "walnuts", "raisins",
@@ -8,10 +9,8 @@ const CORE_CATEGORY_SLUGS: CategorySlug[] = [
 export const categoryService = {
   async getAllCategories(): Promise<Category[]> {
     try {
-      const res = await fetch("/api/v1/categories", { cache: "no-store" });
-      if (!res.ok) throw new Error("Failed");
-      const json = await res.json();
-      return json.data as Category[];
+      const res = await backendApi.get("/categories");
+      return unwrapData<Category[]>(res);
     } catch {
       return [];
     }

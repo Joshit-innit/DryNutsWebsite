@@ -1,163 +1,144 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { db } from "@/lib/server/db";
+import { normalizeProductImages } from "@/lib/product-images";
+import { slugify } from "@/lib/utils";
 import { CategorySlug, Product } from "@/types";
 
 export const dynamic = "force-dynamic";
 
-export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-  const category = searchParams.get("category") as CategorySlug | null;
-  const search = (searchParams.get("search") || "").toLowerCase();
-  const minPrice = searchParams.get("minPrice") ? Number(searchParams.get("minPrice")) : undefined;
-  const maxPrice = searchParams.get("maxPrice") ? Number(searchParams.get("maxPrice")) : undefined;
-  const rating = searchParams.get("rating") ? Number(searchParams.get("rating")) : undefined;
-  const inStockOnly = searchParams.get("inStockOnly") === "true";
-  const sortBy = searchParams.get("sortBy") || "popularity";
+const CATEGORY_NAMES: Record<CategorySlug, string> = {
+  cashews: "Cashews",
+  pistachios: "Pistachios",
+  almonds: "Almonds",
+  walnuts: "Walnuts",
+  raisins: "Raisins",
+  dates: "Dates",
+  "dried-apricots": "Dried Apricots",
+  "dry-figs": "Dry Figs",
+  prunes: "Prunes",
+  combos: "Curated Combos",
+  "gift-boxes": "Gift & Festival Boxes",
+};
 
-  let products = db.getProducts();
+function byLowestPrice(product: Product) {
+  return Math.min(...product.variants.map((variant) => variant.price));
+}
 
-  // Category filter
-  if (category && category !== "all") {
-    products = products.filter(
-      (p) => p.categorySlug === category || p.categoryName?.toLowerCase() === category
+function applyFilters(products: Product[], request: NextRequest) {
+  const params = request.nextUrl.searchParams;
+  const category = params.get("category");
+  const maxPrice = Number(params.get("maxPrice") || 0);
+  const minPrice = Number(params.get("minPrice") || 0);
+  const rating = Number(params.get("rating") || 0);
+  const inStockOnly = params.get("inStockOnly") === "true";
+  const search = (params.get("search") || "").trim().toLowerCase();
+  const sortBy = params.get("sortBy") || "popularity";
+
+  const filtered = products.filter((product) => {
+    const price = byLowestPrice(product);
+    const stock = product.variants.reduce((sum, variant) => sum + variant.stock, 0);
+    const haystack = [
+      product.name,
+      product.categoryName,
+      product.shortDescription,
+      product.description,
+      product.origin,
+      product.tags.join(" "),
+    ]
+      .join(" ")
+      .toLowerCase();
+
+    return (
+      product.status !== "archived" &&
+      (!category || category === "all" || product.category === category) &&
+      (!minPrice || price >= minPrice) &&
+      (!maxPrice || price <= maxPrice) &&
+      (!rating || product.rating >= rating) &&
+      (!inStockOnly || stock > 0) &&
+      (!search || haystack.includes(search))
     );
-  }
-
-  // Search filter
-  if (search) {
-    products = products.filter(
-      (p) =>
-        p.name.toLowerCase().includes(search) ||
-        p.description.toLowerCase().includes(search) ||
-        p.categoryName.toLowerCase().includes(search) ||
-        p.tags?.some((t) => t.toLowerCase().includes(search))
-    );
-  }
-
-  // Price filter (based on lowest variant price)
-  if (minPrice !== undefined || maxPrice !== undefined) {
-    products = products.filter((p) => {
-      const minVariantPrice = Math.min(...p.variants.map((v) => v.price));
-      if (minPrice !== undefined && minVariantPrice < minPrice) return false;
-      if (maxPrice !== undefined && minVariantPrice > maxPrice) return false;
-      return true;
-    });
-  }
-
-  // Rating filter
-  if (rating !== undefined) {
-    products = products.filter((p) => (p.rating || 0) >= rating);
-  }
-
-  // Stock filter
-  if (inStockOnly) {
-    products = products.filter((p) => p.variants.some((v) => v.stock > 0));
-  }
-
-  // Sorting
-  switch (sortBy) {
-    case "price-asc":
-      products.sort((a, b) => Math.min(...a.variants.map((v) => v.price)) - Math.min(...b.variants.map((v) => v.price)));
-      break;
-    case "price-desc":
-      products.sort((a, b) => Math.min(...b.variants.map((v) => v.price)) - Math.min(...a.variants.map((v) => v.price)));
-      break;
-    case "rating":
-      products.sort((a, b) => (b.rating || 0) - (a.rating || 0));
-      break;
-    case "discount":
-      products.sort((a, b) => {
-        const discA = a.variants[0]?.mrp ? ((a.variants[0].mrp - a.variants[0].price) / a.variants[0].mrp) * 100 : 0;
-        const discB = b.variants[0]?.mrp ? ((b.variants[0].mrp - b.variants[0].price) / b.variants[0].mrp) * 100 : 0;
-        return discB - discA;
-      });
-      break;
-    case "newest":
-      // Preserve insertion order (newest first from db.createProduct which unshifts)
-      break;
-    default: // popularity
-      products.sort((a, b) => (b.reviewCount || 0) - (a.reviewCount || 0));
-  }
-
-  return NextResponse.json({
-    status: 200,
-    count: products.length,
-    data: products,
-    timestamp: new Date().toISOString(),
   });
+
+  return filtered.sort((a, b) => {
+    if (sortBy === "price-asc") return byLowestPrice(a) - byLowestPrice(b);
+    if (sortBy === "price-desc") return byLowestPrice(b) - byLowestPrice(a);
+    if (sortBy === "rating") return b.rating - a.rating;
+    if (sortBy === "discount") {
+      const discount = (p: Product) => Math.max(...p.variants.map((v) => v.mrp - v.price));
+      return discount(b) - discount(a);
+    }
+    if (sortBy === "newest") return Number(b.isNew) - Number(a.isNew);
+    return Number(b.isBestSeller) - Number(a.isBestSeller) || b.reviewCount - a.reviewCount;
+  });
+}
+
+export async function GET(request: NextRequest) {
+  const products = db.getProducts().map(normalizeProductImages);
+  return Response.json({ data: applyFilters(products, request) });
 }
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
+    const name = String(body.name || "").trim();
+    const category = String(body.category || "cashews") as CategorySlug;
 
-    if (!body.name || !body.categorySlug) {
-      return NextResponse.json(
-        { status: 422, message: "Validation: Product name and categorySlug are required." },
-        { status: 422 }
-      );
+    if (!name) {
+      return Response.json({ message: "Product name is required." }, { status: 400 });
     }
 
-    // Generate slug and ID if not provided
-    const slug =
-      body.slug ||
-      body.name
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/(^-|-$)/g, "");
+    if (!body.variants?.length) {
+      return Response.json({ message: "Add at least one product variant." }, { status: 400 });
+    }
 
-    const product: Product = {
-      id: body.id || `prod-${Date.now()}`,
+    const slug = slugify(body.slug || name);
+    const origin = [body.originRegion, body.originCountry].filter(Boolean).join(", ") || "India";
+
+    const product: Product = normalizeProductImages({
+      id: `prod-${Date.now()}`,
+      name,
       slug,
-      name: body.name,
-      categoryName: body.categoryName || body.categorySlug,
-      categorySlug: body.categorySlug,
-      shortDescription: body.shortDescription || "",
-      description: body.description || "",
-      ingredients: body.ingredients || "",
-      images: body.images?.length ? body.images : [
-        "https://images.unsplash.com/photo-1563227812-0ea4c22e6cc8?auto=format&fit=crop&w=800&q=80",
-      ],
-      variants: body.variants?.length
-        ? body.variants
-        : [
-            {
-              weight: "500g",
-              price: Number(body.price) || 599,
-              mrp: Number(body.mrp) || Number(body.price) || 599,
-              stock: Number(body.stock) || 50,
-              sku: `${slug.toUpperCase().slice(0, 8)}-500G`,
-            },
-          ],
-      rating: body.rating || 4.5,
-      reviewCount: body.reviewCount || 0,
-      isOrganic: body.isOrganic || false,
-      isBestSeller: body.isBestSeller || false,
-      isFeatured: body.isFeatured || false,
-      originCountry: body.originCountry || "India",
-      originRegion: body.originRegion || "",
-      tags: body.tags || [body.categorySlug],
-      benefits: body.benefits || [],
-      nutritionInfo: body.nutritionInfo || {
-        servingSize: "30g",
-        calories: "160 kcal",
-        protein: "5g",
-        healthyFats: "12g",
-        carbs: "9g",
-        fiber: "1g",
+      category,
+      categoryName: body.categoryName || CATEGORY_NAMES[category] || "Dry Fruits",
+      tagline: body.tagline || body.shortDescription || name,
+      shortDescription: body.shortDescription || body.tagline || "Premium dry fruit harvest, packed fresh.",
+      description: body.description || body.shortDescription || "Premium dry fruit harvest, packed fresh.",
+      origin,
+      grade: body.grade || "Premium Reserve",
+      images: Array.isArray(body.images) ? body.images : [],
+      variants: body.variants.map((variant: any, index: number) => ({
+        id: variant.id || `${slug}-${variant.weight || index}`,
+        weight: String(variant.weight || "250g"),
+        price: Number(variant.price || 0),
+        mrp: Number(variant.mrp || variant.price || 0),
+        stock: Number(variant.stock || 0),
+        sku: String(variant.sku || `${slug}-${index + 1}`).toUpperCase(),
+      })),
+      rating: Number(body.rating || 4.6),
+      reviewCount: Number(body.reviewCount || 0),
+      status: body.status || "published",
+      isFeatured: Boolean(body.isFeatured),
+      isBestSeller: Boolean(body.isBestSeller),
+      isNew: body.isNew ?? true,
+      tags: Array.isArray(body.tags) ? body.tags : [category],
+      benefits: Array.isArray(body.benefits) && body.benefits.length
+        ? body.benefits
+        : ["Naturally nutrient dense", "Packed fresh for daily snacking", "No artificial colors or preservatives"],
+      storageInfo: body.storageInfo || "Store in a cool, dry place in an airtight container after opening.",
+      nutrition: {
+        servingSize: body.nutrition?.servingSize || "30g",
+        calories: body.nutrition?.calories || "160 kcal",
+        protein: body.nutrition?.protein || "5g",
+        healthyFats: body.nutrition?.healthyFats || "12g",
+        carbs: body.nutrition?.carbs || "9g",
+        fiber: body.nutrition?.fiber || "2g",
       },
-      shelfLife: body.shelfLife || "12 months",
-      storageInstructions: body.storageInstructions || "Store in a cool, dry place.",
-      packagingType: body.packagingType || "Nitrogen-Flushed Zip-Lock Pouch",
-    };
+      ingredients: body.ingredients || `100% ${name}.`,
+      faqs: body.faqs || [],
+    });
 
-    const saved = db.createProduct(product);
-
-    return NextResponse.json(
-      { status: 201, message: "Product created and live on storefront.", data: saved },
-      { status: 201 }
-    );
-  } catch (err: any) {
-    return NextResponse.json({ status: 500, message: err.message }, { status: 500 });
+    return Response.json({ data: db.createProduct(product) }, { status: 201 });
+  } catch {
+    return Response.json({ message: "Could not create product." }, { status: 500 });
   }
 }

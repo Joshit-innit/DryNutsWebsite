@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { adminService } from "@/services/admin";
 import { Product } from "@/types";
+import { getProductImage } from "@/lib/product-images";
 import { formatPrice } from "@/lib/utils";
 import { toast } from "sonner";
 import {
@@ -26,7 +27,17 @@ export default function AdminProductsPage() {
 
   useEffect(() => {
     async function load() {
-      const data = await adminService.getAdminProducts();
+      // Fetch live from API (includes any products added via Admin form)
+      let data: Product[] = [];
+      try {
+        const res = await fetch("/api/v1/products", { cache: "no-store" });
+        if (res.ok) {
+          const json = await res.json();
+          data = json.data;
+        }
+      } catch {
+        data = await adminService.getAdminProducts();
+      }
       setProducts(data);
       setLoading(false);
     }
@@ -35,7 +46,11 @@ export default function AdminProductsPage() {
 
   const handleDelete = async (id: string, name: string) => {
     if (confirm(`Are you sure you want to remove "${name}" from the active catalog?`)) {
-      await adminService.deleteProduct(id);
+      try {
+        await fetch(`/api/v1/products/${id}`, { method: "DELETE" });
+      } catch {
+        await adminService.deleteProduct(id);
+      }
       setProducts(products.filter((p) => p.id !== id));
       toast.success(`Product "${name}" deleted`);
     }
@@ -45,7 +60,7 @@ export default function AdminProductsPage() {
     const matchesSearch =
       p.name.toLowerCase().includes(search.toLowerCase()) ||
       p.categoryName.toLowerCase().includes(search.toLowerCase());
-    const matchesCat = categoryFilter === "ALL" || p.category === categoryFilter;
+    const matchesCat = categoryFilter === "ALL" || p.category === categoryFilter || p.categoryName === categoryFilter;
     return matchesSearch && matchesCat;
   });
 
@@ -147,7 +162,14 @@ export default function AdminProductsPage() {
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-3">
                           <div className="w-12 h-12 rounded-xl bg-brand-cream overflow-hidden border border-brand-border flex-shrink-0">
-                            <img src={p.images[0]} alt={p.name} className="w-full h-full object-cover" />
+                            <img
+                              src={getProductImage(p)}
+                              alt={p.name}
+                              className="w-full h-full object-cover"
+                              onError={(event) => {
+                                event.currentTarget.src = getProductImage(p);
+                              }}
+                            />
                           </div>
                           <div>
                             <span className="font-serif font-bold text-xs text-brand-dark block line-clamp-1">

@@ -34,12 +34,12 @@ interface DBSchema {
 function getSeedData(): DBSchema {
   // We do a dynamic require here so this only runs server-side
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const { PRODUCTS, CATEGORIES, MOCK_ORDERS, COUPONS } = require("@/data/mockData");
+  const { PRODUCTS, CATEGORIES, SAMPLE_ORDERS, COUPONS } = require("@/data/mockData");
   return {
-    products: PRODUCTS,
-    categories: CATEGORIES,
-    orders: MOCK_ORDERS,
-    coupons: COUPONS,
+    products: PRODUCTS || [],
+    categories: CATEGORIES || [],
+    orders: SAMPLE_ORDERS || [],
+    coupons: COUPONS || [],
     lastUpdated: new Date().toISOString(),
   };
 }
@@ -55,7 +55,27 @@ function readDB(): DBSchema {
       return seed;
     }
     const raw = fs.readFileSync(DB_FILE, "utf-8");
-    return JSON.parse(raw) as DBSchema;
+    const parsed = JSON.parse(raw) as DBSchema;
+    if (!Array.isArray(parsed.orders) || !Array.isArray(parsed.products) || !Array.isArray(parsed.categories)) {
+      const seed = getSeedData();
+      parsed.orders = Array.isArray(parsed.orders) ? parsed.orders : seed.orders;
+      parsed.products = Array.isArray(parsed.products) ? parsed.products : seed.products;
+      parsed.categories = Array.isArray(parsed.categories) ? parsed.categories : seed.categories;
+      parsed.coupons = Array.isArray(parsed.coupons) ? parsed.coupons : seed.coupons;
+      writeDB(parsed);
+    }
+    const seed = getSeedData();
+    const productIds = new Set(parsed.products.map((product) => product.id));
+    const categoryIds = new Set(parsed.categories.map((category) => category.id));
+    const missingSeedProducts = seed.products.filter((product) => !productIds.has(product.id));
+    const missingSeedCategories = seed.categories.filter((category) => !categoryIds.has(category.id));
+
+    if (missingSeedProducts.length || missingSeedCategories.length) {
+      parsed.products = [...parsed.products, ...missingSeedProducts];
+      parsed.categories = [...parsed.categories, ...missingSeedCategories];
+      writeDB(parsed);
+    }
+    return parsed;
   } catch {
     const seed = getSeedData();
     writeDB(seed);
