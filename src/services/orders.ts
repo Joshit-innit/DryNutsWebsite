@@ -1,18 +1,27 @@
 import { SAMPLE_ORDERS } from "@/data/mockData";
 import { Order, OrderStatus, CartItem, Address } from "@/types";
+import { backendApi, unwrapData } from "@/lib/api/axios";
 
 let currentOrders = [...SAMPLE_ORDERS];
 
 export const orderService = {
   async getOrders(): Promise<Order[]> {
-    await new Promise((res) => setTimeout(res, 30));
-    return [...currentOrders];
+    try {
+      const res = await backendApi.get("/orders");
+      return unwrapData<Order[]>(res);
+    } catch {
+      return [...currentOrders];
+    }
   },
 
   async getOrderById(id: string): Promise<Order | null> {
-    await new Promise((res) => setTimeout(res, 30));
-    const order = currentOrders.find((o) => o.id === id || o.orderNumber === id);
-    return order || null;
+    try {
+      const res = await backendApi.get(`/orders/${id}`);
+      return unwrapData<Order>(res);
+    } catch {
+      const order = currentOrders.find((o) => o.id === id || o.orderNumber === id);
+      return order || null;
+    }
   },
 
   async createOrder(data: {
@@ -24,7 +33,12 @@ export const orderService = {
     paymentMethod: "UPI" | "Card" | "NetBanking" | "COD";
     shippingAddress: Address;
   }): Promise<Order> {
-    await new Promise((res) => setTimeout(res, 60));
+    try {
+      const res = await backendApi.post("/orders", data);
+      return unwrapData<Order>(res);
+    } catch {
+      await new Promise((res) => setTimeout(res, 60));
+    }
     const orderNum = `NN-2026-${Math.floor(1000 + Math.random() * 9000)}`;
     const newOrder: Order = {
       id: `ord-${Date.now()}`,
@@ -56,12 +70,17 @@ export const orderService = {
   },
 
   async updateOrderStatus(orderId: string, status: OrderStatus): Promise<Order | null> {
-    await new Promise((res) => setTimeout(res, 40));
-    const index = currentOrders.findIndex((o) => o.id === orderId);
-    if (index === -1) return null;
+    try {
+      const res = await backendApi.patch(`/orders/${orderId}/status`, { status });
+      return unwrapData<Order>(res);
+    } catch {
+      await new Promise((res) => setTimeout(res, 40));
+      const index = currentOrders.findIndex((o) => o.id === orderId);
+      if (index === -1) return null;
 
-    const order = { ...currentOrders[index], status };
-    currentOrders[index] = order;
-    return order;
+      const order = { ...currentOrders[index], status };
+      currentOrders[index] = order;
+      return order;
+    }
   },
 };

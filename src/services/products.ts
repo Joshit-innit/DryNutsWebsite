@@ -1,4 +1,5 @@
 import { Product, CategorySlug } from "@/types";
+import { backendApi, unwrapData } from "@/lib/api/axios";
 
 export interface ProductFilterOptions {
   category?: CategorySlug | "all";
@@ -11,33 +12,21 @@ export interface ProductFilterOptions {
   sortBy?: "popularity" | "newest" | "price-asc" | "price-desc" | "rating" | "discount";
 }
 
-/**
- * productService — all methods fetch from the REST API at /api/v1/products.
- * This means ANY product added via the Admin Portal instantly appears in the
- * customer storefront without hardcoding or redeploying.
- */
 export const productService = {
   async getAllProducts(filters?: ProductFilterOptions): Promise<Product[]> {
     const params = new URLSearchParams();
-    if (filters?.category && filters.category !== "all") {
-      params.set("category", filters.category);
-    }
+    if (filters?.category && filters.category !== "all") params.set("category", filters.category);
     if (filters?.minPrice !== undefined) params.set("minPrice", String(filters.minPrice));
     if (filters?.maxPrice !== undefined) params.set("maxPrice", String(filters.maxPrice));
-    if (filters?.rating !== undefined && filters.rating > 0) {
-      params.set("rating", String(filters.rating));
-    }
+    if (filters?.rating !== undefined && filters.rating > 0) params.set("rating", String(filters.rating));
     if (filters?.inStockOnly) params.set("inStockOnly", "true");
     if (filters?.search) params.set("search", filters.search);
     if (filters?.sortBy) params.set("sortBy", filters.sortBy);
 
     try {
-      const res = await fetch(`/api/v1/products?${params.toString()}`, {
-        cache: "no-store",
-      });
-      if (!res.ok) throw new Error("Failed to fetch products");
-      const json = await res.json();
-      return json.data as Product[];
+      const query = params.toString();
+      const res = await backendApi.get(query ? `/products?${query}` : "/products");
+      return unwrapData<Product[]>(res);
     } catch {
       return [];
     }
@@ -45,10 +34,8 @@ export const productService = {
 
   async getProductBySlug(slug: string): Promise<Product | null> {
     try {
-      const res = await fetch(`/api/v1/products/${slug}`, { cache: "no-store" });
-      if (!res.ok) return null;
-      const json = await res.json();
-      return json.data as Product;
+      const res = await backendApi.get(`/products/${slug}`);
+      return unwrapData<Product>(res);
     } catch {
       return null;
     }
