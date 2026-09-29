@@ -89,11 +89,11 @@ export default function ProductQuickView() {
                 </div>
               </div>
 
-              <h2 className="font-serif font-bold text-xl sm:text-2xl text-brand-dark mb-2">
+              <h2 className="font-marcellus font-normal text-2xl sm:text-3xl text-brand-dark mb-2.5 leading-tight tracking-[0.015em]">
                 {quickViewProduct.name}
               </h2>
 
-              <p className="text-xs text-brand-muted mb-4 leading-relaxed line-clamp-3">
+              <p className="font-marcellus text-sm text-brand-muted/95 mb-5 leading-relaxed tracking-[0.01em] line-clamp-3">
                 {quickViewProduct.shortDescription}
               </p>
 

@@ -54,7 +54,7 @@ function AdminLoginForm() {
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-brand-green/20 border border-brand-green/40 mb-4">
             <Leaf className="w-8 h-8 text-brand-green" />
           </div>
-          <h1 className="font-serif font-black text-2xl text-white tracking-tight">
+          <h1 className="font-casanova text-3xl sm:text-4xl text-white tracking-[0.03em] font-normal">
             NutriNation
           </h1>
           <p className="text-xs text-white/50 mt-1 uppercase tracking-widest font-mono">

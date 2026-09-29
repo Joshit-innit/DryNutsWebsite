@@ -59,16 +59,16 @@ export default function Navbar() {
             </button>
           </div>
 
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-9 h-9 rounded-full bg-brand-dark flex items-center justify-center transition-transform duration-300 group-hover:scale-105 shadow-sm border border-brand-border">
-              <span className="font-display text-sm font-bold text-brand-saffron tracking-tighter leading-none">N</span>
+          <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group">
+            <div className="w-10 h-10 rounded-full bg-brand-green border border-brand-saffron/30 flex items-center justify-center shadow-xs group-hover:border-brand-saffron transition-all">
+              <span className="font-casanova text-xl text-brand-saffron leading-none pt-0.5">N</span>
             </div>
-            <div className="hidden sm:flex flex-col">
-              <span className="font-display text-base font-bold tracking-[0.1em] uppercase leading-none text-brand-dark group-hover:text-brand-saffron transition-colors">
-                NutHub
+            <div className="flex flex-col">
+              <span className="font-casanova text-[1.35rem] sm:text-[1.5rem] tracking-[0.035em] leading-none text-brand-dark group-hover:text-brand-green transition-colors font-normal">
+                NutriNation
               </span>
-              <span className="text-[8.5px] font-bold tracking-[0.24em] uppercase text-brand-saffron mt-1">
-                Artisan Dry Fruits
+              <span className="text-[8.5px] sm:text-[9px] tracking-[0.28em] uppercase text-brand-saffron mt-1 font-sans font-medium">
+                Nourish naturally
               </span>
             </div>
           </Link>
@@ -182,8 +182,16 @@ export default function Navbar() {
       </div>
 
       {isMobileMenuOpen && (
-        <div className="lg:hidden border-t border-brand-border bg-[#FBF7F1] p-6 space-y-4">
-          <Link href="/products" onClick={() => setIsMobileMenuOpen(false)} className="block font-serif text-2xl">
+        <div className="lg:hidden border-t border-brand-border bg-[#FBF7F1] p-6 space-y-5">
+          <div className="flex items-center gap-2.5 pb-4 border-b border-brand-border/70">
+            <div className="w-8 h-8 rounded-full bg-brand-green border border-brand-saffron/30 flex items-center justify-center">
+              <span className="font-casanova text-base text-brand-saffron leading-none pt-0.5">N</span>
+            </div>
+            <span className="font-casanova text-xl tracking-[0.035em] text-brand-dark">
+              NutriNation
+            </span>
+          </div>
+          <Link href="/products" onClick={() => setIsMobileMenuOpen(false)} className="block font-marcellus text-2xl text-brand-dark">
             Shop all
           </Link>
           <div className="grid grid-cols-2 gap-2 pt-2">

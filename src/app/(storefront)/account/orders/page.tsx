@@ -112,7 +112,7 @@ export default function AccountOrdersPage() {
                       <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-serif font-bold text-xs text-brand-dark line-clamp-1">{item.name}</h4>
+                      <h4 className="font-marcellus font-normal text-xs sm:text-sm text-brand-dark line-clamp-1 tracking-[0.015em]">{item.name}</h4>
                       <p className="text-[11px] text-brand-muted">{item.weight} • Qty: {item.quantity}</p>
                       <p className="text-xs font-semibold text-brand-green mt-0.5">{formatPrice(item.price * item.quantity)}</p>
                     </div>

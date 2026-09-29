@@ -61,6 +61,8 @@ const config: Config = {
         serif: ["var(--font-serif)", "Cinzel", "Georgia", "serif"],
         display: ["var(--font-serif)", "Cinzel", "serif"],
         mono: ["var(--font-mono)", "ui-monospace", "monospace"],
+        casanova: ["var(--font-casanova)", "Casanova", "Georgia", "serif"],
+        marcellus: ["var(--font-marcellus)", "Marcellus", "Georgia", "serif"],
       },
       letterSpacing: {
         luxury: "0.25em",

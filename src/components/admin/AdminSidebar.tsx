@@ -42,14 +42,14 @@ export default function AdminSidebar() {
       <div className="space-y-6">
         {/* Brand Header */}
         <div className="flex items-center gap-3 px-2 py-2 border-b border-brand-border/60 pb-4">
-          <div className="w-9 h-9 rounded-xl bg-brand-green text-white flex items-center justify-center font-serif font-black text-lg">
+          <div className="w-10 h-10 rounded-xl bg-brand-green text-brand-saffron flex items-center justify-center font-casanova text-xl border border-brand-saffron/30">
             N
           </div>
           <div>
-            <span className="font-serif font-black text-base tracking-wider text-brand-dark leading-none block">
-              NUTRI<span className="text-brand-green">NATION</span>
+            <span className="font-casanova text-xl tracking-[0.03em] text-brand-dark leading-none block">
+              Nutri<span className="text-brand-green">Nation</span>
             </span>
-            <span className="text-[10px] uppercase font-bold tracking-widest text-brand-saffron block mt-0.5">
+            <span className="text-[10px] uppercase font-bold tracking-widest text-brand-saffron block mt-1 font-sans">
               ADMIN PORTAL
             </span>
           </div>

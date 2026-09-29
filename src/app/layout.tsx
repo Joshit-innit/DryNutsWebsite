@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Cinzel, Plus_Jakarta_Sans } from "next/font/google";
+import { Cinzel, Plus_Jakarta_Sans, Marcellus } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { StoreProvider } from "@/context/StoreContext";
 import { Toaster } from "sonner";
@@ -19,6 +20,19 @@ const serif = Cinzel({
   subsets: ["latin"],
   weight: ["500", "600", "700", "800", "900"],
   variable: "--font-serif",
+  display: "swap",
+});
+
+const marcellus = Marcellus({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-marcellus",
+  display: "swap",
+});
+
+const casanova = localFont({
+  src: "../../public/fonts/Casanova.otf",
+  variable: "--font-casanova",
   display: "swap",
 });
 
@@ -60,7 +74,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${sans.variable} ${serif.variable}`}>
+    <html lang="en" className={`${sans.variable} ${serif.variable} ${marcellus.variable} ${casanova.variable}`}>
       <body className="min-h-screen bg-brand-cream text-brand-dark antialiased font-sans">
         <StoreProvider>
           <SmoothScroll>

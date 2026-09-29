@@ -227,11 +227,11 @@ export default function ProductDetailPage() {
               </div>
             </div>
 
-            <h1 className="font-serif font-medium text-3xl sm:text-5xl text-brand-dark mb-2 leading-tight">
+            <h1 className="font-marcellus font-normal text-3xl sm:text-4xl lg:text-5xl text-brand-dark mb-3 leading-[1.12] tracking-[0.015em]">
               {product.name}
             </h1>
 
-            <p className="text-sm text-brand-muted leading-relaxed">
+            <p className="font-marcellus text-base sm:text-lg text-brand-muted/95 leading-relaxed tracking-[0.01em]">
               {product.shortDescription}
             </p>
           </div>
@@ -443,8 +443,8 @@ export default function ProductDetailPage() {
         {activeTab === "story" && (
           <div className="space-y-6 max-w-4xl text-sm leading-relaxed text-brand-dark">
             <div>
-              <h3 className="font-serif font-bold text-xl text-brand-dark mb-2">The Harvest Origin</h3>
-              <p className="text-brand-muted">{product.description}</p>
+              <h3 className="font-marcellus font-normal text-2xl text-brand-dark mb-2 tracking-[0.015em]">The Harvest Origin</h3>
+              <p className="font-marcellus text-base text-brand-muted/95 leading-relaxed tracking-[0.012em]">{product.description}</p>
             </div>
 
             <div>

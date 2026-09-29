@@ -106,12 +106,14 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
           </span>
         </div>
 
-        <Link href={`/products/${product.slug}`}>
-          <h3 className="text-lg sm:text-xl font-bold text-brand-dark group-hover:text-brand-green transition-colors line-clamp-2 leading-snug">
+        <Link href={`/products/${product.slug}`} className="group/title">
+          <h3 className="font-marcellus text-xl font-normal text-brand-dark group-hover/title:text-brand-green transition-colors line-clamp-2 leading-[1.25] tracking-[0.015em]">
             {product.name}
           </h3>
         </Link>
-        <p className="text-xs text-brand-muted mt-1 line-clamp-2">{product.shortDescription}</p>
+        <p className="font-marcellus text-xs text-brand-muted/90 mt-1.5 line-clamp-2 leading-relaxed tracking-[0.01em]">
+          {product.shortDescription || product.origin}
+        </p>
 
         {product.variants.length > 1 && (
           <div className="flex flex-wrap gap-1.5 mt-3">

@@ -131,7 +131,7 @@ export default function CartDrawer() {
                         <Link
                           href={`/products/${item.slug}`}
                           onClick={() => setIsCartOpen(false)}
-                          className="font-serif font-bold text-xs sm:text-sm text-brand-dark hover:text-brand-green transition-colors line-clamp-1"
+                          className="font-marcellus text-sm sm:text-[15px] font-normal text-brand-dark hover:text-brand-green transition-colors line-clamp-1 leading-snug tracking-[0.015em]"
                         >
                           {item.name}
                         </Link>

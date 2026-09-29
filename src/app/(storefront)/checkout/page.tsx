@@ -215,7 +215,7 @@ export default function CheckoutPage() {
                           <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                         </div>
                         <div>
-                          <h4 className="font-serif font-bold text-xs sm:text-sm text-brand-dark line-clamp-1">
+                          <h4 className="font-marcellus font-normal text-sm sm:text-base text-brand-dark line-clamp-1 tracking-[0.015em]">
                             {item.name}
                           </h4>
                           <p className="text-xs text-brand-muted">{item.weight} • Qty: {item.quantity}</p>
