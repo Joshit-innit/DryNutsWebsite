@@ -1,23 +1,25 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useStore } from "@/context/StoreContext";
-import { formatPrice, calculateDiscount } from "@/lib/utils";
-import { X, Star, ShoppingBag, Heart, ShieldCheck, Truck, Check, ArrowRight } from "lucide-react";
+import { formatPrice } from "@/lib/utils";
+import { getProductImageMeta } from "@/lib/product-images";
+import { X, ShoppingBag, Heart, Check, ArrowRight, PackageOpen } from "lucide-react";
 
 export default function ProductQuickView() {
   const { quickViewProduct, setQuickViewProduct, addToCart, toggleWishlist, isInWishlist } = useStore();
   const [selectedVariantIndex, setSelectedVariantIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
-  const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [isAdded, setIsAdded] = useState(false);
+  const [imageFailed, setImageFailed] = useState(false);
 
   if (!quickViewProduct) return null;
 
   const currentVariant = quickViewProduct.variants[selectedVariantIndex] || quickViewProduct.variants[0];
-  const discountPercent = calculateDiscount(currentVariant.mrp, currentVariant.price);
   const wishlisted = isInWishlist(quickViewProduct.id);
+  const image = getProductImageMeta(quickViewProduct);
 
   const handleAddToCart = () => {
     addToCart(quickViewProduct, currentVariant, quantity);
@@ -43,50 +45,25 @@ export default function ProductQuickView() {
         <div className="grid grid-cols-1 md:grid-cols-2">
           {/* Product Gallery Left */}
           <div className="bg-brand-cream/50 p-6 flex flex-col items-center justify-between border-r border-brand-border/60">
-            <div className="w-full aspect-square rounded-2xl overflow-hidden mb-4 relative bg-white border border-brand-border/40">
-              <img
-                src={quickViewProduct.images[activeImageIndex] || quickViewProduct.images[0]}
-                alt={quickViewProduct.name}
-                className="w-full h-full object-cover"
-              />
-              {discountPercent > 0 && (
-                <span className="absolute top-3 left-3 bg-brand-green text-white text-xs font-bold px-2.5 py-1 rounded-full shadow-sm">
-                  {discountPercent}% OFF
-                </span>
+            <div className="w-full aspect-square overflow-hidden mb-4 relative" style={{ backgroundColor: image.background }}>
+              {imageFailed ? (
+                <div className="flex h-full w-full flex-col items-center justify-center gap-2 text-brand-muted" role="img" aria-label={`Image unavailable for ${quickViewProduct.name}`}>
+                  <PackageOpen className="h-7 w-7 text-brand-green" />
+                  <span className="text-xs">Product photograph unavailable</span>
+                </div>
+              ) : (
+                <Image src={image.src} alt={image.alt} fill sizes="(max-width: 767px) 100vw, 50vw" className="object-cover" style={{ objectPosition: image.objectPosition }} onError={() => setImageFailed(true)} />
               )}
             </div>
-
-            {/* Thumbnail Strip */}
-            {quickViewProduct.images.length > 1 && (
-              <div className="flex gap-2 w-full justify-center">
-                {quickViewProduct.images.map((img, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setActiveImageIndex(idx)}
-                    className={`w-14 h-14 rounded-xl overflow-hidden border-2 transition-all ${
-                      activeImageIndex === idx ? "border-brand-green scale-105" : "border-transparent opacity-70 hover:opacity-100"
-                    }`}
-                  >
-                    <img src={img} alt="" className="w-full h-full object-cover" />
-                  </button>
-                ))}
-              </div>
-            )}
           </div>
 
           {/* Product Details Right */}
           <div className="p-6 sm:p-8 flex flex-col justify-between">
             <div>
-              {/* Category & Rating */}
-              <div className="flex items-center justify-between text-xs mb-2">
+              <div className="flex items-center text-xs mb-2">
                 <span className="uppercase tracking-wider font-bold text-brand-green">
                   {quickViewProduct.categoryName}
                 </span>
-                <div className="flex items-center gap-1 text-brand-dark font-semibold">
-                  <Star className="w-3.5 h-3.5 fill-brand-saffron text-brand-saffron" />
-                  <span>{quickViewProduct.rating.toFixed(1)}</span>
-                  <span className="text-brand-muted">({quickViewProduct.reviewCount} reviews)</span>
-                </div>
               </div>
 
               <h2 className="font-marcellus font-normal text-2xl sm:text-3xl text-brand-dark mb-2.5 leading-tight tracking-[0.015em]">
@@ -107,9 +84,6 @@ export default function ProductQuickView() {
                     {formatPrice(currentVariant.mrp)}
                   </span>
                 )}
-                <span className="text-xs text-brand-green font-semibold ml-auto">
-                  Inclusive of all taxes
-                </span>
               </div>
 
               {/* Weight Options */}
@@ -193,10 +167,7 @@ export default function ProductQuickView() {
               </div>
 
               <div className="flex items-center justify-between pt-2 border-t border-brand-border text-xs text-brand-muted">
-                <div className="flex items-center gap-1.5">
-                  <Truck className="w-4 h-4 text-brand-green" />
-                  <span>Free delivery over ₹999</span>
-                </div>
+                <span>Choose delivery options at checkout</span>
                 <Link
                   href={`/products/${quickViewProduct.slug}`}
                   onClick={() => setQuickViewProduct(null)}

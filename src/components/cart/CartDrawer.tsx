@@ -13,7 +13,6 @@ import {
   Sparkles,
   ArrowRight,
   ShieldCheck,
-  Check,
 } from "lucide-react";
 
 export default function CartDrawer() {
@@ -35,11 +34,18 @@ export default function CartDrawer() {
   const [couponInput, setCouponInput] = useState("");
   const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
 
-  if (!isCartOpen) return null;
+  React.useEffect(() => {
+    if (!isCartOpen) return;
 
-  const freeDeliveryThreshold = 999;
-  const progressPercent = Math.min(100, (cartSubtotal / freeDeliveryThreshold) * 100);
-  const remainingForFreeDelivery = Math.max(0, freeDeliveryThreshold - cartSubtotal);
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setIsCartOpen(false);
+    };
+
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [isCartOpen, setIsCartOpen]);
+
+  if (!isCartOpen) return null;
 
   const handleApplyCoupon = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,7 +56,7 @@ export default function CartDrawer() {
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-hidden bg-black/50 backdrop-blur-xs transition-opacity animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 overflow-hidden bg-black/50 transition-opacity animate-in fade-in duration-200" role="dialog" aria-modal="true" aria-label="Shopping bag">
       <div className="absolute inset-y-0 right-0 max-w-full flex pl-10">
         <div className="w-screen max-w-md bg-brand-cream border-l border-brand-border shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
           <div className="p-5 border-b border-brand-border flex items-center justify-between bg-white/60">
@@ -69,30 +75,6 @@ export default function CartDrawer() {
             </button>
           </div>
 
-          {/* Free Shipping Progress Bar */}
-          <div className="px-5 py-3 bg-brand-saffron-soft/60 border-b border-brand-border">
-            <div className="flex items-center justify-between text-xs font-semibold mb-1.5">
-              <span>
-                {remainingForFreeDelivery === 0 ? (
-                  <span className="text-brand-green font-bold flex items-center gap-1">
-                    <Check className="w-3.5 h-3.5" /> FREE Express Delivery Unlocked!
-                  </span>
-                ) : (
-                  <span>
-                    Add <strong className="text-brand-dark font-bold">{formatPrice(remainingForFreeDelivery)}</strong> more for FREE delivery
-                  </span>
-                )}
-              </span>
-              <span className="text-brand-muted text-[11px] font-mono">{Math.round(progressPercent)}%</span>
-            </div>
-            <div className="w-full bg-brand-border/80 h-1.5 rounded-full overflow-hidden">
-              <div
-                className="bg-brand-saffron h-full rounded-full transition-all duration-500"
-                style={{ width: `${progressPercent}%` }}
-              />
-            </div>
-          </div>
-
           {/* Cart Item List */}
           <div className="flex-1 overflow-y-auto p-5 space-y-4">
             {cart.length === 0 ? (
@@ -104,14 +86,15 @@ export default function CartDrawer() {
                   Your bag is empty
                 </h3>
                 <p className="text-xs text-brand-muted max-w-xs mb-6">
-                  Nourish your daily routine with hand-selected Kashmiri Mamra, Jumbo Cashews, and Royal Medjool dates.
+                  Explore the collection to add dry fruits, combinations, and gift boxes.
                 </p>
-                <button
+                <Link
+                  href="/products"
                   onClick={() => setIsCartOpen(false)}
-                  className="bg-brand-green hover:bg-brand-green-dark text-white text-xs font-semibold px-6 py-3 rounded-xl transition-all shadow-sm"
+                  className="rounded-md bg-brand-green px-6 py-3 text-xs font-semibold text-white transition-colors hover:bg-brand-green-dark"
                 >
-                  Explore Harvest Collection
-                </button>
+                  Explore harvest collection
+                </Link>
               </div>
             ) : (
               cart.map((item) => (
@@ -259,7 +242,7 @@ export default function CartDrawer() {
 
               <div className="flex items-center justify-center gap-1.5 text-[11px] text-brand-muted pt-1">
                 <ShieldCheck className="w-3.5 h-3.5 text-brand-green" />
-                <span>100% Guaranteed Freshness • Verified Safe Payments</span>
+                <span>Review your order before checkout</span>
               </div>
             </div>
           )}

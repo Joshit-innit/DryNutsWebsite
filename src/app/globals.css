@@ -22,19 +22,19 @@
 
 :root {
   --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-serif: "Cinzel", Georgia, serif;
+  --font-serif: "Marcellus", Georgia, serif;
   --font-casanova: "Casanova", Georgia, serif;
   --font-marcellus: "Marcellus", Georgia, serif;
 
-  --brand-green: #0C1811;
-  --brand-green-light: #1B3425;
-  --brand-saffron: #C69234;
-  --brand-orange: #B25E2B;
-  --brand-cream: #FBFBFA;
-  --brand-beige: #F5F5F3;
-  --brand-dark: #0A0A0A;
-  --brand-muted: #737373;
-  --brand-border: #EAEAEA;
+  --brand-green: #4B8F27;
+  --brand-green-light: #78B63B;
+  --brand-saffron: #F6A900;
+  --brand-orange: #FF8A00;
+  --brand-cream: #FFFAF2;
+  --brand-beige: #F6EEE2;
+  --brand-dark: #202020;
+  --brand-muted: #777777;
+  --brand-border: #E9E9E9;
 }
 
 html {
@@ -45,8 +45,8 @@ html {
 }
 
 body {
-  background-color: #FBFBFA;
-  color: #0A0A0A;
+  background-color: #FFFAF2;
+  color: #202020;
   overflow-x: hidden;
   font-family: var(--font-sans);
   font-weight: 400;
@@ -54,14 +54,11 @@ body {
   letter-spacing: 0;
 }
 
-/* Modern Luxury Typography:
-   Headings default to sleek, confident, tight modern sans!
-   Serif is reserved for prestige display branding. */
 h1, h2, h3, h4 {
-  font-family: var(--font-sans);
+  font-family: var(--font-serif);
   letter-spacing: 0;
-  font-weight: 700;
-  color: #0A0A0A;
+  font-weight: 400;
+  color: #202020;
 }
 
 .font-serif, .font-display {
@@ -74,10 +71,9 @@ h1, h2, h3, h4 {
   font-variant-numeric: tabular-nums;
 }
 
-/* Global Silky-Smooth Transition Physics (Apple / Vercel Spring Curve) */
 a, button, input, select, textarea, .transition-smooth {
-  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-  transition-duration: 280ms;
+  transition-timing-function: ease;
+  transition-duration: 180ms;
 }
 
 .font-casanova {
@@ -115,7 +111,7 @@ a, button, input, select, textarea, .transition-smooth {
 }
 
 ::-webkit-scrollbar-track {
-  background: #FBFBFA;
+  background: #FFFAF2;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -125,7 +121,7 @@ a, button, input, select, textarea, .transition-smooth {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #0A0A0A;
+  background: #4B8F27;
 }
 
 ::selection {
@@ -133,30 +129,23 @@ a, button, input, select, textarea, .transition-smooth {
   color: #FBF6EC;
 }
 
-/* Glass Panels: Pure, Frosted, High-End Clarity */
+/* Kept for legacy components; new storefront work uses opaque surfaces. */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(234, 234, 234, 0.95);
+  background: #FFFFFF;
+  border: 1px solid #E9E9E9;
 }
 
 .glass-dark {
-  background: rgba(10, 10, 10, 0.94);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #202020;
+  border: 1px solid rgba(255, 255, 255, 0.14);
 }
 
 /* Luxury Card Smooth Hover Physics */
 .card-hover {
-  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 0.3s ease;
+  transition: border-color 0.2s ease;
 }
 .card-hover:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.02);
+  border-color: #D8D8D8;
 }
 
 /* Image Smooth Zoom */
@@ -205,30 +194,27 @@ a, button, input, select, textarea, .transition-smooth {
   text-transform: uppercase;
 }
 
-/* Modern Luxury Buttons with Buttery Spring States */
 .btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.625rem;
-  background: #0A0A0A;
+  background: #4B8F27;
   color: #FFFFFF;
   font-size: 0.8125rem;
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   padding: 0.9375rem 2rem;
-  border-radius: 9999px;
-  border: 1px solid #0A0A0A;
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+  border-radius: 0.5rem;
+  border: 1px solid #4B8F27;
+  transition: background-color 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
 }
 
 .btn-primary:hover {
-  background: #1A1A1A;
-  border-color: #1A1A1A;
-  box-shadow: 0 12px 28px -6px rgba(0, 0, 0, 0.25);
-  transform: translateY(-2px);
+  background: #35691B;
+  border-color: #35691B;
+  transform: translateY(-1px);
 }
 
 .btn-primary:active {
@@ -248,17 +234,23 @@ a, button, input, select, textarea, .transition-smooth {
   letter-spacing: 0.06em;
   text-transform: uppercase;
   padding: 0.9375rem 2rem;
-  border-radius: 9999px;
+  border-radius: 0.5rem;
   transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .btn-ghost:hover {
   background: rgba(255, 255, 255, 0.12);
-  transform: translateY(-2px);
+  transform: translateY(-1px);
 }
 
 .btn-ghost:active {
   transform: scale(0.98);
+}
+
+.btn-primary:focus-visible,
+.btn-ghost:focus-visible {
+  outline: 2px solid #2C5530;
+  outline-offset: 3px;
 }
 
 /* Input Fields */

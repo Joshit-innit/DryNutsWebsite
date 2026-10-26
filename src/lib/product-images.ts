@@ -49,6 +49,20 @@ export const CATEGORY_IMAGE_SETS: Record<CategorySlug, string[]> = {
 
 export const PRODUCT_IMAGE_PLACEHOLDER = CATEGORY_IMAGE_SETS.combos[0];
 
+const CATEGORY_IMAGE_TREATMENT: Record<CategorySlug, { objectPosition: string; background: string }> = {
+  cashews: { objectPosition: "50% 50%", background: "#F6EEE2" },
+  pistachios: { objectPosition: "50% 50%", background: "#F6EEE2" },
+  almonds: { objectPosition: "50% 50%", background: "#F6EEE2" },
+  walnuts: { objectPosition: "50% 48%", background: "#F6EEE2" },
+  raisins: { objectPosition: "50% 50%", background: "#FFFAF2" },
+  dates: { objectPosition: "50% 50%", background: "#F6EEE2" },
+  "dried-apricots": { objectPosition: "50% 50%", background: "#F6EEE2" },
+  "dry-figs": { objectPosition: "50% 50%", background: "#F6EEE2" },
+  prunes: { objectPosition: "50% 50%", background: "#FFFAF2" },
+  combos: { objectPosition: "50% 50%", background: "#F6EEE2" },
+  "gift-boxes": { objectPosition: "50% 50%", background: "#F6EEE2" },
+};
+
 export function getCategoryImages(category?: string): string[] {
   if (category && category in CATEGORY_IMAGE_SETS) {
     return CATEGORY_IMAGE_SETS[category as CategorySlug];
@@ -72,4 +86,18 @@ export function normalizeProductImages(product: Product): Product {
 export function getProductImage(product: Pick<Product, "category" | "images">, index = 0): string {
   const images = normalizeProductImages(product as Product).images;
   return images[index] || images[0] || PRODUCT_IMAGE_PLACEHOLDER;
+}
+
+export function getProductImageMeta(product: Pick<Product, "name" | "category" | "categoryName" | "images">) {
+  const category = product.category as CategorySlug;
+  const treatment = CATEGORY_IMAGE_TREATMENT[category] || {
+    objectPosition: "50% 50%",
+    background: "#F6EEE2",
+  };
+
+  return {
+    src: getProductImage(product),
+    alt: `Photograph of ${product.name}, ${product.categoryName}`,
+    ...treatment,
+  };
 }

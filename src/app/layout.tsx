@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cinzel, Plus_Jakarta_Sans, Marcellus } from "next/font/google";
+import { Plus_Jakarta_Sans, Marcellus } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 import { StoreProvider } from "@/context/StoreContext";
@@ -13,13 +13,6 @@ const sans = Plus_Jakarta_Sans({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700", "800"],
   variable: "--font-sans",
-  display: "swap",
-});
-
-const serif = Cinzel({
-  subsets: ["latin"],
-  weight: ["500", "600", "700", "800", "900"],
-  variable: "--font-serif",
   display: "swap",
 });
 
@@ -39,20 +32,14 @@ const casanova = localFont({
 export const metadata: Metadata = {
   title: "NutriNation — Nourish Naturally | Premium Dry Fruits",
   description:
-    "NutriNation brings you the top 1% harvest of dry fruits — Cashews, Pistachios, Mamra Almonds, Kashmiri Walnuts, Medjool Dates, Figs, Apricots, Raisins & Prunes.",
+    "NutriNation offers cashews, pistachios, almonds, walnuts, raisins, dates, dried apricots, dry figs, prunes, combos, and gift boxes.",
   keywords: [
     "Dry Fruits",
-    "Mamra Almonds",
-    "Kashmiri Walnuts",
-    "W-180 Cashews",
-    "Iranian Pistachios",
-    "Medjool Dates",
-    "Afghani Anjeer",
     "Premium Indian Dry Fruits",
   ],
   openGraph: {
-    title: "NutriNation — Premium Dry Fruits. Naturally Better.",
-    description: "Cold-cracked Kashmiri almonds, jumbo king cashews, and mountain-cured dry fruits.",
+    title: "NutriNation — Premium Indian Dry Fruits",
+    description: "A focused collection of dry fruits, combos, and gift boxes.",
     url: "https://nutrination.in",
     siteName: "NutriNation",
     images: [
@@ -74,7 +61,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${sans.variable} ${serif.variable} ${marcellus.variable} ${casanova.variable}`}>
+    <html lang="en" className={`${sans.variable} ${marcellus.variable} ${casanova.variable}`}>
       <body className="min-h-screen bg-brand-cream text-brand-dark antialiased font-sans">
         <StoreProvider>
           <SmoothScroll>
@@ -86,11 +73,11 @@ export default function RootLayout({
               position="top-right"
               toastOptions={{
                 style: {
-                  background: "#FBF7F1",
-                  color: "#1A1612",
-                  border: "1px solid #E5DCD0",
-                  boxShadow: "0 18px 40px rgba(26,22,18,0.08)",
-                  borderRadius: "16px",
+                  background: "#FFFAF2",
+                  color: "#202020",
+                  border: "1px solid #E9E9E9",
+                  boxShadow: "0 8px 24px rgba(32,32,32,0.08)",
+                  borderRadius: "8px",
                   fontFamily: "var(--font-sans)",
                 },
               }}

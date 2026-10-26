@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { toast } from "sonner";
-import { ShieldCheck, Leaf, Truck, ArrowRight, Award } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { CATEGORIES } from "@/data/mockData";
 
 const newsletterSchema = z.object({
@@ -19,18 +19,15 @@ export default function Footer() {
   const {
     register,
     handleSubmit,
-    reset,
     formState: { errors, isSubmitting },
   } = useForm<NewsletterForm>({
     resolver: zodResolver(newsletterSchema),
   });
 
-  const onSubmit = async () => {
-    await new Promise((res) => setTimeout(res, 500));
-    toast.success("Welcome to the NutriNation family!", {
-      description: "Harvest notes and private drops, never spam.",
+  const onSubmit = () => {
+    toast.info("Newsletter sign-up is not connected yet.", {
+      description: "Your email has not been submitted.",
     });
-    reset();
   };
 
   const coreCategories = CATEGORIES.filter(
@@ -38,38 +35,18 @@ export default function Footer() {
   );
 
   return (
-    <footer className="bg-brand-dark text-[#F7F1E8] pt-16 pb-10 relative overflow-hidden">
-      <div className="absolute -top-24 right-0 w-80 h-80 bg-brand-saffron/10 rounded-full blur-3xl pointer-events-none" />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pb-12 border-b border-white/10">
-          {[
-            { icon: Leaf, title: "100% natural", body: "No oils, dyes, or syrups" },
-            { icon: Award, title: "Top 1% grade", body: "W-180 & Mamra lots" },
-            { icon: ShieldCheck, title: "Nitrogen sealed", body: "Crunch locked in" },
-            { icon: Truck, title: "Express India", body: "Insured doorstep" },
-          ].map(({ icon: Icon, title, body }) => (
-            <div key={title} className="flex items-start gap-3">
-              <Icon className="w-5 h-5 text-brand-saffron shrink-0 mt-0.5" />
-              <div>
-                <h4 className="text-sm font-medium">{title}</h4>
-                <p className="text-xs text-white/45 mt-0.5">{body}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 py-14 border-b border-white/10">
+    <footer className="bg-brand-dark py-12 text-white">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-10 border-b border-white/15 pb-12 md:grid-cols-2 lg:grid-cols-5">
           <div className="lg:col-span-2 space-y-5">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-brand-green-light/20 border border-brand-saffron/30 flex items-center justify-center">
-                <span className="font-casanova text-xl text-brand-saffron pt-0.5">N</span>
+              <div className="w-10 h-10 rounded-md bg-brand-green flex items-center justify-center">
+                <span className="font-casanova text-xl text-white pt-0.5">N</span>
               </div>
               <span className="font-casanova text-3xl tracking-[0.035em] text-[#FBF7F1]">NutriNation</span>
             </div>
             <p className="text-sm text-white/55 leading-relaxed max-w-sm font-light">
-              Dry fruit from the highest orchards of Kashmir, Mangalore, Jordan, and Malatya — packed
-              for taste, not for bulk.
+              A considered selection of dry fruits, everyday mixes, and gift boxes for Indian tables.
             </p>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-2 max-w-md">
               <p className="text-[11px] tracking-[0.22em] uppercase text-brand-saffron">Notes in your inbox</p>
@@ -78,12 +55,12 @@ export default function Footer() {
                   {...register("email")}
                   type="email"
                   placeholder="Email address"
-                  className="flex-1 bg-white/8 border border-white/15 rounded-full px-4 py-2.5 text-sm text-white placeholder:text-white/35 focus:border-brand-saffron"
+                  className="flex-1 bg-white/8 border border-white/15 rounded-md px-4 py-2.5 text-sm text-white placeholder:text-white/35 focus:border-brand-saffron"
                 />
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="rounded-full bg-brand-saffron text-brand-dark px-5 py-2.5 text-sm font-medium hover:bg-[#d4b688] transition-colors"
+                  className="rounded-md bg-brand-saffron text-brand-dark px-5 py-2.5 text-sm font-medium hover:bg-brand-saffron-light transition-colors"
                 >
                   <ArrowRight className="w-4 h-4" />
                 </button>
@@ -93,7 +70,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="text-[11px] tracking-[0.22em] uppercase text-brand-saffron mb-4">Harvests</h4>
+            <h4 className="text-[11px] tracking-[0.22em] uppercase text-brand-saffron mb-4">Ingredients</h4>
             <ul className="space-y-2 text-sm text-white/55">
               {coreCategories.map((c) => (
                 <li key={c.id}>
@@ -126,16 +103,12 @@ export default function Footer() {
           </div>
         </div>
 
-        <p className="py-12 text-center font-serif italic text-4xl sm:text-6xl md:text-7xl text-white/[0.07] select-none">
-          Nourish naturally
-        </p>
-
-        <div className="flex flex-col sm:flex-row items-center justify-between text-xs text-white/35 pt-4 border-t border-white/10 gap-4">
+        <div className="flex flex-col sm:flex-row items-center justify-between text-xs text-white/50 pt-8 gap-4">
           <p>© {new Date().getFullYear()} NutriNation Foods Pvt. Ltd.</p>
           <div className="flex items-center gap-6">
             <Link href="/contact" className="hover:text-white">Privacy</Link>
             <Link href="/contact" className="hover:text-white">Terms</Link>
-            <span>FSSAI #10020021004829</span>
+            <Link href="/contact" className="hover:text-white">Contact</Link>
           </div>
         </div>
       </div>

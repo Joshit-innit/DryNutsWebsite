@@ -11,7 +11,6 @@ import {
   Menu,
   X,
   ChevronDown,
-  Sparkles,
   Gift,
 } from "lucide-react";
 import { useStore } from "@/context/StoreContext";
@@ -40,13 +39,7 @@ export default function Navbar() {
     }`;
 
   return (
-    <header
-      className={`sticky top-0 z-40 transition-all duration-300 ${
-        isScrolled
-          ? "bg-[#FBF7F1]/90 backdrop-blur-xl shadow-subtle border-b border-brand-border/70"
-          : "bg-brand-cream/80 backdrop-blur-md border-b border-transparent"
-      }`}
-    >
+    <header className={`sticky top-0 z-40 border-b transition-colors ${isScrolled ? "border-brand-border bg-white" : "border-transparent bg-brand-cream"}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-[4.5rem]">
           <div className="flex items-center lg:hidden">
@@ -60,14 +53,14 @@ export default function Navbar() {
           </div>
 
           <Link href="/" className="flex items-center gap-2.5 sm:gap-3 group">
-            <div className="w-10 h-10 rounded-full bg-brand-green border border-brand-saffron/30 flex items-center justify-center shadow-xs group-hover:border-brand-saffron transition-all">
-              <span className="font-casanova text-xl text-brand-saffron leading-none pt-0.5">N</span>
+            <div className="w-9 h-9 rounded-md bg-brand-green flex items-center justify-center">
+              <span className="font-casanova text-xl text-white leading-none pt-0.5">N</span>
             </div>
             <div className="flex flex-col">
               <span className="font-casanova text-[1.35rem] sm:text-[1.5rem] tracking-[0.035em] leading-none text-brand-dark group-hover:text-brand-green transition-colors font-normal">
                 NutriNation
               </span>
-              <span className="text-[8.5px] sm:text-[9px] tracking-[0.28em] uppercase text-brand-saffron mt-1 font-sans font-medium">
+              <span className="text-[8.5px] sm:text-[9px] tracking-[0.22em] uppercase text-brand-green mt-1 font-sans font-medium">
                 Nourish naturally
               </span>
             </div>
@@ -83,7 +76,13 @@ export default function Navbar() {
               onMouseEnter={() => setIsMegaMenuOpen(true)}
               onMouseLeave={() => setIsMegaMenuOpen(false)}
             >
-              <button className={`${navLink(pathname.startsWith("/category"))} flex items-center gap-1 py-2`}>
+              <button
+                type="button"
+                onClick={() => setIsMegaMenuOpen(!isMegaMenuOpen)}
+                aria-expanded={isMegaMenuOpen}
+                aria-controls="harvest-menu"
+                className={`${navLink(pathname.startsWith("/category"))} flex items-center gap-1 py-2`}
+              >
                 Harvests
                 <ChevronDown
                   className={`w-3.5 h-3.5 transition-transform ${isMegaMenuOpen ? "rotate-180" : ""}`}
@@ -91,33 +90,30 @@ export default function Navbar() {
               </button>
 
               {isMegaMenuOpen && (
-                <div className="absolute top-full -left-16 w-[620px] bg-[#FBF7F1] rounded-2xl shadow-card border border-brand-border p-5 grid grid-cols-3 gap-3">
+                <div id="harvest-menu" className="absolute top-full -left-16 w-[620px] bg-white border border-brand-border p-5 grid grid-cols-3 gap-3 shadow-card">
                   <div className="col-span-2 grid grid-cols-2 gap-1">
                     {coreCategories.map((cat) => (
                       <Link
                         key={cat.id}
                         href={`/category/${cat.slug}`}
                         onClick={() => setIsMegaMenuOpen(false)}
-                        className="flex items-center gap-2.5 p-2 rounded-xl hover:bg-brand-beige/70 transition-colors"
+                        className="flex items-center gap-2.5 p-2 hover:bg-brand-cream transition-colors"
                       >
                         <div className="w-9 h-9 rounded-lg overflow-hidden bg-brand-beige shrink-0">
                           <img src={cat.image} alt="" className="w-full h-full object-cover" />
                         </div>
                         <div>
                           <p className="text-sm font-medium text-brand-dark">{cat.name}</p>
-                          <p className="text-[11px] text-brand-muted line-clamp-1">
-                            {cat.originHighlight.split(",")[0]}
-                          </p>
+                          <p className="text-[11px] text-brand-muted">Shop category</p>
                         </div>
                       </Link>
                     ))}
                   </div>
-                  <div className="rounded-xl bg-brand-green p-4 flex flex-col justify-between text-[#F7F1E8]">
+                  <div className="bg-brand-green p-4 flex flex-col justify-between text-white">
                     <div>
-                      <Sparkles className="w-4 h-4 text-brand-saffron mb-2" />
                       <h4 className="font-serif text-lg">Gift caskets</h4>
                       <p className="text-[11px] text-white/65 mt-1 leading-relaxed">
-                        Heirloom boxes filled with top-grade lots.
+                        Gift boxes and combinations for sharing.
                       </p>
                     </div>
                     <Link
@@ -164,7 +160,7 @@ export default function Navbar() {
             </Link>
             <button
               onClick={() => setIsCartOpen(true)}
-              className="ml-1 flex items-center gap-2 bg-brand-green text-[#F7F1E8] pl-3 pr-4 py-2 rounded-full text-sm font-medium hover:bg-brand-green-dark transition-colors"
+              className="ml-1 flex items-center gap-2 bg-brand-green text-white pl-3 pr-4 py-2 rounded-md text-sm font-medium hover:bg-brand-green-dark transition-colors"
               aria-label="Open cart"
             >
               <span className="relative">
@@ -182,10 +178,10 @@ export default function Navbar() {
       </div>
 
       {isMobileMenuOpen && (
-        <div className="lg:hidden border-t border-brand-border bg-[#FBF7F1] p-6 space-y-5">
+        <div className="lg:hidden border-t border-brand-border bg-white p-6 space-y-5">
           <div className="flex items-center gap-2.5 pb-4 border-b border-brand-border/70">
-            <div className="w-8 h-8 rounded-full bg-brand-green border border-brand-saffron/30 flex items-center justify-center">
-              <span className="font-casanova text-base text-brand-saffron leading-none pt-0.5">N</span>
+            <div className="w-8 h-8 rounded-md bg-brand-green flex items-center justify-center">
+              <span className="font-casanova text-base text-white leading-none pt-0.5">N</span>
             </div>
             <span className="font-casanova text-xl tracking-[0.035em] text-brand-dark">
               NutriNation

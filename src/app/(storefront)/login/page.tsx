@@ -8,15 +8,21 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { toast } from "sonner";
 import { useStore } from "@/context/StoreContext";
+import { backendApi, unwrapData } from "@/lib/api/axios";
+import { ACCESS_TOKEN_STORAGE_KEY, AUTH_ROLE_STORAGE_KEY } from "@/lib/auth-constants";
 import { Apple, ArrowRight, Chrome, Lock, Mail, ShieldCheck, Sparkles } from "lucide-react";
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
-  rememberMe: z.boolean().optional(),
+  password: z.string().min(12, "Password must be at least 12 characters"),
 });
 
 type LoginForm = z.infer<typeof loginSchema>;
+type AuthResponse = {
+  accessToken: string;
+  customerId: string;
+  role: string;
+};
 
 export default function LoginPage() {
   const router = useRouter();
@@ -29,24 +35,34 @@ export default function LoginPage() {
   } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: "chandu@nutrination.in",
-      password: "password123",
-      rememberMe: true,
+      email: "",
+      password: "",
     },
   });
 
   const onSubmit = async (data: LoginForm) => {
-    await new Promise((res) => setTimeout(res, 500));
-    setUser({
-      id: "user-1",
-      name: "Chandu Tammana",
-      email: data.email,
-      role: "customer",
-    });
-    toast.success("Welcome back to NutriNation!", {
-      description: "Signed in successfully.",
-    });
-    router.push("/account");
+    try {
+      const response = await backendApi.post("/auth/login", {
+        email: data.email,
+        password: data.password,
+      });
+      const auth = unwrapData<AuthResponse>(response);
+
+      sessionStorage.setItem(ACCESS_TOKEN_STORAGE_KEY, auth.accessToken);
+      sessionStorage.setItem(AUTH_ROLE_STORAGE_KEY, auth.role);
+      setUser({
+        id: auth.customerId,
+        name: data.email.split("@")[0],
+        email: data.email,
+        role: auth.role === "ADMIN" ? "admin" : "customer",
+      });
+      toast.success("Welcome back to NutriNation!");
+      router.push("/account");
+    } catch {
+      toast.error("We could not sign you in.", {
+        description: "Check your email and password, then try again.",
+      });
+    }
   };
 
   return (
@@ -91,13 +107,14 @@ export default function LoginPage() {
               Welcome back
             </h1>
             <p className="mt-2 text-sm leading-relaxed text-brand-muted">
-              Use demo credentials for now, or connect Google/Apple later when authentication is ready.
+              Sign in with your NutriNation account to view your orders and saved items.
             </p>
           </div>
 
           <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-2">
             <button
               type="button"
+              onClick={() => toast.info("Google sign-in will be available soon.")}
               className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-brand-border bg-white text-xs font-bold text-brand-dark shadow-xs hover:border-brand-dark hover:bg-brand-cream"
             >
               <Chrome className="h-4 w-4" />
@@ -105,6 +122,7 @@ export default function LoginPage() {
             </button>
             <button
               type="button"
+              onClick={() => toast.info("Apple sign-in will be available soon.")}
               className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-brand-dark bg-brand-dark text-xs font-bold text-white shadow-xs hover:bg-brand-green-light"
             >
               <Apple className="h-4 w-4" />
@@ -152,17 +170,6 @@ export default function LoginPage() {
               {errors.password && <p className="text-xs text-red-500 mt-1">{errors.password.message}</p>}
             </div>
 
-            <div className="flex items-center justify-between text-xs">
-              <label className="flex items-center gap-2 cursor-pointer text-brand-muted">
-                <input
-                  {...register("rememberMe")}
-                  type="checkbox"
-                  className="w-4 h-4 rounded text-brand-green accent-brand-green"
-                />
-                <span>Remember me on this device</span>
-              </label>
-            </div>
-
             <button
               type="submit"
               disabled={isSubmitting}
@@ -177,7 +184,7 @@ export default function LoginPage() {
             <div className="flex gap-2">
               <ShieldCheck className="mt-0.5 h-4 w-4 flex-shrink-0 text-brand-green" />
               <p>
-                Google and Apple are visual placeholders right now. The email form keeps the current demo sign-in behavior.
+                Google and Apple sign-in are not connected yet. Email sessions are kept only for this browser session.
               </p>
             </div>
           </div>

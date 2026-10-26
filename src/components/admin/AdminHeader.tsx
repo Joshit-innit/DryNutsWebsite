@@ -5,6 +5,8 @@ import { Bell, Search, ExternalLink, ShieldCheck, LogOut } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { backendApi } from "@/lib/api/axios";
+import { ACCESS_TOKEN_STORAGE_KEY, AUTH_ROLE_STORAGE_KEY } from "@/lib/auth-constants";
 
 export default function AdminHeader() {
   const router = useRouter();
@@ -13,9 +15,9 @@ export default function AdminHeader() {
   const handleLogout = async () => {
     setLoggingOut(true);
     try {
-      await fetch("/api/v1/auth/admin-logout", { method: "POST" });
-      localStorage.removeItem("nn_admin_authenticated");
-      localStorage.removeItem("nn_admin_user");
+      await backendApi.post("/auth/admin-logout");
+      sessionStorage.removeItem(ACCESS_TOKEN_STORAGE_KEY);
+      sessionStorage.removeItem(AUTH_ROLE_STORAGE_KEY);
       toast.success("Signed out of Admin Portal");
       router.push("/admin/login");
       router.refresh();

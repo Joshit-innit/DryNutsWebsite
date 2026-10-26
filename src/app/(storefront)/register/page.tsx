@@ -8,6 +8,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { toast } from "sonner";
 import { useStore } from "@/context/StoreContext";
+import { backendApi, unwrapData } from "@/lib/api/axios";
+import { ACCESS_TOKEN_STORAGE_KEY, AUTH_ROLE_STORAGE_KEY } from "@/lib/auth-constants";
 import { ArrowRight, User, Mail, Phone, Lock, Sparkles } from "lucide-react";
 
 const registerSchema = z
@@ -15,8 +17,8 @@ const registerSchema = z
     name: z.string().min(2, "Full name is required"),
     email: z.string().email("Please enter a valid email address"),
     phone: z.string().min(10, "Valid 10-digit phone number is required"),
-    password: z.string().min(6, "Password must be at least 6 characters"),
-    confirmPassword: z.string().min(6, "Confirm password is required"),
+    password: z.string().min(12, "Password must be at least 12 characters"),
+    confirmPassword: z.string().min(12, "Confirm password is required"),
     agreeTerms: z.boolean().refine((val) => val === true, "You must agree to the Terms of Service"),
   })
   .refine((data) => data.password === data.confirmPassword, {
@@ -25,6 +27,11 @@ const registerSchema = z
   });
 
 type RegisterForm = z.infer<typeof registerSchema>;
+type AuthResponse = {
+  accessToken: string;
+  customerId: string;
+  role: string;
+};
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -42,17 +49,29 @@ export default function RegisterPage() {
   });
 
   const onSubmit = async (data: RegisterForm) => {
-    await new Promise((res) => setTimeout(res, 600));
-    setUser({
-      id: `user-${Date.now()}`,
-      name: data.name,
-      email: data.email,
-      role: "customer",
-    });
-    toast.success("Welcome to the NutriNation family!", {
-      description: "Your connoisseur account has been created.",
-    });
-    router.push("/account");
+    try {
+      const response = await backendApi.post("/auth/register", {
+        name: data.name,
+        email: data.email,
+        password: data.password,
+      });
+      const auth = unwrapData<AuthResponse>(response);
+
+      sessionStorage.setItem(ACCESS_TOKEN_STORAGE_KEY, auth.accessToken);
+      sessionStorage.setItem(AUTH_ROLE_STORAGE_KEY, auth.role);
+      setUser({
+        id: auth.customerId,
+        name: data.name,
+        email: data.email,
+        role: "customer",
+      });
+      toast.success("Your account is ready.");
+      router.push("/account");
+    } catch {
+      toast.error("We could not create your account.", {
+        description: "This email may already be registered. Please try signing in.",
+      });
+    }
   };
 
   return (

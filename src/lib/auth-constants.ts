@@ -1,4 +1,3 @@
-export const ADMIN_USERNAME = "JoshitAdmin";
-export const ADMIN_PASSWORD = "Joshit@123";
-export const ADMIN_TOKEN = "nutrination_admin_session_joshit_2026";
-export const ADMIN_TOKEN_COOKIE = "nn_admin_token";
+/** Short-lived access tokens are held only for the current browser session. */
+export const ACCESS_TOKEN_STORAGE_KEY = "nn_access_token";
+export const AUTH_ROLE_STORAGE_KEY = "nn_authenticated_role";

@@ -11,38 +11,27 @@ const config: Config = {
     extend: {
       colors: {
         brand: {
-          // Deep Onyx Botanical Forest (Sleek, Modern Luxury)
-          green: "#0C1811",
-          "green-dark": "#060D09",
-          "green-light": "#1B3425",
-          "green-emerald": "#164A31",
-
-          // Warm Artisan 24k Gold & Royal Saffron (Precious, Refined)
-          saffron: "#C69234",
-          "saffron-light": "#DFAB4F",
-          "saffron-soft": "#FBF6EC",
-          gold: "#D4A340",
-
-          // Roasted Harvest Bronze
-          orange: "#B25E2B",
-          "orange-dark": "#8F451A",
-          "orange-soft": "#FBF2EC",
-
-          // Clean Gallery Canvas & High-End Linen
-          cream: "#FBFBFA",
+          green: "#4B8F27",
+          "green-dark": "#35691B",
+          "green-light": "#78B63B",
+          "green-emerald": "#4B8F27",
+          saffron: "#F6A900",
+          "saffron-light": "#FFC64A",
+          "saffron-soft": "#FFF3D6",
+          gold: "#F6A900",
+          orange: "#FF8A00",
+          "orange-dark": "#D86E00",
+          "orange-soft": "#FFF0DE",
+          cream: "#FFFAF2",
           "cream-light": "#FFFFFF",
-          beige: "#F5F5F3",
-          "beige-dark": "#ECECE8",
-
-          // Deep Onyx & Obsidian Typography (High Contrast, Ultra-Crisp)
-          dark: "#0A0A0A",
-          "dark-light": "#1A1A1A",
-          muted: "#737373",
-          "muted-light": "#999999",
-
-          // Razor-Sharp Architectural Hairlines
-          border: "#EAEAEA",
-          "border-dark": "#DCDCDC",
+          beige: "#F6EEE2",
+          "beige-dark": "#EBDCC9",
+          dark: "#202020",
+          "dark-light": "#363636",
+          muted: "#777777",
+          "muted-light": "#A0A0A0",
+          border: "#E9E9E9",
+          "border-dark": "#D9D9D9",
         },
         cmd: {
           bg: "#0B0F14",
@@ -58,8 +47,8 @@ const config: Config = {
       },
       fontFamily: {
         sans: ["var(--font-sans)", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "sans-serif"],
-        serif: ["var(--font-serif)", "Cinzel", "Georgia", "serif"],
-        display: ["var(--font-serif)", "Cinzel", "serif"],
+        serif: ["var(--font-serif)", "Marcellus", "Georgia", "serif"],
+        display: ["var(--font-serif)", "Marcellus", "serif"],
         mono: ["var(--font-mono)", "ui-monospace", "monospace"],
         casanova: ["var(--font-casanova)", "Casanova", "Georgia", "serif"],
         marcellus: ["var(--font-marcellus)", "Marcellus", "Georgia", "serif"],

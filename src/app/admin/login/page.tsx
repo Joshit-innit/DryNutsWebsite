@@ -4,13 +4,20 @@ import React, { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Eye, EyeOff, Lock, User, Leaf, AlertCircle } from "lucide-react";
 import { Suspense } from "react";
+import { backendApi, unwrapData } from "@/lib/api/axios";
+import { ACCESS_TOKEN_STORAGE_KEY, AUTH_ROLE_STORAGE_KEY } from "@/lib/auth-constants";
+
+type AuthResponse = {
+  accessToken: string;
+  role: string;
+};
 
 function AdminLoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const from = searchParams.get("from") || "/admin";
 
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
@@ -22,23 +29,18 @@ function AdminLoginForm() {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/v1/auth/admin-login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-      });
+      const response = await backendApi.post("/auth/admin-login", { email, password });
+      const auth = unwrapData<AuthResponse>(response);
 
-      const data = await res.json();
-
-      if (data.success) {
-        // Store in localStorage so client-side can check session
-        localStorage.setItem("nn_admin_authenticated", "true");
-        localStorage.setItem("nn_admin_user", username);
-        router.push(from);
-        router.refresh();
-      } else {
-        setError(data.message || "Invalid credentials. Access denied.");
+      if (auth.role !== "ADMIN") {
+        setError("Administrator access is required.");
+        return;
       }
+
+      sessionStorage.setItem(ACCESS_TOKEN_STORAGE_KEY, auth.accessToken);
+      sessionStorage.setItem(AUTH_ROLE_STORAGE_KEY, auth.role);
+      router.push(from);
+      router.refresh();
     } catch {
       setError("Connection error. Please try again.");
     } finally {
@@ -75,17 +77,17 @@ function AdminLoginForm() {
             {/* Username */}
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-white/70 uppercase tracking-wider block">
-                Administrator Username
+                Administrator Email
               </label>
               <div className="relative">
                 <User className="w-4 h-4 text-white/30 absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  placeholder="Enter your username"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="admin@example.com"
                   required
-                  autoComplete="off"
+                  autoComplete="username"
                   className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white text-sm placeholder:text-white/30 focus:outline-none focus:border-brand-green transition-colors"
                 />
               </div>

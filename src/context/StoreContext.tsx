@@ -56,13 +56,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   // Quick view modal
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
 
-  // User session & simulated role
-  const [user, setUser] = useState<UserSession | null>({
-    id: "user-1",
-    name: "Chandu Tammana",
-    email: "chandu@nutrination.in",
-    role: "customer",
-  });
+  // The server establishes a user session after successful authentication.
+  const [user, setUser] = useState<UserSession | null>(null);
   const [activeRole, setActiveRole] = useState<"customer" | "admin" | "developer">("customer");
 
   // Load cart from localStorage on mount (hydration safe)

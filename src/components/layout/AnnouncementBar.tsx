@@ -12,11 +12,7 @@ export default function AnnouncementBar() {
     <div className="bg-brand-green text-[#F7F1E8] text-[11px] sm:text-xs py-2.5 px-4 relative z-40">
       <div className="max-w-7xl mx-auto flex items-center justify-center gap-3 text-center">
         <p className="tracking-wide font-light">
-          2026 harvest now packed · Free express over{" "}
-          <span className="font-medium text-brand-saffron">₹999</span>
-          <span className="hidden sm:inline"> · Code </span>
-          <span className="hidden sm:inline font-medium tracking-[0.14em]">FIRSTBUY</span>
-          <span className="hidden sm:inline"> for 15% off</span>
+          Explore cashews, pistachios, almonds, dried fruit, combos, and gift boxes.
         </p>
         <button
           onClick={() => setVisible(false)}

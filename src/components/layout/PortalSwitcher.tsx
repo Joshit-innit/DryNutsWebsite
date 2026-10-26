@@ -5,6 +5,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ShoppingBag, ShieldCheck, Terminal, Code2 } from "lucide-react";
 import { useStore } from "@/context/StoreContext";
+import { backendApi, unwrapData } from "@/lib/api/axios";
+
+type SessionCheck = {
+  authenticated: boolean;
+  role?: string;
+};
 
 export default function PortalSwitcher() {
   const pathname = usePathname();
@@ -14,8 +20,9 @@ export default function PortalSwitcher() {
   useEffect(() => {
     const checkAdminSession = async () => {
       try {
-        const res = await fetch("/api/v1/auth/check", { method: "GET" });
-        setIsAdmin(res.ok);
+        const response = await backendApi.get("/auth/check");
+        const session = unwrapData<SessionCheck>(response);
+        setIsAdmin(session.authenticated && session.role === "ADMIN");
       } catch {
         setIsAdmin(false);
       }
