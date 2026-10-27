@@ -1,3 +1,3 @@
 package com.nutrination.dto;
 
-public record AuthResponse(String accessToken, String tokenType, long expiresIn, String customerId, String role) {}
+public record AuthResponse(String accessToken, String tokenType, long expiresIn, String customerId, String name, String email, String role) {}

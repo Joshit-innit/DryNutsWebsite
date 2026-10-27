@@ -14,6 +14,19 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class DataSeeder {
+    // Photos checked by eye to show the named dry fruit (Unsplash, free licence).
+    private static final java.util.Map<String, String> CATEGORY_IMAGES = java.util.Map.of(
+            "cashews", "1723466998040-78d7e2ef6d72",
+            "pistachios", "1598110996285-54523b72be93",
+            "almonds", "1600188999986-331bec5f9a8d",
+            "raisins", "1634601288149-601f4b81ed7e",
+            "combos", "1543158181-1274e5362710");
+
+    private static String imageFor(String category) {
+        return "https://images.unsplash.com/photo-" + CATEGORY_IMAGES.getOrDefault(category, "1543158181-1274e5362710")
+                + "?auto=format&fit=crop&w=1200&q=80";
+    }
+
     @Bean
     CommandLineRunner seedCatalog(CategoryRepository categoryRepository, ProductRepository productRepository) {
         return args -> {
@@ -41,7 +54,7 @@ public class DataSeeder {
         category.setName(name);
         category.setTagline(tagline);
         category.setDescription(tagline + " Premium dry fruits packed fresh for everyday wellness.");
-        category.setImage("https://images.unsplash.com/photo-1599785209707-a456fc1337bb?auto=format&fit=crop&w=1000&q=80");
+        category.setImage(imageFor(slug));
         category.setBannerImage(category.getImage());
         category.setOriginHighlight("India");
         category.setBenefits(List.of("Freshly packed", "Premium grade", "No artificial preservatives"));
@@ -60,7 +73,7 @@ public class DataSeeder {
         product.setDescription("A premium NutriNation harvest with natural crunch, rich taste, and careful hygienic packing.");
         product.setOrigin("India");
         product.setGrade("Premium Reserve");
-        product.setImages(List.of("https://images.unsplash.com/photo-1599785209707-a456fc1337bb?auto=format&fit=crop&w=1000&q=80"));
+        product.setImages(List.of(imageFor(category)));
         product.setTags(List.of(categoryName, "Premium", "Dry Fruits"));
         product.setBenefits(List.of("Naturally nutrient dense", "Freshly packed", "No artificial colors"));
         product.setIngredients("100% " + name + ".");

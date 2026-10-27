@@ -1,5 +1,7 @@
 package com.nutrination.entity;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
@@ -61,7 +63,8 @@ public class Product {
     private List<String> benefits = new ArrayList<>();
 
     @Valid
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @Fetch(FetchMode.SUBSELECT)
     private List<ProductVariant> variants = new ArrayList<>();
 
     @Embedded

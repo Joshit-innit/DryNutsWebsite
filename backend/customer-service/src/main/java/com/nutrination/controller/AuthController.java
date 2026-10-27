@@ -71,6 +71,6 @@ public class AuthController {
     private AuthResponse tokenFor(Customer customer) {
         String role = customer.getRole() == null ? "CUSTOMER" : customer.getRole().toUpperCase();
         String token = jwtService.issue(new JwtService.CustomerTokenSubject(customer.getId(), customer.getEmail(), role));
-        return new AuthResponse(token, "Bearer", jwtService.expiresInSeconds(), customer.getId(), role);
+        return new AuthResponse(token, "Bearer", jwtService.expiresInSeconds(), customer.getId(), customer.getName(), customer.getEmail(), role);
     }
 }

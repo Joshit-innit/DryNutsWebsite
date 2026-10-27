@@ -1,0 +1,15 @@
+/Users/chandutammana/Downloads/untitled_folder/DryNutsWebsite/backend/product-service/src/main/java/com/nutrination/ProductServiceApplication.java
+/Users/chandutammana/Downloads/untitled_folder/DryNutsWebsite/backend/product-service/src/main/java/com/nutrination/config/DataSeeder.java
+/Users/chandutammana/Downloads/untitled_folder/DryNutsWebsite/backend/product-service/src/main/java/com/nutrination/config/OpenApiConfig.java
+/Users/chandutammana/Downloads/untitled_folder/DryNutsWebsite/backend/product-service/src/main/java/com/nutrination/config/WebConfig.java
+/Users/chandutammana/Downloads/untitled_folder/DryNutsWebsite/backend/product-service/src/main/java/com/nutrination/controller/CategoryController.java
+/Users/chandutammana/Downloads/untitled_folder/DryNutsWebsite/backend/product-service/src/main/java/com/nutrination/controller/ProductController.java
+/Users/chandutammana/Downloads/untitled_folder/DryNutsWebsite/backend/product-service/src/main/java/com/nutrination/dto/ApiResponse.java
+/Users/chandutammana/Downloads/untitled_folder/DryNutsWebsite/backend/product-service/src/main/java/com/nutrination/entity/Category.java
+/Users/chandutammana/Downloads/untitled_folder/DryNutsWebsite/backend/product-service/src/main/java/com/nutrination/entity/NutritionInfo.java
+/Users/chandutammana/Downloads/untitled_folder/DryNutsWebsite/backend/product-service/src/main/java/com/nutrination/entity/Product.java
+/Users/chandutammana/Downloads/untitled_folder/DryNutsWebsite/backend/product-service/src/main/java/com/nutrination/entity/ProductVariant.java
+/Users/chandutammana/Downloads/untitled_folder/DryNutsWebsite/backend/product-service/src/main/java/com/nutrination/repository/CategoryRepository.java
+/Users/chandutammana/Downloads/untitled_folder/DryNutsWebsite/backend/product-service/src/main/java/com/nutrination/repository/ProductRepository.java
+/Users/chandutammana/Downloads/untitled_folder/DryNutsWebsite/backend/product-service/src/main/java/com/nutrination/service/CategoryService.java
+/Users/chandutammana/Downloads/untitled_folder/DryNutsWebsite/backend/product-service/src/main/java/com/nutrination/service/ProductService.java

@@ -29,6 +29,11 @@ springdoc:
 frontend:
   allowed-origins: http://localhost:3000,http://127.0.0.1:3000
 
+seed:
+  admin:
+    email: ${ADMIN_EMAIL:admin@nutrination.in}
+    password: ${ADMIN_PASSWORD:NutriAdmin@2026}
+
 security:
   jwt:
     secret: ${JWT_SECRET}

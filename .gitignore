@@ -4,6 +4,9 @@ out/
 dist/
 .env
 .env.local
-.DS_Storenode_modules/
+.DS_Store
 AGENTS.md
 CLAUDE.md
+
+# Local account store (password hashes)
+frontend/src/data/users.json

@@ -1,6 +1,11 @@
 package com.nutrination.entity;
 
+import jakarta.persistence.FetchType;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -30,12 +35,15 @@ public class CustomerOrder {
     private String trackingNumber;
 
     @Embedded
+    @AttributeOverride(name = "id", column = @Column(name = "shipping_address_id"))
     private ShippingAddress shippingAddress;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @Fetch(FetchMode.SUBSELECT)
     private List<OrderItem> items = new ArrayList<>();
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @Fetch(FetchMode.SUBSELECT)
     private List<OrderTimelineStep> timeline = new ArrayList<>();
 
     public void syncChildren() {

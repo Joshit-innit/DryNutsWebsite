@@ -1,5 +1,8 @@
 package com.nutrination.entity;
 
+import jakarta.persistence.FetchType;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import jakarta.persistence.CascadeType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
@@ -33,7 +36,8 @@ public class Customer {
     @JsonIgnore
     private String passwordHash;
 
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @Fetch(FetchMode.SUBSELECT)
     private List<Address> addresses = new ArrayList<>();
 
     public void syncAddresses() {
