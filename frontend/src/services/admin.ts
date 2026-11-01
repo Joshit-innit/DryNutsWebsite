@@ -1,28 +1,32 @@
-import { PRODUCTS, SAMPLE_ORDERS, SAMPLE_CUSTOMERS, COUPONS } from "@/data/mockData";
-import { Product, Order, Customer, Coupon } from "@/types";
+import { Product, Customer, Order } from "@/types";
+import { backendApi, unwrapData } from "@/lib/api/axios";
 
-let adminProducts = [...PRODUCTS];
-let adminCustomers = [...SAMPLE_CUSTOMERS];
+async function fetchList<T>(endpoint: string): Promise<T[]> {
+  try {
+    return unwrapData<T[]>(await backendApi.get(endpoint));
+  } catch {
+    return [];
+  }
+}
 
 export const adminService = {
   async getDashboardMetrics() {
-    await new Promise((res) => setTimeout(res, 30));
-    const totalRevenue = SAMPLE_ORDERS.reduce((sum, o) => sum + o.total, 458900);
-    const totalOrders = SAMPLE_ORDERS.length + 184;
-    const totalCustomers = adminCustomers.length + 420;
-    const totalProducts = adminProducts.length;
-
-    const lowStockItems = adminProducts.filter((p) =>
-      p.variants.some((v) => v.stock < 25)
-    );
+    const [orders, customers, products] = await Promise.all([
+      fetchList<Order>("/orders"),
+      fetchList<Customer>("/customers"),
+      fetchList<Product>("/products?scope=all"),
+    ]);
+    const billable = orders.filter((o) => o.status !== "Cancelled" && o.status !== "Refunded");
+    const totalRevenue = billable.reduce((sum, o) => sum + o.total, 0);
+    const lowStockItems = products.filter((p) => p.variants.some((v) => v.stock < 25));
 
     return {
       totalRevenue,
-      totalOrders,
-      totalCustomers,
-      totalProducts,
+      totalOrders: orders.length,
+      totalCustomers: customers.length,
+      totalProducts: products.length,
       lowStockCount: lowStockItems.length,
-      averageOrderValue: Math.round(totalRevenue / totalOrders),
+      averageOrderValue: billable.length ? Math.round(totalRevenue / billable.length) : 0,
       revenueGrowth: "+18.4% vs last month",
       ordersGrowth: "+12.2% vs last month",
       customersGrowth: "+24.5% vs last month",
@@ -54,42 +58,49 @@ export const adminService = {
   },
 
   async getAdminProducts(): Promise<Product[]> {
-    await new Promise((res) => setTimeout(res, 30));
-    return [...adminProducts];
+    return fetchList<Product>("/products?scope=all");
   },
 
   async getProductById(id: string): Promise<Product | null> {
-    await new Promise((res) => setTimeout(res, 20));
-    return adminProducts.find((p) => p.id === id) || null;
+    try {
+      return unwrapData<Product>(await backendApi.get(`/products/${encodeURIComponent(id)}`));
+    } catch {
+      return null;
+    }
   },
 
   async saveProduct(product: Product): Promise<Product> {
-    await new Promise((res) => setTimeout(res, 40));
-    const index = adminProducts.findIndex((p) => p.id === product.id);
-    if (index >= 0) {
-      adminProducts[index] = product;
-    } else {
-      adminProducts = [product, ...adminProducts];
-    }
-    return product;
+    const existing = await adminService.getProductById(product.id);
+    const res = existing
+      ? await backendApi.patch(`/products/${encodeURIComponent(product.id)}`, product)
+      : await backendApi.post("/products", product);
+    return unwrapData<Product>(res);
   },
 
   async deleteProduct(id: string): Promise<boolean> {
-    await new Promise((res) => setTimeout(res, 30));
-    adminProducts = adminProducts.filter((p) => p.id !== id);
-    return true;
+    try {
+      await backendApi.delete(`/products/${encodeURIComponent(id)}`);
+      return true;
+    } catch {
+      return false;
+    }
   },
 
   async getCustomers(): Promise<Customer[]> {
-    await new Promise((res) => setTimeout(res, 20));
-    return [...adminCustomers];
+    return fetchList<Customer>("/customers");
   },
 
   async toggleCustomerStatus(id: string): Promise<Customer | null> {
-    await new Promise((res) => setTimeout(res, 20));
-    const cust = adminCustomers.find((c) => c.id === id);
-    if (!cust) return null;
-    cust.status = cust.status === "active" ? "suspended" : "active";
-    return { ...cust };
+    const customers = await adminService.getCustomers();
+    const current = customers.find((c) => c.id === id);
+    if (!current) return null;
+    try {
+      const res = await backendApi.patch(`/customers/${encodeURIComponent(id)}/status`, {
+        status: current.status === "active" ? "suspended" : "active",
+      });
+      return unwrapData<Customer>(res);
+    } catch {
+      return null;
+    }
   },
 };

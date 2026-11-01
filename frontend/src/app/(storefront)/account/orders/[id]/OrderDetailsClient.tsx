@@ -7,7 +7,6 @@ import { orderService } from "@/services/orders";
 import { Order } from "@/types";
 import { formatPrice } from "@/lib/utils";
 import { toast } from "sonner";
-import { SAMPLE_ORDERS } from "@/data/mockData";
 import {
   Package,
   CheckCircle2,
@@ -20,10 +19,6 @@ import {
   ShieldCheck,
   Sparkles,
 } from "lucide-react";
-
-export function generateStaticParams() {
-  return SAMPLE_ORDERS.map((order) => ({ id: order.id }));
-}
 
 export default function OrderDetailsPage() {
   const params = useParams();

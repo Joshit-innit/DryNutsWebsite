@@ -1,23 +1,36 @@
-import { REVIEWS } from "@/data/mockData";
 import { Review } from "@/types";
-
-let currentReviews = [...REVIEWS];
+import { backendApi, unwrapData } from "@/lib/api/axios";
 
 export const reviewService = {
+  async getAllReviews(): Promise<Review[]> {
+    try {
+      const res = await backendApi.get("/reviews");
+      return unwrapData<Review[]>(res);
+    } catch {
+      return [];
+    }
+  },
+
+  async deleteReview(id: string): Promise<boolean> {
+    try {
+      await backendApi.delete(`/reviews/${encodeURIComponent(id)}`);
+      return true;
+    } catch {
+      return false;
+    }
+  },
+
   async getReviewsForProduct(productId: string): Promise<Review[]> {
-    await new Promise((res) => setTimeout(res, 20));
-    return currentReviews.filter((r) => r.productId === productId);
+    try {
+      const res = await backendApi.get(`/reviews?productId=${encodeURIComponent(productId)}`);
+      return unwrapData<Review[]>(res);
+    } catch {
+      return [];
+    }
   },
 
   async addReview(review: Omit<Review, "id" | "date" | "likes">): Promise<Review> {
-    await new Promise((res) => setTimeout(res, 40));
-    const created: Review = {
-      ...review,
-      id: `rev-${Date.now()}`,
-      date: new Date().toISOString().split("T")[0],
-      likes: 0,
-    };
-    currentReviews = [created, ...currentReviews];
-    return created;
+    const res = await backendApi.post("/reviews", review);
+    return unwrapData<Review>(res);
   },
 };

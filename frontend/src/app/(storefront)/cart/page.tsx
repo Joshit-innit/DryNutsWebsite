@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useStore } from "@/context/StoreContext";
 import { formatPrice } from "@/lib/utils";
-import { PRODUCTS } from "@/data/mockData";
+import { productService } from "@/services/products";
+import { Product } from "@/types";
 import ProductCard from "@/components/products/ProductCard";
 import {
   ShoppingBag,
@@ -35,7 +36,12 @@ export default function CartPage() {
     removeCoupon,
   } = useStore();
 
+  const [catalogue, setCatalogue] = useState<Product[]>([]);
   const [couponCode, setCouponCode] = useState("");
+
+  useEffect(() => {
+    productService.getAllProducts().then(setCatalogue);
+  }, []);
   const [giftNote, setGiftNote] = useState("");
   const [isGift, setIsGift] = useState(false);
 
@@ -46,7 +52,7 @@ export default function CartPage() {
     }
   };
 
-  const recommendedItems = PRODUCTS.filter((p) => !cart.some((c) => c.productId === p.id)).slice(0, 4);
+  const recommendedItems = catalogue.filter((p) => !cart.some((c) => c.productId === p.id)).slice(0, 4);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-12">

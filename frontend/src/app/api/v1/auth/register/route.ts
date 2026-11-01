@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
       return Response.json({ message: "Password must be 12 to 128 characters." }, { status: 400 });
     }
 
-    return Response.json({ data: register(name, email, password) }, { status: 201 });
+    return Response.json({ data: await register(name, email, password) }, { status: 201 });
   } catch (error) {
     if (error instanceof AuthError) {
       return Response.json({ message: error.message }, { status: error.status });

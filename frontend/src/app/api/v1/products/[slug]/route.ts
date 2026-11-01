@@ -13,7 +13,7 @@ type ProductRouteContext = {
 
 export async function GET(request: NextRequest, context: ProductRouteContext) {
   const { slug } = await context.params;
-  const product = db.getProductBySlug(slug);
+  const product = await db.getProductBySlug(slug);
   const isAdmin = getRequestUser(request)?.role === "ADMIN";
 
   if (!product || (product.status !== "published" && !isAdmin)) {
@@ -35,8 +35,8 @@ export async function PATCH(request: NextRequest, context: ProductRouteContext) 
 
     if (body.slug !== undefined) {
       const nextSlug = slugify(body.slug);
-      const current = db.getProductBySlug(slug);
-      const clash = db.getProducts().some((p) => p.slug === nextSlug && p.id !== current?.id);
+      const current = await db.getProductBySlug(slug);
+      const clash = (await db.getProducts()).some((p) => p.slug === nextSlug && p.id !== current?.id);
       if (!nextSlug || clash) {
         return Response.json({ message: "That URL slug is already used by another product." }, { status: 409 });
       }
@@ -47,7 +47,7 @@ export async function PATCH(request: NextRequest, context: ProductRouteContext) 
       return Response.json({ message: "Add at least one product variant." }, { status: 400 });
     }
 
-    const updated = db.updateProduct(slug, updates);
+    const updated = await db.updateProduct(slug, updates);
 
     if (!updated) {
       return Response.json({ message: "Product not found." }, { status: 404 });
@@ -68,7 +68,7 @@ export async function DELETE(request: NextRequest, context: ProductRouteContext)
   if (denied) return denied;
 
   const { slug } = await context.params;
-  const deleted = db.deleteProduct(slug);
+  const deleted = await db.deleteProduct(slug);
 
   if (!deleted) {
     return Response.json({ message: "Product not found." }, { status: 404 });

@@ -1,13 +1,17 @@
 "use client";
 
-import React, { useState } from "react";
-import { CATEGORIES } from "@/data/mockData";
+import React, { useEffect, useState } from "react";
+import { categoryService } from "@/services/categories";
 import { Category } from "@/types";
 import { toast } from "sonner";
 import { Boxes, Plus, Edit2, CheckCircle2, Layers } from "lucide-react";
 
 export default function AdminCategoriesPage() {
-  const [categories, setCategories] = useState<Category[]>(CATEGORIES);
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    categoryService.getAllCategories().then(setCategories);
+  }, []);
 
   return (
     <div className="space-y-6 max-w-7xl">

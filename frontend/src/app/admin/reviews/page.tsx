@@ -1,20 +1,28 @@
 "use client";
 
-import React, { useState } from "react";
-import { REVIEWS } from "@/data/mockData";
+import React, { useEffect, useState } from "react";
+import { reviewService } from "@/services/reviews";
 import { Review } from "@/types";
 import { toast } from "sonner";
 import { Star, CheckCircle2, Trash2, Check, ShieldCheck } from "lucide-react";
 
 export default function AdminReviewsPage() {
-  const [reviews, setReviews] = useState<Review[]>(REVIEWS);
+  const [reviews, setReviews] = useState<Review[]>([]);
+
+  useEffect(() => {
+    reviewService.getAllReviews().then(setReviews);
+  }, []);
 
   const handleApprove = (id: string) => {
     toast.success("Review published live to product page.");
   };
 
-  const handleDelete = (id: string) => {
-    setReviews(reviews.filter((r) => r.id !== id));
+  const handleDelete = async (id: string) => {
+    if (!(await reviewService.deleteReview(id))) {
+      toast.error("Could not remove that review.");
+      return;
+    }
+    setReviews((current) => current.filter((r) => r.id !== id));
     toast.info("Review removed.");
   };
 

@@ -77,7 +77,7 @@ export async function GET(request: NextRequest) {
   // Drafts and archived products are only listed for admins who ask for them.
   const includeUnpublished =
     request.nextUrl.searchParams.get("scope") === "all" && getRequestUser(request)?.role === "ADMIN";
-  const products = db.getProducts().map(normalizeProductImages);
+  const products = (await db.getProducts()).map(normalizeProductImages);
   return Response.json({ data: applyFilters(products, request, includeUnpublished) });
 }
 
@@ -99,7 +99,7 @@ export async function POST(request: NextRequest) {
     }
 
     const baseSlug = slugify(body.slug || name);
-    const takenSlugs = new Set(db.getProducts().map((product) => product.slug));
+    const takenSlugs = new Set((await db.getProducts()).map((product) => product.slug));
     let slug = baseSlug;
     for (let suffix = 2; takenSlugs.has(slug); suffix++) slug = `${baseSlug}-${suffix}`;
     const origin = String(body.origin || "").trim() || [body.originRegion, body.originCountry].filter(Boolean).join(", ") || "India";
@@ -147,7 +147,7 @@ export async function POST(request: NextRequest) {
       faqs: body.faqs || [],
     });
 
-    return Response.json({ data: db.createProduct(product) }, { status: 201 });
+    return Response.json({ data: await db.createProduct(product) }, { status: 201 });
   } catch {
     return Response.json({ message: "Could not create product." }, { status: 500 });
   }

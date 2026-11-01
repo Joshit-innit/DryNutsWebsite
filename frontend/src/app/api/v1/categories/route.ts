@@ -4,8 +4,8 @@ import { getCategoryImages } from "@/lib/product-images";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  const products = db.getProducts();
-  const categories = db.getCategories().map((category) => {
+  const [products, rawCategories] = await Promise.all([db.getProducts(), db.getCategories()]);
+  const categories = rawCategories.map((category) => {
     const images = getCategoryImages(category.slug);
 
     return {

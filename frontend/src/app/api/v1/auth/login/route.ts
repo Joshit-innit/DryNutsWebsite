@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
       return Response.json({ message: "Email and password are required." }, { status: 400 });
     }
 
-    return Response.json({ data: login(email, password) });
+    return Response.json({ data: await login(email, password) });
   } catch (error) {
     if (error instanceof AuthError) {
       return Response.json({ message: error.message }, { status: error.status });

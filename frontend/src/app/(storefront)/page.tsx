@@ -4,6 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { CATEGORIES, PRODUCTS, REVIEWS } from "@/data/mockData";
+import { reviewService } from "@/services/reviews";
 import { STORE_FAQS } from "@/data/faqs";
 import ProductCard from "@/components/products/ProductCard";
 import HarvestHero from "@/components/home/HarvestHero";
@@ -13,7 +14,7 @@ import FaqAccordion from "@/components/ui/FaqAccordion";
 import { productService } from "@/services/products";
 import { getCategoryImages, getProductImage } from "@/lib/product-images";
 import { formatPrice } from "@/lib/utils";
-import { Product } from "@/types";
+import { Product, Review } from "@/types";
 
 /** Bestsellers first, then featured picks, then the rest of the catalogue. */
 function topProducts(products: Product[]) {
@@ -56,11 +57,15 @@ function SectionHeading({
 
 export default function HomePage() {
   const [products, setProducts] = React.useState<Product[]>(PRODUCTS);
+  const [reviews, setReviews] = React.useState<Review[]>(REVIEWS);
 
   React.useEffect(() => {
     productService.getAllProducts().then((live) => {
       // The local catalogue stays in place if the API is unreachable or empty.
       if (live.length > 0) setProducts(live);
+    });
+    reviewService.getAllReviews().then((live) => {
+      if (live.length > 0) setReviews(live);
     });
   }, []);
 
@@ -316,7 +321,7 @@ export default function HomePage() {
       <WhyNutriNation />
 
       {/* ------------------------------------------------ Reviews (Watermelon testimonials-1) */}
-      <ReviewsCarousel reviews={REVIEWS} products={products} />
+      <ReviewsCarousel reviews={reviews} products={products} />
 
       {/* ------------------------------------------------ FAQ (Watermelon faq-1) */}
       <section className="mx-auto max-w-[1440px] px-4 py-24 sm:px-6 sm:py-32 lg:px-12">

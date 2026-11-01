@@ -3,13 +3,20 @@
 import React from "react";
 import Link from "next/link";
 import { useStore } from "@/context/StoreContext";
-import { PRODUCTS } from "@/data/mockData";
+import { productService } from "@/services/products";
+import { Product } from "@/types";
 import ProductCard from "@/components/products/ProductCard";
 import { Heart, ShoppingBag, ArrowRight, ChevronRight } from "lucide-react";
 
 export default function WishlistPage() {
   const { wishlist } = useStore();
-  const wishlistedProducts = PRODUCTS.filter((p) => wishlist.includes(p.id));
+  const [products, setProducts] = React.useState<Product[]>([]);
+
+  React.useEffect(() => {
+    productService.getAllProducts().then(setProducts);
+  }, []);
+
+  const wishlistedProducts = products.filter((p) => wishlist.includes(p.id));
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8 min-h-[70vh]">

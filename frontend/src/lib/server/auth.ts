@@ -3,13 +3,12 @@
  * Mirrors the Spring customer-service contract (/auth/login, /auth/register,
  * /auth/check) so the frontend works against either backend.
  *
- * Accounts live in src/data/users.json, which is git-ignored because it holds
- * password hashes. The admin account is seeded from ADMIN_EMAIL / ADMIN_PASSWORD.
+ * Accounts live in the Supabase `app_users` table (scrypt password hashes).
+ * The admin account is seeded from ADMIN_EMAIL / ADMIN_PASSWORD.
  */
 
-import fs from "fs";
-import path from "path";
 import crypto from "crypto";
+import { getSupabase } from "@/lib/server/supabase";
 
 export type Role = "ADMIN" | "CUSTOMER";
 
@@ -40,7 +39,6 @@ export interface AuthPayload {
   role: Role;
 }
 
-const USERS_FILE = path.join(process.cwd(), "src", "data", "users.json");
 const TOKEN_TTL_SECONDS = 8 * 60 * 60;
 const DEV_ADMIN_EMAIL = "admin@nutrination.in";
 const DEV_ADMIN_PASSWORD = "NutriAdmin@2026";
@@ -81,42 +79,56 @@ function verifyPassword(password: string, stored: string): boolean {
 }
 
 // ---------------------------------------------------------------------------
-// User file
+// User store (Supabase: public.app_users)
 // ---------------------------------------------------------------------------
-function readUsers(): StoredUser[] {
-  let users: StoredUser[] = [];
-  try {
-    if (fs.existsSync(USERS_FILE)) {
-      const parsed = JSON.parse(fs.readFileSync(USERS_FILE, "utf-8"));
-      users = Array.isArray(parsed) ? parsed : [];
-    }
-  } catch {
-    users = [];
-  }
+function toStoredUser(row: Record<string, any>): StoredUser {
+  return {
+    id: row.id,
+    name: row.name,
+    email: row.email,
+    role: row.role,
+    passwordHash: row.password_hash,
+    createdAt: row.created_at,
+  };
+}
 
-  if (!users.some((user) => user.role === "ADMIN")) {
+let adminEnsured: Promise<void> | null = null;
+
+/** Seeds the admin account from ADMIN_EMAIL / ADMIN_PASSWORD when no admin exists. */
+function ensureAdmin(): Promise<void> {
+  adminEnsured ??= (async () => {
+    const supabase = getSupabase();
+    const { data, error } = await supabase.from("app_users").select("id").eq("role", "ADMIN").limit(1);
+    if (error) throw new Error(`Supabase: ${error.message}`);
+    if (data?.length) return;
+
     const adminEmail = (process.env.ADMIN_EMAIL || DEV_ADMIN_EMAIL).trim().toLowerCase();
     const adminPassword = process.env.ADMIN_PASSWORD || (process.env.NODE_ENV === "production" ? "" : DEV_ADMIN_PASSWORD);
-    if (adminPassword) {
-      users = users.filter((user) => user.email !== adminEmail);
-      users.push({
+    if (!adminPassword) return;
+
+    const { error: upsertError } = await supabase.from("app_users").upsert(
+      {
         id: "admin-1",
         name: "NutriNation Admin",
         email: adminEmail,
         role: "ADMIN",
-        passwordHash: hashPassword(adminPassword),
-        createdAt: new Date().toISOString(),
-      });
-      writeUsers(users);
-    }
-  }
-
-  return users;
+        password_hash: hashPassword(adminPassword),
+      },
+      { onConflict: "email" }
+    );
+    if (upsertError) throw new Error(`Supabase: ${upsertError.message}`);
+  })().catch((error) => {
+    adminEnsured = null;
+    throw error;
+  });
+  return adminEnsured;
 }
 
-function writeUsers(users: StoredUser[]): void {
-  fs.mkdirSync(path.dirname(USERS_FILE), { recursive: true });
-  fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2), "utf-8");
+async function findUserByEmail(email: string): Promise<StoredUser | null> {
+  await ensureAdmin();
+  const { data, error } = await getSupabase().from("app_users").select("*").eq("email", email).limit(1);
+  if (error) throw new Error(`Supabase: ${error.message}`);
+  return data?.[0] ? toStoredUser(data[0]) : null;
 }
 
 // ---------------------------------------------------------------------------
@@ -192,29 +204,39 @@ export class AuthError extends Error {
   }
 }
 
-export function login(email: string, password: string): AuthPayload {
+export async function login(email: string, password: string): Promise<AuthPayload> {
   const normalized = email.trim().toLowerCase();
-  const user = readUsers().find((candidate) => candidate.email === normalized);
+  const user = await findUserByEmail(normalized);
   if (!user || !verifyPassword(password, user.passwordHash)) {
     throw new AuthError(401, "Invalid email or password.");
   }
   return issueToken(user);
 }
 
-export function register(name: string, email: string, password: string): AuthPayload {
+export async function register(name: string, email: string, password: string): Promise<AuthPayload> {
   const normalized = email.trim().toLowerCase();
-  const users = readUsers();
-  if (users.some((user) => user.email === normalized)) {
+  if (await findUserByEmail(normalized)) {
     throw new AuthError(409, "An account already exists for that email address.");
   }
-  const user: StoredUser = {
-    id: `cust-${Date.now()}`,
-    name: name.trim(),
-    email: normalized,
-    role: "CUSTOMER",
-    passwordHash: hashPassword(password),
-    createdAt: new Date().toISOString(),
-  };
-  writeUsers([...users, user]);
+  const { data, error } = await getSupabase()
+    .from("app_users")
+    .insert({
+      id: `cust-${Date.now()}-${crypto.randomBytes(3).toString("hex")}`,
+      name: name.trim(),
+      email: normalized,
+      role: "CUSTOMER",
+      password_hash: hashPassword(password),
+    })
+    .select("*")
+    .single();
+  if (error) {
+    if (error.code === "23505") throw new AuthError(409, "An account already exists for that email address.");
+    throw new Error(`Supabase: ${error.message}`);
+  }
+  const user = toStoredUser(data);
+  // Mirror the account into the admin CRM list; failures here must not block sign-up.
+  await getSupabase()
+    .from("customers")
+    .upsert({ id: user.id, name: user.name, email: user.email }, { onConflict: "email", ignoreDuplicates: true });
   return issueToken(user);
 }
