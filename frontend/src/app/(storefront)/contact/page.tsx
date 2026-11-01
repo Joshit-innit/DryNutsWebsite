@@ -5,6 +5,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { toast } from "sonner";
+import FaqAccordion from "@/components/ui/FaqAccordion";
+import { STORE_FAQS } from "@/data/faqs";
 import {
   Mail,
   Phone,
@@ -14,7 +16,6 @@ import {
   MessageSquare,
   Sparkles,
   ShieldCheck,
-  HelpCircle,
 } from "lucide-react";
 
 const contactSchema = z.object({
@@ -44,25 +45,6 @@ export default function ContactPage() {
     });
     reset();
   };
-
-  const faqs = [
-    {
-      q: "Where do you source your dry fruits from?",
-      a: "Our almonds and walnuts are sourced directly from certified organic groves in Pulwama and Pahalgam, Kashmir. Our King W-180 cashews come from Mangalore, while Medjool dates and Afghani figs are imported under strict temperature controls from Jordan and Afghanistan.",
-    },
-    {
-      q: "How does NutriNation guarantee zero rancidity?",
-      a: "All our products are packed in clean-room nitrogen-flushed tins and multilayer oxygen-barrier pouches. This seals in the delicate natural oils and keeps moisture and oxidation completely out.",
-    },
-    {
-      q: "Do you offer corporate and wedding gifting packages?",
-      a: "Yes! We specialize in bespoke handcrafted wooden caskets, brass filigree hampers, and customized gift sleeves for corporate milestones and luxury wedding celebrations.",
-    },
-    {
-      q: "What is your standard delivery timeline?",
-      a: "Standard ground/air delivery takes 2-3 business days across India. Priority next-day air express is also available at checkout for major metro cities.",
-    },
-  ];
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
@@ -229,17 +211,7 @@ export default function ContactPage() {
           </h3>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
-          {faqs.map((faq, i) => (
-            <div key={i} className="p-5 rounded-2xl bg-brand-cream/40 border border-brand-border space-y-2">
-              <h4 className="font-serif font-bold text-sm text-brand-dark flex items-center gap-2">
-                <HelpCircle className="w-4 h-4 text-brand-green flex-shrink-0" />
-                <span>{faq.q}</span>
-              </h4>
-              <p className="text-xs text-brand-muted leading-relaxed pl-6 font-sans">{faq.a}</p>
-            </div>
-          ))}
-        </div>
+        <FaqAccordion items={STORE_FAQS} className="mx-auto max-w-4xl pt-4" />
       </div>
     </div>
   );

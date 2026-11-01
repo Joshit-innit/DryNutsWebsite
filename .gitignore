@@ -10,3 +10,16 @@ CLAUDE.md
 
 # Local account store (password hashes)
 frontend/src/data/users.json
+
+# Build caches / generated files
+*.tsbuildinfo
+next-env.d.ts
+
+# Logs
+*.log
+npm-debug.log*
+
+# Machine-local Claude/agent skills
+.claude/skills/
+.agents/
+**/SKILL.md
