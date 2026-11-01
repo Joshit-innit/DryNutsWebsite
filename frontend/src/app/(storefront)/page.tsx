@@ -3,9 +3,13 @@
 import React from "react";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
-import { CATEGORIES, PRODUCTS } from "@/data/mockData";
+import { CATEGORIES, PRODUCTS, REVIEWS } from "@/data/mockData";
+import { STORE_FAQS } from "@/data/faqs";
 import ProductCard from "@/components/products/ProductCard";
 import HarvestHero from "@/components/home/HarvestHero";
+import WhyNutriNation from "@/components/home/WhyNutriNation";
+import ReviewsCarousel from "@/components/home/ReviewsCarousel";
+import FaqAccordion from "@/components/ui/FaqAccordion";
 import { productService } from "@/services/products";
 import { getCategoryImages, getProductImage } from "@/lib/product-images";
 import { formatPrice } from "@/lib/utils";
@@ -305,6 +309,34 @@ export default function HomePage() {
               </tbody>
             </table>
           </div>
+        </div>
+      </section>
+
+      {/* ------------------------------------------------ Why NutriNation (Watermelon feature-1) */}
+      <WhyNutriNation />
+
+      {/* ------------------------------------------------ Reviews (Watermelon testimonials-1) */}
+      <ReviewsCarousel reviews={REVIEWS} products={products} />
+
+      {/* ------------------------------------------------ FAQ (Watermelon faq-1) */}
+      <section className="mx-auto max-w-[1440px] px-4 py-24 sm:px-6 sm:py-32 lg:px-12">
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16">
+          <div>
+            <p className="section-label mb-4">Good to know</p>
+            <h2 className="section-title max-w-md">
+              Questions,
+              <br />
+              <span className="font-accent text-brand-green">answered.</span>
+            </h2>
+            <p className="mt-6 max-w-sm text-[15px] leading-relaxed text-brand-muted">
+              Sourcing, freshness, gifting and delivery. Anything else, our team is a message away.
+            </p>
+            <Link href="/contact" className="group mt-8 inline-flex items-center gap-2 text-[15px] font-medium text-brand-dark">
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+              <span className="link-rule">Contact concierge</span>
+            </Link>
+          </div>
+          <FaqAccordion items={STORE_FAQS} defaultOpen={STORE_FAQS[0]?.id} />
         </div>
       </section>
     </div>
