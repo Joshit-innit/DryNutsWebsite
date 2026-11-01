@@ -2,6 +2,7 @@ import { Review } from "@/types";
 import { backendApi, unwrapData } from "@/lib/api/axios";
 
 export const reviewService = {
+  /** Admin only: reviews are moderated, not shown on the storefront. */
   async getAllReviews(): Promise<Review[]> {
     try {
       const res = await backendApi.get("/reviews");
@@ -20,16 +21,7 @@ export const reviewService = {
     }
   },
 
-  async getReviewsForProduct(productId: string): Promise<Review[]> {
-    try {
-      const res = await backendApi.get(`/reviews?productId=${encodeURIComponent(productId)}`);
-      return unwrapData<Review[]>(res);
-    } catch {
-      return [];
-    }
-  },
-
-  async addReview(review: Omit<Review, "id" | "date" | "likes">): Promise<Review> {
+  async addReview(review: { productId: string; rating: number; title: string; comment: string }): Promise<Review> {
     const res = await backendApi.post("/reviews", review);
     return unwrapData<Review>(res);
   },

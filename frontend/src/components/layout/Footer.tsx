@@ -44,7 +44,7 @@ export default function Footer() {
       links: [
         { label: "Wellness combos", href: "/category/combos" },
         { label: "Gift hampers", href: "/category/gift-boxes" },
-        { label: "Best sellers", href: "/products?filter=bestseller" },
+        { label: "Best sellers", href: "/best-sellers" },
         { label: "Full catalogue", href: "/products" },
       ],
     },

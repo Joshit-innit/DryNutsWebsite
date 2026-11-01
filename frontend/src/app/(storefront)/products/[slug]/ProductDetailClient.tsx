@@ -11,6 +11,7 @@ import { useStore } from "@/context/StoreContext";
 import { formatPrice } from "@/lib/utils";
 import { getProductImageMeta } from "@/lib/product-images";
 import ProductCard from "@/components/products/ProductCard";
+import ReviewForm from "@/components/products/ReviewForm";
 
 type DetailTab = "details" | "nutrition" | "storage";
 
@@ -246,6 +247,8 @@ export default function ProductDetailPage() {
           )}
         </div>
       </section>
+
+      <ReviewForm productId={product.id} productName={product.name} slug={product.slug} />
 
       {relatedProducts.length > 0 && (
         <section className="border-t border-brand-border py-16 sm:py-20">

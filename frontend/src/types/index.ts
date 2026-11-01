@@ -244,3 +244,22 @@ export interface DeploymentRecord {
   deployedAt: string;
   status: "SUCCESS" | "FAILED" | "IN_PROGRESS" | "ROLLED_BACK";
 }
+
+/* =========================================================================
+   LANDING PAGE MEDIA (admin managed)
+   ========================================================================= */
+
+export type LandingSection = "hero" | "featured" | "category";
+
+export interface LandingImage {
+  id: string;
+  section: LandingSection;
+  /** Category slug for "category" rows; null otherwise. */
+  slot: string | null;
+  imageUrl: string;
+  title: string;
+  caption: string;
+  linkUrl: string;
+  alt: string;
+  sortOrder: number;
+}

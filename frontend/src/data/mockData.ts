@@ -4,7 +4,6 @@ import {
   Order,
   Customer,
   Coupon,
-  Review,
   SystemServiceStatus,
   SystemMetrics,
   LogEntry,
@@ -1146,65 +1145,6 @@ export const PRODUCTS: Product[] = [
       fiber: "2.2g",
     },
     ingredients: "King Cashews, Iranian Pistachios, Kashmiri Mamra Almonds, Snow White Walnuts, Afghan Anjeer, Medjool Dates.",
-  },
-];
-
-/* =========================================================================
-   3. SAMPLE REVIEWS
-   ========================================================================= */
-
-export const REVIEWS: Review[] = [
-  {
-    id: "rev-1",
-    productId: "prod-cashew-1",
-    customerName: "Aarav Sharma",
-    location: "South Mumbai",
-    rating: 5,
-    date: "2026-07-15",
-    title: "Unmatched creaminess and monumental size",
-    comment:
-      "I have been buying dry fruits for over 20 years from traditional markets, but NutriNation's W-180 cashews are on another level entirely. Zero broken nuts, vacuum packed to absolute perfection.",
-    verifiedPurchase: true,
-    likes: 42,
-  },
-  {
-    id: "rev-2",
-    productId: "prod-almond-1",
-    customerName: "Dr. Meenakshi Sundaram",
-    location: "Bengaluru",
-    rating: 5,
-    date: "2026-07-28",
-    title: "Genuine Kashmiri Mamra with high oil content",
-    comment:
-      "When you crush one between your fingers, you can instantly see the glistening almond oil. This is authentic unadulterated Mamra giri. My entire family eats 5 soaked almonds daily.",
-    verifiedPurchase: true,
-    likes: 38,
-  },
-  {
-    id: "rev-3",
-    productId: "prod-walnut-1",
-    customerName: "Vikram Malhotra",
-    location: "New Delhi",
-    rating: 5,
-    date: "2026-08-02",
-    title: "Zero bitterness — pristine white butterfly halves",
-    comment:
-      "Finding walnuts without that harsh rancid aftertaste is nearly impossible in supermarkets. NutriNation delivers them as fresh as if they were just cracked in Kashmir.",
-    verifiedPurchase: true,
-    likes: 29,
-  },
-  {
-    id: "rev-4",
-    productId: "prod-combo-1",
-    customerName: "Pooja Hegde",
-    location: "Hyderabad",
-    rating: 5,
-    date: "2026-08-10",
-    title: "My daily energy ritual",
-    comment:
-      "The 7-in-1 wellness mix is so convenient. The dates and figs stay moist while the almonds and pistachios retain their sharp crunch. Highly recommended!",
-    verifiedPurchase: true,
-    likes: 51,
   },
 ];
 

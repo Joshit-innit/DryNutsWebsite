@@ -53,7 +53,9 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null);
 
   // Wishlist state
-  const [wishlist, setWishlist] = useState<string[]>(["prod-cashew-1", "prod-almond-1"]);
+  // Each account (and guests) gets its own list, so a new account starts empty.
+  const [wishlist, setWishlist] = useState<string[]>([]);
+  const [wishlistOwner, setWishlistOwner] = useState<string | null>(null);
 
   // Quick view modal
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null);
@@ -70,10 +72,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       if (saved) {
         setCart(JSON.parse(saved));
       }
-      const savedWishlist = localStorage.getItem("nn_wishlist");
-      if (savedWishlist) {
-        setWishlist(JSON.parse(savedWishlist));
-      }
+      // Drop the old wishlist that was shared by every account on this browser.
+      localStorage.removeItem("nn_wishlist");
     } catch {
       // ignore
     }
@@ -88,14 +88,30 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     }
   }, [cart]);
 
-  // Save wishlist to localStorage
+  // Load the signed-in account's wishlist whenever the account changes.
+  const wishlistKey = `nn_wishlist:${user?.id ?? "guest"}`;
   useEffect(() => {
+    let saved: string[] = [];
     try {
-      localStorage.setItem("nn_wishlist", JSON.stringify(wishlist));
+      const raw = localStorage.getItem(wishlistKey);
+      const parsed = raw ? JSON.parse(raw) : [];
+      saved = Array.isArray(parsed) ? parsed.filter((id) => typeof id === "string") : [];
     } catch {
       // ignore
     }
-  }, [wishlist]);
+    setWishlist(saved);
+    setWishlistOwner(wishlistKey);
+  }, [wishlistKey]);
+
+  // Save it back under the same account, never under the one that just signed in.
+  useEffect(() => {
+    if (wishlistOwner !== wishlistKey) return;
+    try {
+      localStorage.setItem(wishlistKey, JSON.stringify(wishlist));
+    } catch {
+      // ignore
+    }
+  }, [wishlist, wishlistKey, wishlistOwner]);
 
   // Cart operations
   const addToCart = (product: Product, variant?: WeightVariant, quantity = 1) => {

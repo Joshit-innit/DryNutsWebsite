@@ -128,7 +128,7 @@ export default function Navbar() {
               )}
             </div>
 
-            <Link href="/products?filter=bestseller" className={navLink(false)}>
+            <Link href="/best-sellers" className={navLink(pathname === "/best-sellers")}>
               Best sellers
             </Link>
             <Link href="/category/combos" className={navLink(pathname.includes("combos"))}>

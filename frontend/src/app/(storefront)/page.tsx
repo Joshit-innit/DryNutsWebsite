@@ -3,32 +3,18 @@
 import React from "react";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
-import { CATEGORIES, PRODUCTS, REVIEWS } from "@/data/mockData";
-import { reviewService } from "@/services/reviews";
+import { CATEGORIES, PRODUCTS } from "@/data/mockData";
+import { landingService } from "@/services/landing";
 import { STORE_FAQS } from "@/data/faqs";
 import ProductCard from "@/components/products/ProductCard";
 import HarvestHero from "@/components/home/HarvestHero";
 import WhyNutriNation from "@/components/home/WhyNutriNation";
-import ReviewsCarousel from "@/components/home/ReviewsCarousel";
 import FaqAccordion from "@/components/ui/FaqAccordion";
 import { productService } from "@/services/products";
-import { getCategoryImages, getProductImage } from "@/lib/product-images";
+import { getProductImage } from "@/lib/product-images";
+import { categoryPhoto, featuredPhoto, heroSlides, lowestPrice, shortName, sized, topProducts } from "@/lib/landing";
 import { formatPrice } from "@/lib/utils";
-import { Product, Review } from "@/types";
-
-/** Bestsellers first, then featured picks, then the rest of the catalogue. */
-function topProducts(products: Product[]) {
-  const rank = (p: Product) => (p.isBestSeller ? 2 : 0) + (p.isFeatured ? 1 : 0);
-  return [...products].sort((a, b) => rank(b) - rank(a) || b.reviewCount - a.reviewCount).slice(0, 10);
-}
-
-function shortName(name: string) {
-  return name.replace(/\s*\(.*?\)\s*/g, " ").replace(/\s+/g, " ").trim();
-}
-
-function lowestPrice(product: Product) {
-  return Math.min(...product.variants.map((v) => v.price));
-}
+import { LandingImage, Product } from "@/types";
 
 function SectionHeading({
   label,
@@ -57,19 +43,20 @@ function SectionHeading({
 
 export default function HomePage() {
   const [products, setProducts] = React.useState<Product[]>(PRODUCTS);
-  const [reviews, setReviews] = React.useState<Review[]>(REVIEWS);
+  // null until loaded, so the built-in photos never flash before the admin's ones.
+  const [landing, setLanding] = React.useState<LandingImage[] | null>(null);
 
   React.useEffect(() => {
     productService.getAllProducts().then((live) => {
       // The local catalogue stays in place if the API is unreachable or empty.
       if (live.length > 0) setProducts(live);
     });
-    reviewService.getAllReviews().then((live) => {
-      if (live.length > 0) setReviews(live);
-    });
+    landingService.getAll().then(setLanding);
   }, []);
 
-  const ranked = topProducts(products);
+  const ranked = React.useMemo(() => topProducts(products), [products]);
+  const slides = React.useMemo(() => (landing ? heroSlides(landing, ranked) : []), [landing, ranked]);
+  const photos = landing ?? [];
   const featured = ranked[0];
   const shelf = ranked.slice(0, 4);
   const directory = ranked.slice(0, 8);
@@ -79,7 +66,7 @@ export default function HomePage() {
 
   return (
     <div className="overflow-hidden">
-      <HarvestHero products={ranked} />
+      <HarvestHero slides={slides} />
 
       {/* ------------------------------------------------ Harvest of the Day */}
       {featured && (
@@ -118,7 +105,7 @@ export default function HomePage() {
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={getProductImage(featured).replace(/([?&])w=\d+/, "$1w=2000")}
+              src={landing ? sized(featuredPhoto(photos, featured), 2000) : undefined}
               alt={featured.name}
               className="aspect-[16/9] w-full object-cover transition-transform duration-[1200ms] ease-luxury group-hover:scale-[1.03] sm:aspect-[21/9]"
               loading="lazy"
@@ -154,7 +141,7 @@ export default function HomePage() {
                 <div className="overflow-hidden rounded-2xl bg-brand-beige">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={getCategoryImages(category.slug)[0].replace(/([?&])w=\d+/, "$1w=900")}
+                    src={landing ? sized(categoryPhoto(photos, category.slug), 900) : undefined}
                     alt={category.name}
                     className="aspect-[4/3] w-full object-cover transition-transform duration-700 ease-luxury group-hover:scale-[1.04]"
                     loading="lazy"
@@ -218,7 +205,7 @@ export default function HomePage() {
                 <div className="w-[52%] overflow-hidden rounded-xl">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={getCategoryImages(card.slug)[0].replace(/([?&])w=\d+/, "$1w=900")}
+                    src={landing ? sized(categoryPhoto(photos, card.slug), 900) : undefined}
                     alt=""
                     className="aspect-[4/3] w-full object-cover transition-transform duration-700 ease-luxury group-hover:scale-[1.05]"
                     loading="lazy"
@@ -319,9 +306,6 @@ export default function HomePage() {
 
       {/* ------------------------------------------------ Why NutriNation (Watermelon feature-1) */}
       <WhyNutriNation />
-
-      {/* ------------------------------------------------ Reviews (Watermelon testimonials-1) */}
-      <ReviewsCarousel reviews={reviews} products={products} />
 
       {/* ------------------------------------------------ FAQ (Watermelon faq-1) */}
       <section className="mx-auto max-w-[1440px] px-4 py-24 sm:px-6 sm:py-32 lg:px-12">

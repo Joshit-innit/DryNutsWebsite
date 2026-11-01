@@ -3,9 +3,6 @@
 import React, { useEffect, useRef } from "react";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { Product } from "@/types";
-import { getProductImage } from "@/lib/product-images";
-import { formatPrice } from "@/lib/utils";
 import styles from "./HarvestHero.module.css";
 
 /**
@@ -15,6 +12,15 @@ import styles from "./HarvestHero.module.css";
  */
 
 export type CarouselMode = "desktop" | "mobile";
+
+/** One card in the reel: either a product or an admin-managed landing photo. */
+export interface CarouselSlide {
+  id: string;
+  image: string;
+  title: string;
+  caption?: string;
+  href: string;
+}
 
 const CARD_COUNT = 10;
 const PITCH = 196; // even spacing between card centres before the outward push
@@ -35,12 +41,9 @@ type CardRefs = {
   icon: HTMLSpanElement | null;
 };
 
-function shortName(name: string) {
-  return name.replace(/\s*\(.*?\)\s*/g, " ").replace(/\s+/g, " ").trim();
-}
-
-function cardImage(product: Product) {
-  return getProductImage(product).replace(/([?&])w=\d+/, "$1w=720");
+function cardImage(slide: CarouselSlide) {
+  // Shrink Unsplash photos for the small cards; other URLs are used as-is.
+  return slide.image.includes("images.unsplash.com") ? slide.image.replace(/([?&])w=\d+/, "$1w=720") : slide.image;
 }
 
 /** Rounded polygon through the given corners, as an SVG path for clip-path. */
@@ -66,11 +69,11 @@ function roundedQuad(points: [number, number][], r: number) {
 }
 
 export default function HarvestCarousel({
-  products,
+  slides,
   mode,
   className,
 }: {
-  products: Product[];
+  slides: CarouselSlide[];
   mode: CarouselMode;
   className?: string;
 }) {
@@ -80,7 +83,7 @@ export default function HarvestCarousel({
   );
 
   // Fill all ten slots even when the catalogue is smaller.
-  const slots = Array.from({ length: CARD_COUNT }, (_, i) => products[i % Math.max(products.length, 1)]).filter(Boolean);
+  const slots = Array.from({ length: CARD_COUNT }, (_, i) => slides[i % Math.max(slides.length, 1)]).filter(Boolean);
 
   useEffect(() => {
     const track = trackRef.current;
@@ -252,9 +255,9 @@ export default function HarvestCarousel({
       track.removeEventListener("pointercancel", onUp);
       track.removeEventListener("click", onClickCapture, true);
     };
-    // slots is derived from products; re-run only when the catalogue or mode changes.
+    // slots is derived from slides; re-run only when the catalogue or mode changes.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [products, mode]);
+  }, [slides, mode]);
 
   return (
     <div
@@ -264,19 +267,18 @@ export default function HarvestCarousel({
       aria-roledescription="carousel"
       aria-label="Bestselling dry fruits"
     >
-      {slots.map((product, i) => {
-        const isDuplicate = i >= products.length;
-        const price = Math.min(...product.variants.map((v) => v.price));
+      {slots.map((slide, i) => {
+        const isDuplicate = i >= slides.length;
         return (
           <Link
-            key={`${product.id}-${i}`}
-            href={`/products/${product.slug}`}
+            key={`${slide.id}-${i}`}
+            href={slide.href || "/products"}
             ref={(el) => {
               cardRefs.current[i].root = el;
             }}
             className={styles.card}
             draggable={false}
-            aria-label={`${product.name}, from ${formatPrice(price)}`}
+            aria-label={slide.caption ? `${slide.title}, ${slide.caption}` : slide.title}
             aria-hidden={isDuplicate || undefined}
             tabIndex={isDuplicate ? -1 : undefined}
           >
@@ -285,7 +287,7 @@ export default function HarvestCarousel({
               ref={(el) => {
                 cardRefs.current[i].media = el;
               }}
-              src={cardImage(product)}
+              src={cardImage(slide)}
               alt=""
               className={styles.cardMedia}
               draggable={false}
@@ -305,8 +307,8 @@ export default function HarvestCarousel({
               }}
               className={styles.cardInfo}
             >
-              <span className={styles.cardName}>{shortName(product.name)}</span>
-              <span className={styles.cardPrice}>from {formatPrice(price)}</span>
+              <span className={styles.cardName}>{slide.title}</span>
+              {slide.caption && <span className={styles.cardPrice}>{slide.caption}</span>}
             </div>
             <span
               ref={(el) => {

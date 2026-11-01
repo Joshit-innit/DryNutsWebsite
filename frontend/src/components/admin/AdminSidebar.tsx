@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useStore } from "@/context/StoreContext";
 import {
+  Images,
   LayoutDashboard,
   Package,
   Boxes,
@@ -36,6 +37,7 @@ export default function AdminSidebar() {
     { label: "Promo Offers", href: "/admin/offers", icon: Tag },
     { label: "Review Moderation", href: "/admin/reviews", icon: Star },
     { label: "Revenue Analytics", href: "/admin/analytics", icon: BarChart3 },
+    { label: "Home Page Photos", href: "/admin/landing", icon: Images },
     { label: "Editorial Content", href: "/admin/content", icon: FileText },
     { label: "Store Settings", href: "/admin/settings", icon: Sliders },
   ];

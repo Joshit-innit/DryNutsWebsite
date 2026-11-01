@@ -3,8 +3,7 @@
 import React, { useEffect, useRef } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { Product } from "@/types";
-import HarvestCarousel from "./HarvestCarousel";
+import HarvestCarousel, { CarouselSlide } from "./HarvestCarousel";
 import styles from "./HarvestHero.module.css";
 
 const FRAME_WIDTH = 1440;
@@ -33,7 +32,7 @@ function ShopButton() {
   );
 }
 
-export default function HarvestHero({ products }: { products: Product[] }) {
+export default function HarvestHero({ slides }: { slides: CarouselSlide[] }) {
   const rootRef = useRef<HTMLElement>(null);
 
   // Contained 1440×940 frame: one unit = min(width / 1440, remaining height / 940).
@@ -146,7 +145,7 @@ export default function HarvestHero({ products }: { products: Product[] }) {
         </p>
       </div>
 
-      <HarvestCarousel products={products} mode="desktop" className={`${styles.reel} ${styles.reelDesktop}`} />
+      <HarvestCarousel slides={slides} mode="desktop" className={`${styles.reel} ${styles.reelDesktop}`} />
 
       {/* ------------------------------ Phone layout ------------------------------ */}
       <div className={styles.mobile}>
@@ -155,7 +154,7 @@ export default function HarvestHero({ products }: { products: Product[] }) {
         <p className={styles.mobileSubline} data-enter="fade-up">
           Mamra almonds, W-180 cashews and Medjool dates — sorted by hand and nitrogen-sealed in small batches.
         </p>
-        <HarvestCarousel products={products} mode="mobile" className={`${styles.reel} ${styles.reelMobile}`} />
+        <HarvestCarousel slides={slides} mode="mobile" className={`${styles.reel} ${styles.reelMobile}`} />
         <div className={styles.mobileCta}>
           <ShopButton />
           <p className={`${styles.note} ${styles.mobileNote}`} data-enter="note">

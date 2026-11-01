@@ -7,7 +7,7 @@
  */
 
 import { getSupabase } from "@/lib/server/supabase";
-import { Product, Category, Order, Coupon, Review, Customer } from "@/types";
+import { Product, Category, Order, Coupon, Review, Customer, LandingImage } from "@/types";
 
 type Row = Record<string, any>;
 
@@ -181,6 +181,33 @@ function toCustomer(r: Row): Customer {
   };
 }
 
+function toLandingImage(r: Row): LandingImage {
+  return {
+    id: r.id,
+    section: r.section,
+    slot: r.slot ?? null,
+    imageUrl: r.image_url,
+    title: r.title,
+    caption: r.caption,
+    linkUrl: r.link_url,
+    alt: r.alt,
+    sortOrder: num(r.sort_order),
+  };
+}
+
+function fromLandingImage(l: Partial<LandingImage>): Row {
+  const map: Record<string, string> = {
+    section: "section", slot: "slot", imageUrl: "image_url", title: "title", caption: "caption",
+    linkUrl: "link_url", alt: "alt", sortOrder: "sort_order",
+  };
+  const row: Row = {};
+  for (const [key, column] of Object.entries(map)) {
+    const value = (l as Row)[key];
+    if (value !== undefined) row[column] = value;
+  }
+  return row;
+}
+
 // Escape a value for use inside a PostgREST `or=(...)` filter.
 const orValue = (v: string) => `"${v.replace(/"/g, '\\"')}"`;
 
@@ -343,5 +370,54 @@ export const db = {
   async setCustomerStatus(id: string, status: Customer["status"]): Promise<Customer | null> {
     const rows = check(await getSupabase().from("customers").update({ status }).eq("id", id).select("*"));
     return rows?.[0] ? toCustomer(rows[0]) : null;
+  },
+
+  // ---- Landing page media ----
+  async getLandingImages(): Promise<LandingImage[]> {
+    const rows = check(
+      await getSupabase()
+        .from("landing_images")
+        .select("*")
+        .order("section", { ascending: true })
+        .order("sort_order", { ascending: true })
+        .order("created_at", { ascending: true })
+    );
+    return (rows ?? []).map(toLandingImage);
+  },
+
+  async getLandingImage(id: string): Promise<LandingImage | undefined> {
+    const rows = check(await getSupabase().from("landing_images").select("*").eq("id", id).limit(1));
+    return rows?.[0] ? toLandingImage(rows[0]) : undefined;
+  },
+
+  /** Inserts, or for single-slot sections (featured/category) replaces the existing row. */
+  async saveLandingImage(image: Omit<LandingImage, "id">): Promise<LandingImage> {
+    const supabase = getSupabase();
+    if (image.section !== "hero") {
+      let query = supabase.from("landing_images").select("id").eq("section", image.section);
+      query = image.slot ? query.eq("slot", image.slot) : query.is("slot", null);
+      const existing = check(await query.limit(1));
+      if (existing?.[0]) {
+        const row = check(
+          await supabase.from("landing_images").update(fromLandingImage(image)).eq("id", existing[0].id).select("*").single()
+        );
+        return toLandingImage(row);
+      }
+    }
+    const row = check(await supabase.from("landing_images").insert(fromLandingImage(image)).select("*").single());
+    return toLandingImage(row);
+  },
+
+  async updateLandingImage(id: string, updates: Partial<LandingImage>): Promise<LandingImage | null> {
+    const { id: _id, section: _section, slot: _slot, ...rest } = updates;
+    const rows = check(
+      await getSupabase().from("landing_images").update(fromLandingImage(rest)).eq("id", id).select("*")
+    );
+    return rows?.[0] ? toLandingImage(rows[0]) : null;
+  },
+
+  async deleteLandingImage(id: string): Promise<LandingImage | null> {
+    const rows = check(await getSupabase().from("landing_images").delete().eq("id", id).select("*"));
+    return rows?.[0] ? toLandingImage(rows[0]) : null;
   },
 };
