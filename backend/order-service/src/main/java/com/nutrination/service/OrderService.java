@@ -5,12 +5,15 @@ import com.nutrination.client.ProductClient;
 import com.nutrination.entity.CustomerOrder;
 import com.nutrination.entity.OrderTimelineStep;
 import com.nutrination.repository.OrderRepository;
+import feign.FeignException;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -40,9 +43,9 @@ public class OrderService {
     @Transactional
     public CustomerOrder create(CustomerOrder order) {
         if (order.getCustomerId() != null && !order.getCustomerId().isBlank()) {
-            customerClient.getCustomer(order.getCustomerId());
+            verifyCustomer(order.getCustomerId());
         }
-        order.getItems().forEach(item -> productClient.getProduct(item.getProductId()));
+        order.getItems().forEach(item -> verifyProduct(item.getProductId()));
         order.setId(order.getId() == null ? "ord-" + System.currentTimeMillis() : order.getId());
         order.setOrderNumber(order.getOrderNumber() == null ? orderNumber() : order.getOrderNumber());
         order.setDate(order.getDate() == null ? LocalDate.now() : order.getDate());
@@ -54,6 +57,32 @@ public class OrderService {
         }
         order.syncChildren();
         return orderRepository.save(order);
+    }
+
+    /** customer-service only returns the record to that customer or an admin (token forwarded by the client). */
+    private void verifyCustomer(String customerId) {
+        try {
+            customerClient.getCustomer(customerId);
+        } catch (FeignException.Unauthorized e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Sign in to place an order for a customer account");
+        } catch (FeignException.Forbidden e) {
+            // customer-service answers 403 both without a token and with another customer's token.
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Sign in as this customer to place an order on their account");
+        } catch (FeignException.NotFound e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unknown customer: " + customerId);
+        } catch (FeignException e) {
+            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Customer service unavailable", e);
+        }
+    }
+
+    private void verifyProduct(String productId) {
+        try {
+            productClient.getProduct(productId);
+        } catch (FeignException.NotFound e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unknown product: " + productId);
+        } catch (FeignException e) {
+            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Product service unavailable", e);
+        }
     }
 
     @Transactional
