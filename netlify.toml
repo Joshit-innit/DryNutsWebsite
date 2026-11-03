@@ -14,6 +14,9 @@
 [build.environment]
   NODE_VERSION = "22"
   NEXT_TELEMETRY_DISABLED = "1"
+  # The admin email doubles as the public customer-service address shown on
+  # the contact and policy pages, so it is expected in the build output.
+  SECRETS_SCAN_OMIT_KEYS = "ADMIN_EMAIL"
 
 # Declared explicitly: auto-detection runs at the repo root (no Next.js there)
 # and skipped it, which uploaded .next as static files and 404'd every route.
