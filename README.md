@@ -13,6 +13,9 @@
 ![Java](https://img.shields.io/badge/Java-21-ED8B00?logo=openjdk&logoColor=white)
 ![Supabase](https://img.shields.io/badge/Supabase-Postgres-3FCF8E?logo=supabase&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)
+![Netlify](https://img.shields.io/badge/Netlify-deployed-00C7B7?logo=netlify&logoColor=white)
+
+### [Live site → nutrination.netlify.app](https://nutrination.netlify.app)
 
 <br/>
 
@@ -30,7 +33,7 @@ All store data (catalogue, accounts, orders, coupons, reviews and customers) liv
 
 ### Highlights
 
-- **Editorial storefront** with a 3D harvest carousel, smooth scrolling, scroll-reveal motion, a quick-view modal, a slide-out cart drawer and a mobile-first bottom dock.
+- **Editorial storefront** with an expanding photo gallery hero, a scroll-pinned product reel where each product morphs into the next (Framer Motion), smooth scrolling, scroll-reveal motion, a quick-view modal, a slide-out cart drawer and a mobile-first bottom dock.
 - **Complete shopping flow**: catalogue filtering and sorting, category pages, product variants by weight, wishlist, cart, checkout, order history and order tracking.
 - **Admin console** with revenue and conversion analytics, product CRUD, inventory thresholds, fulfilment pipeline, customers, coupons, promotions, review moderation and editorial content.
 - **Operations console (CMD)** with service health, a service registry, database and cache views, logs, background jobs, deployments, security and audit screens.
@@ -43,6 +46,17 @@ All store data (catalogue, accounts, orders, coupons, reviews and customers) liv
 ## Screenshots
 
 ### Storefront
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/screenshots/home-reel.png" alt="Scroll-pinned product reel"/></td>
+    <td width="50%"><img src="docs/screenshots/home-featured.png" alt="Harvest of the Day"/></td>
+  </tr>
+  <tr>
+    <td align="center"><sub><b>Harvest Reel</b>: a pinned scroll section where each product morphs into the next</sub></td>
+    <td align="center"><sub><b>Harvest of the Day</b>: one featured product with a scroll-revealed photo</sub></td>
+  </tr>
+</table>
 
 <table>
   <tr>
@@ -134,6 +148,23 @@ All store data (catalogue, accounts, orders, coupons, reviews and customers) liv
 | **Order Service** | Order creation, status updates and a fulfilment timeline. Calls Product and Customer services through **OpenFeign**. |
 
 Each service exposes **OpenAPI / Swagger UI** documentation and **Spring Boot Actuator** health endpoints.
+
+---
+
+## Deployment
+
+| Part | Host | URL |
+| --- | --- | --- |
+| Storefront, admin console and built-in API | Netlify | **[nutrination.netlify.app](https://nutrination.netlify.app)** |
+| API gateway | Render (Docker) | [nutrination-gateway.onrender.com](https://nutrination-gateway.onrender.com/actuator/health) |
+| Product, customer and order services | Render (Docker) | `nutrination-product` / `-customer` / `-order` `.onrender.com` |
+
+The frontend deploys from `netlify.toml` with Netlify's Next.js runtime. The four Spring Boot services deploy from the `render.yaml` Blueprint as Docker web services in Frankfurt, next to the Supabase database, and call each other by URL instead of through Eureka. Each service is built by a multi-stage Dockerfile (Maven build stage, JRE-only runtime as a non-root user, JVM sized for 512 MB instances).
+
+<img src="docs/screenshots/render-services.jpg" alt="Render Blueprint with all four services deployed" width="100%"/>
+<p align="center"><sub><b>Render</b>: gateway, product, customer and order services deployed on Docker in Frankfurt</sub></p>
+
+Render's free plan puts idle services to sleep, so the first request after a quiet spell takes about a minute.
 
 ---
 
