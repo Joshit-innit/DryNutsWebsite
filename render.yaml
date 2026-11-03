@@ -6,6 +6,9 @@
 # The service URLs are only known after the first deploy, so fill them in
 # then (Service → Environment) and redeploy the gateway and order service.
 #
+# Region: frankfurt, the closest Render region to the Supabase database
+# (eu-west-1, Ireland).
+#
 # Database: the Supabase project, one schema per service. Use the Session
 # pooler JDBC URL from Supabase → Connect, e.g.
 #   jdbc:postgresql://aws-0-<region>.pooler.supabase.com:5432/postgres?sslmode=require
@@ -23,7 +26,7 @@ services:
     name: nutrination-gateway
     runtime: docker
     plan: free
-    region: singapore
+    region: frankfurt
     dockerContext: ./backend
     dockerfilePath: ./backend/api-gateway/Dockerfile
     buildFilter:
@@ -45,7 +48,7 @@ services:
     name: nutrination-product
     runtime: docker
     plan: free
-    region: singapore
+    region: frankfurt
     dockerContext: ./backend
     dockerfilePath: ./backend/product-service/Dockerfile
     buildFilter:
@@ -69,7 +72,7 @@ services:
     name: nutrination-customer
     runtime: docker
     plan: free
-    region: singapore
+    region: frankfurt
     dockerContext: ./backend
     dockerfilePath: ./backend/customer-service/Dockerfile
     buildFilter:
@@ -99,7 +102,7 @@ services:
     name: nutrination-order
     runtime: docker
     plan: free
-    region: singapore
+    region: frankfurt
     dockerContext: ./backend
     dockerfilePath: ./backend/order-service/Dockerfile
     buildFilter:
