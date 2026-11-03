@@ -94,16 +94,44 @@ function toStoredUser(row: Record<string, any>): StoredUser {
 
 let adminEnsured: Promise<void> | null = null;
 
-/** Seeds the admin account from ADMIN_EMAIL / ADMIN_PASSWORD when no admin exists. */
+/**
+ * Keeps the admin account in step with ADMIN_EMAIL / ADMIN_PASSWORD: seeds it when
+ * no admin exists, and updates the stored email or password when the env values
+ * change, so rotating ADMIN_PASSWORD on the host takes effect on the next start.
+ */
 function ensureAdmin(): Promise<void> {
   adminEnsured ??= (async () => {
     const supabase = getSupabase();
-    const { data, error } = await supabase.from("app_users").select("id").eq("role", "ADMIN").limit(1);
-    if (error) throw new Error(`Supabase: ${error.message}`);
-    if (data?.length) return;
-
     const adminEmail = (process.env.ADMIN_EMAIL || DEV_ADMIN_EMAIL).trim().toLowerCase();
     const adminPassword = process.env.ADMIN_PASSWORD || (process.env.NODE_ENV === "production" ? "" : DEV_ADMIN_PASSWORD);
+
+    const { data, error } = await supabase
+      .from("app_users")
+      .select("id,email,password_hash")
+      .eq("role", "ADMIN")
+      .order("created_at", { ascending: true })
+      .limit(1);
+    if (error) throw new Error(`Supabase: ${error.message}`);
+
+    const existing = data?.[0];
+    if (existing) {
+      // Without an explicit ADMIN_PASSWORD, leave the stored admin untouched.
+      if (!process.env.ADMIN_PASSWORD) return;
+      const emailChanged = existing.email !== adminEmail;
+      const passwordChanged = !verifyPassword(adminPassword, existing.password_hash);
+      if (!emailChanged && !passwordChanged) return;
+
+      const { error: updateError } = await supabase
+        .from("app_users")
+        .update({
+          email: adminEmail,
+          ...(passwordChanged ? { password_hash: hashPassword(adminPassword) } : {}),
+        })
+        .eq("id", existing.id);
+      if (updateError) throw new Error(`Supabase: ${updateError.message}`);
+      return;
+    }
+
     if (!adminPassword) return;
 
     const { error: upsertError } = await supabase.from("app_users").upsert(
