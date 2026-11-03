@@ -7,8 +7,9 @@ import { CATEGORIES, PRODUCTS } from "@/data/mockData";
 import { landingService } from "@/services/landing";
 import { STORE_FAQS } from "@/data/faqs";
 import ProductCard from "@/components/products/ProductCard";
-import HarvestHero from "@/components/home/HarvestHero";
-import WhyNutriNation from "@/components/home/WhyNutriNation";
+import HeroGallery from "@/components/home/HeroGallery";
+import FeaturedHarvest from "@/components/home/FeaturedHarvest";
+import ProductMorph from "@/components/home/ProductMorph";
 import FaqAccordion from "@/components/ui/FaqAccordion";
 import { productService } from "@/services/products";
 import { getProductImage } from "@/lib/product-images";
@@ -62,63 +63,16 @@ export default function HomePage() {
   const directory = ranked.slice(0, 8);
   const coreCategories = CATEGORIES.filter((c) => c.slug !== "combos" && c.slug !== "gift-boxes");
   const countIn = (slug: string) => products.filter((p) => p.category === slug).length;
-  const today = new Intl.DateTimeFormat("en-IN", { day: "numeric", month: "short", year: "numeric" }).format(new Date());
 
   return (
-    <div className="overflow-hidden">
-      <HarvestHero slides={slides} />
+    <div className="overflow-x-clip">
+      <HeroGallery slides={slides} />
+
+      {/* ------------------------------------------------ Harvest Reel (scroll morph) */}
+      <ProductMorph products={ranked} />
 
       {/* ------------------------------------------------ Harvest of the Day */}
-      {featured && (
-        <section className="mx-auto max-w-[1440px] px-2 pb-24 pt-24 sm:px-3 sm:pt-32">
-          <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-[15px] text-brand-dark">
-            <span>Harvest of the Day</span>
-            <span className="rounded-md border border-brand-border-dark px-2 py-0.5 text-sm">{today}</span>
-            <span>
-              Rated <span className="font-semibold">{featured.rating.toFixed(1)}</span>
-              <span className="text-brand-muted"> of 5</span>
-            </span>
-          </div>
-          <h2 className="mx-auto mt-6 max-w-[14ch] px-4 text-center text-[clamp(3rem,8.4vw,8.5rem)] font-bold uppercase leading-[0.9] tracking-[-0.055em]">
-            {shortName(featured.name).split(" ").slice(0, 3).join(" ")}
-          </h2>
-          <div className="mt-7 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 px-4 text-[17px] font-medium sm:text-xl">
-            <span className="inline-flex items-center gap-2.5">
-              <span className="grid h-8 w-8 place-items-center rounded-full bg-brand-dark text-xs font-bold text-white">
-                {featured.categoryName.charAt(0)}
-              </span>
-              <Link href={`/category/${featured.category}`} className="link-rule">
-                {featured.categoryName}
-              </Link>
-            </span>
-            <span className="inline-flex items-center gap-2.5">
-              <span className="grid h-8 w-8 place-items-center rounded-full bg-brand-green text-xs font-bold text-white">
-                {featured.origin.charAt(0)}
-              </span>
-              <span className="link-rule">{featured.origin.split(",")[0]}</span>
-            </span>
-          </div>
-
-          <Link
-            href={`/products/${featured.slug}`}
-            className="group relative mt-14 block overflow-hidden rounded-2xl bg-brand-beige"
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={landing ? sized(featuredPhoto(photos, featured), 2000) : undefined}
-              alt={featured.name}
-              className="aspect-[16/9] w-full object-cover transition-transform duration-[1200ms] ease-luxury group-hover:scale-[1.03] sm:aspect-[21/9]"
-              loading="lazy"
-            />
-            <div className="absolute inset-x-0 bottom-0 flex flex-wrap items-end justify-between gap-4 bg-gradient-to-t from-black/55 to-transparent p-5 pt-24 text-white sm:p-8">
-              <p className="max-w-md text-[15px] leading-relaxed text-white/85">{featured.shortDescription}</p>
-              <span className="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-medium text-brand-dark">
-                From {formatPrice(lowestPrice(featured))} <ArrowUpRight className="h-4 w-4" />
-              </span>
-            </div>
-          </Link>
-        </section>
-      )}
+      {featured && <FeaturedHarvest product={featured} photo={landing ? sized(featuredPhoto(photos, featured), 2000) : undefined} />}
 
       {/* ------------------------------------------------ Category gallery */}
       <section className="border-t border-brand-border bg-[#F9F8F5]">
@@ -255,13 +209,12 @@ export default function HomePage() {
           />
 
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[720px] text-left">
+            <table className="w-full min-w-[620px] text-left">
               <thead>
                 <tr className="text-[14px] text-brand-dark">
                   <th className="pb-4 pl-2 font-medium">Name</th>
                   <th className="pb-4 font-medium">Origin</th>
                   <th className="pb-4 font-medium">Grade</th>
-                  <th className="pb-4 font-medium">Rating</th>
                   <th className="pb-4 font-medium">From</th>
                   <th className="pb-4" aria-label="Actions" />
                 </tr>
@@ -283,10 +236,6 @@ export default function HomePage() {
                     </td>
                     <td className="py-4 text-[15px] text-brand-muted">{product.origin.split(",")[0]}</td>
                     <td className="py-4 text-[15px] text-brand-muted">{product.grade || "Premium"}</td>
-                    <td className="py-4 text-[15px]">
-                      <span className="font-semibold">{product.rating.toFixed(1)}</span>
-                      <span className="text-brand-muted">/5</span>
-                    </td>
                     <td className="py-4 text-[15px] font-semibold">{formatPrice(lowestPrice(product))}</td>
                     <td className="py-4 pr-2 text-right">
                       <Link
@@ -303,9 +252,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
-      {/* ------------------------------------------------ Why NutriNation (Watermelon feature-1) */}
-      <WhyNutriNation />
 
       {/* ------------------------------------------------ FAQ (Watermelon faq-1) */}
       <section className="mx-auto max-w-[1440px] px-4 py-24 sm:px-6 sm:py-32 lg:px-12">

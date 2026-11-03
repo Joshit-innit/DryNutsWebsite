@@ -108,7 +108,7 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
               )}
             </div>
             <p className="text-[12px] text-brand-muted">
-              {currentVariant.weight} · <span className="font-medium text-brand-dark">{product.rating.toFixed(1)}</span>/5
+              {currentVariant.weight}
             </p>
           </div>
           <button

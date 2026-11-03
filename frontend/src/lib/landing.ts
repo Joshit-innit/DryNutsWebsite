@@ -1,7 +1,7 @@
 import { LandingImage, Product } from "@/types";
 import { getCategoryImages, getProductImage } from "@/lib/product-images";
 import { formatPrice } from "@/lib/utils";
-import type { CarouselSlide } from "@/components/home/HarvestCarousel";
+import type { CarouselSlide } from "@/components/home/HeroGallery";
 
 /** Bestsellers first, then featured picks, then the rest of the catalogue. */
 export function topProducts(products: Product[], limit = 10) {
