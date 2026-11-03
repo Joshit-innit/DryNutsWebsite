@@ -19,6 +19,7 @@ import {
   ShieldCheck,
   Sparkles,
 } from "lucide-react";
+import { OrderDetailSkeleton } from "@/components/ui/Skeleton";
 
 export default function OrderDetailsPage() {
   const params = useParams();
@@ -43,7 +44,7 @@ export default function OrderDetailsPage() {
   };
 
   if (loading) {
-    return <div className="max-w-4xl mx-auto py-20 text-center text-xs text-brand-muted">Loading order timeline...</div>;
+    return <OrderDetailSkeleton />;
   }
 
   if (!order) {

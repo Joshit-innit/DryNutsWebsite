@@ -12,6 +12,7 @@ import { formatPrice } from "@/lib/utils";
 import { getProductImageMeta } from "@/lib/product-images";
 import ProductCard from "@/components/products/ProductCard";
 import ReviewForm from "@/components/products/ReviewForm";
+import { ProductDetailSkeleton } from "@/components/ui/Skeleton";
 
 type DetailTab = "details" | "nutrition" | "storage";
 
@@ -47,19 +48,7 @@ export default function ProductDetailPage() {
   }, [slug]);
 
   if (loading) {
-    return (
-      <div className="mx-auto max-w-7xl px-5 py-12 sm:px-8 sm:py-16 lg:px-10">
-        <div className="grid animate-pulse grid-cols-1 gap-10 lg:grid-cols-2">
-          <div className="aspect-square bg-brand-beige" />
-          <div className="space-y-5 pt-4">
-            <div className="h-3 w-24 bg-brand-beige" />
-            <div className="h-14 w-3/4 bg-brand-beige" />
-            <div className="h-20 w-full bg-brand-beige" />
-            <div className="h-12 w-1/2 bg-brand-beige" />
-          </div>
-        </div>
-      </div>
-    );
+    return <ProductDetailSkeleton />;
   }
 
   if (!product) {

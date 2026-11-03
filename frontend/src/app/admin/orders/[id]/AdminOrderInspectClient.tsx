@@ -8,6 +8,7 @@ import { Order, OrderStatus } from "@/types";
 import { formatPrice } from "@/lib/utils";
 import { toast } from "sonner";
 import { ArrowLeft, CheckCircle2, Truck, Package, MapPin, Printer } from "lucide-react";
+import { OrderDetailSkeleton } from "@/components/ui/Skeleton";
 
 export default function AdminOrderInspectPage() {
   const params = useParams();
@@ -34,7 +35,7 @@ export default function AdminOrderInspectPage() {
     }
   };
 
-  if (loading) return <div className="p-8 text-xs text-brand-muted">Loading order manifest...</div>;
+  if (loading) return <OrderDetailSkeleton />;
   if (!order) return <div className="p-8 text-center">Order not found</div>;
 
   return (

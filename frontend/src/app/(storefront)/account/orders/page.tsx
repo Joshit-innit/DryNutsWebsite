@@ -6,6 +6,7 @@ import { orderService } from "@/services/orders";
 import { Order, OrderStatus } from "@/types";
 import { formatPrice } from "@/lib/utils";
 import { Package, ArrowRight, Clock, CheckCircle2, ChevronRight } from "lucide-react";
+import { LoadingRegion, Skeleton } from "@/components/ui/Skeleton";
 
 export default function AccountOrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -61,11 +62,24 @@ export default function AccountOrdersPage() {
       </div>
 
       {loading ? (
-        <div className="space-y-4 animate-pulse">
-          {[1, 2].map((i) => (
-            <div key={i} className="h-40 bg-white rounded-3xl border border-brand-border" />
+        <LoadingRegion label="Loading orders" className="space-y-4">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="space-y-4 rounded-3xl border border-brand-border bg-white p-6">
+              <div className="flex justify-between gap-4">
+                <Skeleton className="h-5 w-40" />
+                <Skeleton className="h-6 w-24 rounded-full" />
+              </div>
+              <div className="flex gap-3">
+                <Skeleton className="h-14 w-14 rounded-xl" />
+                <Skeleton className="h-14 w-14 rounded-xl" />
+              </div>
+              <div className="flex justify-between gap-4">
+                <Skeleton className="h-4 w-32" />
+                <Skeleton className="h-4 w-20" />
+              </div>
+            </div>
           ))}
-        </div>
+        </LoadingRegion>
       ) : filtered.length === 0 ? (
         <div className="text-center py-16 bg-white rounded-3xl border border-brand-border">
           <Package className="w-12 h-12 text-brand-green/60 mx-auto mb-2" />

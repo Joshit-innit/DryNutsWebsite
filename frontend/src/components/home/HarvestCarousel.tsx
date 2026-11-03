@@ -266,7 +266,16 @@ export default function HarvestCarousel({
       role="region"
       aria-roledescription="carousel"
       aria-label="Bestselling dry fruits"
+      aria-busy={slots.length === 0 || undefined}
     >
+      {/* Photos come from the landing API; hold the reel's shape until they arrive. */}
+      {slots.length === 0 && (
+        <div className={styles.skeletonRow} aria-hidden="true">
+          {Array.from({ length: mode === "mobile" ? 3 : 5 }, (_, i) => (
+            <div key={i} className={`skeleton ${styles.skeletonCard}`} />
+          ))}
+        </div>
+      )}
       {slots.map((slide, i) => {
         const isDuplicate = i >= slides.length;
         return (

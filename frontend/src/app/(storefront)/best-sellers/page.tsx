@@ -11,6 +11,7 @@ import { Product } from "@/types";
 import { formatPrice } from "@/lib/utils";
 import { getProductImageMeta } from "@/lib/product-images";
 import { lowestPrice, shortName, sized } from "@/lib/landing";
+import { LoadingRegion, ProductCardSkeleton, ProductGridSkeleton, Skeleton } from "@/components/ui/Skeleton";
 
 type SortKey = "loved" | "price-asc" | "price-desc" | "savings";
 
@@ -440,14 +441,14 @@ function BestSellersContent() {
 
       <div className="mx-auto max-w-[1440px] px-4 pt-8 sm:px-6 lg:px-12">
         {loading ? (
-          <div className="space-y-6" aria-busy="true" aria-label="Loading best sellers">
-            <div className="h-[26rem] animate-pulse rounded-3xl bg-brand-beige" />
+          <LoadingRegion label="Loading best sellers" className="space-y-6">
+            <Skeleton className="h-[26rem] rounded-3xl" />
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
               {Array.from({ length: 4 }, (_, i) => (
-                <div key={i} className="h-96 animate-pulse rounded-2xl bg-brand-beige" />
+                <ProductCardSkeleton key={i} />
               ))}
             </div>
-          </div>
+          </LoadingRegion>
         ) : visible.length === 0 ? (
           <div className="mx-auto my-16 max-w-md text-center">
             <h2 className="text-2xl font-semibold tracking-[-0.03em]">Nothing matches that yet.</h2>
@@ -513,7 +514,7 @@ function BestSellersContent() {
 
 export default function BestSellersPage() {
   return (
-    <Suspense fallback={<div className="mx-auto max-w-7xl px-5 py-20 text-sm text-brand-muted">Loading best sellers…</div>}>
+    <Suspense fallback={<div className="mx-auto max-w-[1440px] px-4 py-8 sm:px-6 lg:px-12"><Skeleton className="h-[26rem] rounded-3xl" /><ProductGridSkeleton count={4} className="mt-6 gap-5" /></div>}>
       <BestSellersContent />
     </Suspense>
   );

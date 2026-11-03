@@ -5,6 +5,7 @@ import { adminService } from "@/services/admin";
 import { Product } from "@/types";
 import { toast } from "sonner";
 import { Sliders, AlertTriangle, CheckCircle2, RefreshCw, Plus } from "lucide-react";
+import { TableRowsSkeleton } from "@/components/ui/Skeleton";
 
 export default function AdminInventoryPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -103,7 +104,7 @@ export default function AdminInventoryPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-brand-border">
-              {allVariants.map((item, idx) => {
+              {loading ? <TableRowsSkeleton columns={7} rows={8} /> : allVariants.map((item, idx) => {
                 const isLow = item.stock < item.threshold;
 
                 return (

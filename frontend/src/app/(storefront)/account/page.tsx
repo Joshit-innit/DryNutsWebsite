@@ -21,6 +21,7 @@ import {
   ArrowRight,
   CheckCircle2,
 } from "lucide-react";
+import { LoadingRegion, Skeleton } from "@/components/ui/Skeleton";
 
 export default function AccountDashboardPage() {
   const { user, wishlist, logout } = useStore();
@@ -159,7 +160,24 @@ export default function AccountDashboardPage() {
           </div>
 
           {/* Active Order Card */}
-          {latestOrder && (
+          {loading && (
+            <LoadingRegion label="Loading your latest order" className="space-y-4 rounded-3xl border border-brand-border bg-white p-6 sm:p-8">
+              <div className="flex justify-between gap-4 border-b border-brand-border pb-3">
+                <Skeleton className="h-5 w-40" />
+                <Skeleton className="h-6 w-24 rounded-full" />
+              </div>
+              {[1, 2].map((i) => (
+                <div key={i} className="flex items-center gap-3">
+                  <Skeleton className="h-12 w-12 rounded-xl" />
+                  <div className="flex-1 space-y-2">
+                    <Skeleton className="h-3 w-1/2" />
+                    <Skeleton className="h-3 w-1/4" />
+                  </div>
+                </div>
+              ))}
+            </LoadingRegion>
+          )}
+          {!loading && latestOrder && (
             <div className="bg-white rounded-3xl border border-brand-border p-6 sm:p-8 shadow-card space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-brand-border">
                 <div>

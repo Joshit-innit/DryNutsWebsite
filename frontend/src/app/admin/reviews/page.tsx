@@ -6,7 +6,8 @@ import { reviewService } from "@/services/reviews";
 import { productService } from "@/services/products";
 import { Product, Review } from "@/types";
 import { toast } from "sonner";
-import { Star, Trash2, MessageSquareText, Loader2 } from "lucide-react";
+import { Star, Trash2, MessageSquareText } from "lucide-react";
+import { LoadingRegion, Skeleton } from "@/components/ui/Skeleton";
 
 export default function AdminReviewsPage() {
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -45,9 +46,19 @@ export default function AdminReviewsPage() {
       </div>
 
       {loading ? (
-        <div className="flex items-center gap-2 py-16 text-sm text-brand-muted">
-          <Loader2 className="h-4 w-4 animate-spin" /> Loading reviews…
-        </div>
+        <LoadingRegion label="Loading reviews" className="space-y-4">
+          {Array.from({ length: 4 }, (_, i) => (
+            <div key={i} className="space-y-3 rounded-3xl border border-brand-border bg-white p-6">
+              <div className="flex items-center justify-between gap-4">
+                <Skeleton className="h-4 w-48" />
+                <Skeleton className="h-8 w-8 rounded-lg" />
+              </div>
+              <Skeleton className="h-3 w-24" />
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-3/4" />
+            </div>
+          ))}
+        </LoadingRegion>
       ) : reviews.length === 0 ? (
         <div className="flex flex-col items-center gap-3 rounded-3xl border border-dashed border-brand-border bg-white px-6 py-16 text-center">
           <MessageSquareText className="h-8 w-8 text-brand-green" />

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { Loader2 } from "lucide-react";
+import { DashboardSkeleton, Skeleton } from "@/components/ui/Skeleton";
 import { useStore } from "@/context/StoreContext";
 import { backendApi, unwrapData } from "@/lib/api/axios";
 import { ACCESS_TOKEN_STORAGE_KEY } from "@/lib/auth-constants";
@@ -55,11 +55,23 @@ export default function AdminGuard({ children }: { children: React.ReactNode }) 
   }, []);
 
   if (!allowed) {
+    // Skeleton of the admin shell (sidebar, header, dashboard) while the session is checked.
     return (
-      <div className="flex min-h-screen items-center justify-center bg-brand-cream">
-        <div className="flex items-center gap-2 text-xs font-semibold text-brand-muted">
-          <Loader2 className="h-4 w-4 animate-spin text-brand-green" />
-          Verifying admin access...
+      <div className="flex min-h-screen bg-brand-cream">
+        <aside className="hidden w-64 shrink-0 space-y-3 border-r border-brand-border bg-white p-5 md:block">
+          <Skeleton className="mb-8 h-8 w-36" />
+          {Array.from({ length: 10 }, (_, i) => (
+            <Skeleton key={i} className="h-9 w-full rounded-xl" />
+          ))}
+        </aside>
+        <div className="flex min-w-0 flex-1 flex-col">
+          <div className="flex h-16 items-center justify-between border-b border-brand-border bg-white px-6">
+            <Skeleton className="h-9 w-64 max-w-[50%] rounded-xl" />
+            <Skeleton className="h-9 w-9 rounded-full" />
+          </div>
+          <div className="p-6 md:p-10">
+            <DashboardSkeleton label="Verifying admin access" />
+          </div>
         </div>
       </div>
     );

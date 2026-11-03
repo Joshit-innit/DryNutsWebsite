@@ -313,6 +313,36 @@ input:focus, select:focus, textarea:focus {
   border-color: #1D1C1A !important;
 }
 
+/* ---------------------------------------------------------------------------
+   Loading skeletons
+   .skeleton           → a placeholder block with a moving sheen
+   img[data-img-state] → set by <ImageLoadState/>; images show the same sheen
+                         behind them until they finish loading
+--------------------------------------------------------------------------- */
+@keyframes skeleton-sheen {
+  from { background-position: 150% 0; }
+  to { background-position: -50% 0; }
+}
+
+.skeleton,
+img[data-img-state="loading"] {
+  background-color: #EBE7DF;
+  background-image: linear-gradient(100deg, rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, 0.55) 50%, rgba(255, 255, 255, 0) 70%);
+  background-size: 200% 100%;
+  background-repeat: no-repeat;
+  animation: skeleton-sheen 1.4s ease-in-out infinite;
+}
+
+.skeleton { border-radius: 8px; }
+
+.skeleton-dark {
+  background-color: #1A2029;
+  background-image: linear-gradient(100deg, rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, 0.06) 50%, rgba(255, 255, 255, 0) 70%);
+}
+
+/* Hide alt text while the photo is still on its way. */
+img[data-img-state="loading"] { color: transparent; }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

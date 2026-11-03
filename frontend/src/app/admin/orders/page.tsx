@@ -7,6 +7,7 @@ import { Order, OrderStatus } from "@/types";
 import { formatPrice } from "@/lib/utils";
 import { toast } from "sonner";
 import { ShoppingBag, Search, Filter, ExternalLink, ChevronRight } from "lucide-react";
+import { TableRowsSkeleton } from "@/components/ui/Skeleton";
 
 export default function AdminOrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -102,7 +103,7 @@ export default function AdminOrdersPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-brand-border">
-              {filtered.map((ord) => (
+              {loading ? <TableRowsSkeleton columns={7} rows={8} /> : filtered.map((ord) => (
                 <tr key={ord.id} className="hover:bg-brand-cream/70 transition-colors">
                   <td className="py-3 px-4">
                     <span className="font-mono font-bold text-xs text-brand-dark block">

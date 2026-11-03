@@ -6,6 +6,7 @@ import { Coupon } from "@/types";
 import { formatPrice } from "@/lib/utils";
 import { toast } from "sonner";
 import { Percent, Plus, Trash2, CheckCircle2, Sparkles } from "lucide-react";
+import { TableRowsSkeleton } from "@/components/ui/Skeleton";
 
 export default function AdminCouponsPage() {
   const [coupons, setCoupons] = useState<Coupon[]>([]);
@@ -90,7 +91,7 @@ export default function AdminCouponsPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-brand-border">
-            {coupons.map((c) => (
+            {loading ? <TableRowsSkeleton columns={7} rows={4} /> : coupons.map((c) => (
               <tr key={c.code} className="hover:bg-brand-cream/70 transition-colors">
                 <td className="py-3 px-4">
                   <span className="font-mono font-black text-xs text-brand-green bg-brand-green/10 px-2.5 py-1 rounded-lg">

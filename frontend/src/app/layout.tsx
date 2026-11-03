@@ -8,6 +8,7 @@ import PortalSwitcher from "@/components/layout/PortalSwitcher";
 import SmoothScroll from "@/components/animations/SmoothScroll";
 import CartDrawer from "@/components/cart/CartDrawer";
 import ProductQuickView from "@/components/products/ProductQuickView";
+import ImageLoadState from "@/components/ui/ImageLoadState";
 
 const sans = Inter_Tight({
   subsets: ["latin"],
@@ -70,6 +71,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${sans.variable} ${accent.variable} ${hand.variable} ${casanova.variable}`}>
       <body className="min-h-screen bg-brand-cream text-brand-dark antialiased font-sans">
+        <ImageLoadState />
         <StoreProvider>
           <SmoothScroll>
             <PortalSwitcher />

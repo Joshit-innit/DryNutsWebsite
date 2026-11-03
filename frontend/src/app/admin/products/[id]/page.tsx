@@ -3,10 +3,10 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { Loader2 } from "lucide-react";
 import ProductForm from "@/components/admin/ProductForm";
 import { backendApi, unwrapData } from "@/lib/api/axios";
 import { Product } from "@/types";
+import { HeadingSkeleton, LoadingRegion, Skeleton } from "@/components/ui/Skeleton";
 
 export default function AdminEditProductPage() {
   const params = useParams();
@@ -29,9 +29,23 @@ export default function AdminEditProductPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center gap-2 p-8 text-xs text-brand-muted">
-        <Loader2 className="h-4 w-4 animate-spin text-brand-green" /> Loading product...
-      </div>
+      <LoadingRegion label="Loading product" className="max-w-5xl space-y-6">
+        <HeadingSkeleton />
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+          <div className="space-y-5 rounded-3xl border border-brand-border bg-white p-6 lg:col-span-2">
+            {Array.from({ length: 5 }, (_, i) => (
+              <div key={i} className="space-y-2">
+                <Skeleton className="h-3 w-24" />
+                <Skeleton className={i === 2 ? "h-24 w-full rounded-xl" : "h-11 w-full rounded-xl"} />
+              </div>
+            ))}
+          </div>
+          <div className="space-y-4 rounded-3xl border border-brand-border bg-white p-6">
+            <Skeleton className="aspect-square w-full rounded-2xl" />
+            <Skeleton className="h-11 w-full rounded-xl" />
+          </div>
+        </div>
+      </LoadingRegion>
     );
   }
 

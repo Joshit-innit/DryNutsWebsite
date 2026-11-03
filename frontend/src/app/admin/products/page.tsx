@@ -21,6 +21,7 @@ import {
   ExternalLink,
   Loader2,
 } from "lucide-react";
+import { TableRowsSkeleton } from "@/components/ui/Skeleton";
 
 const STATUS_BADGE: Record<Product["status"], { label: string; className: string; icon: React.ElementType }> = {
   published: { label: "Published", className: "text-brand-green", icon: CheckCircle2 },
@@ -146,11 +147,7 @@ export default function AdminProductsPage() {
             </thead>
             <tbody className="divide-y divide-brand-border">
               {loading ? (
-                <tr>
-                  <td colSpan={7} className="p-8 text-center text-brand-muted animate-pulse">
-                    Loading product catalog...
-                  </td>
-                </tr>
+                <TableRowsSkeleton columns={7} rows={8} />
               ) : loadError ? (
                 <tr>
                   <td colSpan={7} className="p-8 text-center text-red-600">

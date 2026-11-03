@@ -7,6 +7,7 @@ import { productService, ProductFilterOptions } from "@/services/products";
 import { CATEGORIES } from "@/data/mockData";
 import { CategorySlug, Product } from "@/types";
 import ProductCard from "@/components/products/ProductCard";
+import { ProductGridSkeleton } from "@/components/ui/Skeleton";
 
 function ProductsContent() {
   const searchParams = useSearchParams();
@@ -143,16 +144,7 @@ function ProductsContent() {
       </div>
 
       {loading ? (
-        <div className="mt-8 grid grid-cols-1 gap-x-5 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
-          {Array.from({ length: 8 }, (_, index) => (
-            <div key={index} className="animate-pulse">
-              <div className="aspect-[4/5] bg-brand-beige" />
-              <div className="mt-4 h-3 w-20 bg-brand-beige" />
-              <div className="mt-3 h-6 w-3/4 bg-brand-beige" />
-              <div className="mt-4 h-5 w-1/3 bg-brand-beige" />
-            </div>
-          ))}
-        </div>
+        <ProductGridSkeleton className="mt-8" />
       ) : products.length === 0 ? (
         <div className="my-20 max-w-xl border-l-2 border-brand-saffron pl-6">
           <h2 className="text-2xl">No products match those filters.</h2>
@@ -170,7 +162,7 @@ function ProductsContent() {
 
 export default function ProductsPage() {
   return (
-    <Suspense fallback={<div className="mx-auto max-w-7xl px-5 py-20 text-sm text-brand-muted">Loading collection...</div>}>
+    <Suspense fallback={<div className="mx-auto max-w-7xl px-5 py-12"><ProductGridSkeleton /></div>}>
       <ProductsContent />
     </Suspense>
   );

@@ -16,6 +16,7 @@ import {
   ShieldCheck,
   Zap,
 } from "lucide-react";
+import { DashboardSkeleton } from "@/components/ui/Skeleton";
 
 export default function CmdOverviewPage() {
   const [services, setServices] = useState<SystemServiceStatus[]>([]);
@@ -32,6 +33,10 @@ export default function CmdOverviewPage() {
     }
     load();
   }, []);
+
+  if (loading) {
+    return <DashboardSkeleton label="Loading cluster overview" dark />;
+  }
 
   return (
     <div className="space-y-8 max-w-7xl">

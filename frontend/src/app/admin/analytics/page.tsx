@@ -19,6 +19,7 @@ import {
   Legend,
 } from "recharts";
 import { BarChart3, TrendingUp, DollarSign, Users, ShoppingCart, Percent } from "lucide-react";
+import { DashboardSkeleton } from "@/components/ui/Skeleton";
 
 export default function AdminAnalyticsPage() {
   const [chartData, setChartData] = useState<any[]>([]);
@@ -43,6 +44,10 @@ export default function AdminAnalyticsPage() {
     { name: "Initiated Checkout", users: 4200 },
     { name: "Completed Purchase", users: 3410 },
   ];
+
+  if (loading) {
+    return <DashboardSkeleton label="Loading analytics" />;
+  }
 
   return (
     <div className="space-y-8 max-w-7xl">

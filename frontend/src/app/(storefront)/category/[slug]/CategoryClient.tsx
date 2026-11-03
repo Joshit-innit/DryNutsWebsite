@@ -8,6 +8,7 @@ import { productService } from "@/services/products";
 import { Category, Product, CategorySlug } from "@/types";
 import ProductCard from "@/components/products/ProductCard";
 import { ChevronRight } from "lucide-react";
+import { ProductGridSkeleton } from "@/components/ui/Skeleton";
 
 export default function CategoryPage() {
   const params = useParams();
@@ -113,11 +114,7 @@ export default function CategoryPage() {
         </div>
 
         {loading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[...Array(3)].map((_, i) => (
-              <div key={i} className="h-80 bg-brand-beige animate-pulse" />
-            ))}
-          </div>
+          <ProductGridSkeleton count={6} className="gap-6 lg:grid-cols-3" />
         ) : products.length === 0 ? (
           <div className="border-l-2 border-brand-saffron py-4 pl-5">
             <h3 className="text-xl text-brand-dark">No products in this category yet.</h3>

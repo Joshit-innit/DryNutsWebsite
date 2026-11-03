@@ -5,6 +5,7 @@ import { cmdService } from "@/services/cmd";
 import { SystemServiceStatus } from "@/types";
 import { Activity, CheckCircle2, RefreshCw, Server, Database, Layers, ShieldCheck, Mail, Search, MessageSquare } from "lucide-react";
 import { toast } from "sonner";
+import { DashboardSkeleton } from "@/components/ui/Skeleton";
 
 export default function CmdHealthPage() {
   const [services, setServices] = useState<SystemServiceStatus[]>([]);
@@ -28,6 +29,10 @@ export default function CmdHealthPage() {
     setRefreshing(false);
     toast.success("Health checks completed across all endpoints.");
   };
+
+  if (loading) {
+    return <DashboardSkeleton label="Loading health checks" dark />;
+  }
 
   return (
     <div className="space-y-6 max-w-7xl">

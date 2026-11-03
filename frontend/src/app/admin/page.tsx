@@ -31,6 +31,7 @@ import {
   Cell,
   Legend,
 } from "recharts";
+import { DashboardSkeleton } from "@/components/ui/Skeleton";
 
 export default function AdminDashboardPage() {
   const [metrics, setMetrics] = useState<any>(null);
@@ -59,7 +60,7 @@ export default function AdminDashboardPage() {
   }, []);
 
   if (loading) {
-    return <div className="p-8 text-xs text-brand-muted animate-pulse">Loading business intelligence...</div>;
+    return <DashboardSkeleton label="Loading dashboard" />;
   }
 
   return (

@@ -168,6 +168,38 @@
   pointer-events: none;
 }
 
+/* While a photo downloads, keep it visible so the global skeleton sheen shows. */
+.cardMedia[data-img-state="loading"] {
+  opacity: 1;
+}
+
+.skeletonRow {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2%;
+  padding: 0 4%;
+}
+
+.skeletonCard {
+  flex: 0 0 auto;
+  width: 17%;
+  height: 86%;
+  border-radius: 20px;
+}
+
+.skeletonCard:nth-child(odd) {
+  height: 72%;
+}
+
+@media (max-width: 820px) {
+  .skeletonCard {
+    width: 42%;
+  }
+}
+
 .cardMedia[data-ready] {
   opacity: 1;
 }

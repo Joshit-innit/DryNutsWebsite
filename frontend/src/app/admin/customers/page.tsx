@@ -6,6 +6,7 @@ import { Customer } from "@/types";
 import { formatPrice } from "@/lib/utils";
 import { toast } from "sonner";
 import { Users, Search, ShieldCheck, ShieldAlert, Check, X } from "lucide-react";
+import { TableRowsSkeleton } from "@/components/ui/Skeleton";
 
 export default function AdminCustomersPage() {
   const [customers, setCustomers] = useState<Customer[]>([]);
@@ -78,7 +79,7 @@ export default function AdminCustomersPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-brand-border">
-            {filtered.map((cust) => (
+            {loading ? <TableRowsSkeleton columns={7} /> : filtered.map((cust) => (
               <tr key={cust.id} className="hover:bg-brand-cream/70 transition-colors">
                 <td className="py-3 px-4">
                   <div className="flex items-center gap-2.5">

@@ -7,6 +7,7 @@ import { Product } from "@/types";
 import { CATEGORIES } from "@/data/mockData";
 import ProductCard from "@/components/products/ProductCard";
 import { Search, X, Sparkles, TrendingUp, History, ArrowRight } from "lucide-react";
+import { ProductGridSkeleton } from "@/components/ui/Skeleton";
 
 export default function SearchPage() {
   const [query, setQuery] = useState("");
@@ -164,11 +165,7 @@ export default function SearchPage() {
           </div>
 
           {loading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {[...Array(4)].map((_, i) => (
-                <div key={i} className="h-80 bg-white rounded-2xl animate-pulse border border-brand-border" />
-              ))}
-            </div>
+            <ProductGridSkeleton count={4} className="gap-6" />
           ) : results.length === 0 ? (
             <div className="bg-white rounded-3xl p-12 text-center border border-brand-border max-w-md mx-auto">
               <p className="font-serif font-bold text-lg text-brand-dark mb-1">
