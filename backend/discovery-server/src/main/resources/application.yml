@@ -1,5 +1,6 @@
 server:
-  port: 8761
+  # Render (and most PaaS hosts) inject PORT.
+  port: ${PORT:8761}
 
 spring:
   application:

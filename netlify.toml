@@ -1,0 +1,16 @@
+# Netlify builds the Next.js app in frontend/. Its Next.js runtime is applied
+# automatically and serves pages plus the /api/v1 route handlers as functions.
+#
+# Set these in Site configuration → Environment variables (server-side only):
+#   SUPABASE_URL, SUPABASE_SECRET_KEY, AUTH_SECRET (32+ chars),
+#   ADMIN_EMAIL, ADMIN_PASSWORD
+# Leave NEXT_PUBLIC_API_URL unset so the app uses its own /api/v1 routes.
+
+[build]
+  base = "frontend"
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "22"
+  NEXT_TELEMETRY_DISABLED = "1"

@@ -1,5 +1,6 @@
 server:
-  port: 8082
+  # Render (and most PaaS hosts) inject PORT.
+  port: ${PORT:8082}
 
 spring:
   application:
@@ -8,6 +9,9 @@ spring:
     url: ${CUSTOMER_DB_URL:jdbc:postgresql://localhost:5432/nutrination_customers}
     username: ${POSTGRES_USER:postgres}
     password: ${POSTGRES_PASSWORD:postgres}
+    hikari:
+      # Keep low on Supabase: the session pooler caps connections per project.
+      maximum-pool-size: ${DB_POOL_SIZE:10}
   jpa:
     hibernate:
       ddl-auto: update
@@ -24,15 +28,18 @@ spring:
 
 eureka:
   client:
+    # Set EUREKA_ENABLED=false where services reach each other by URL (e.g. Render).
+    enabled: ${EUREKA_ENABLED:true}
     service-url:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
 
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
 
 frontend:
-  allowed-origins: http://localhost:3000,http://127.0.0.1:3000
+  # Comma-separated list, e.g. https://your-site.netlify.app
+  allowed-origins: ${FRONTEND_ORIGINS:http://localhost:3000,http://127.0.0.1:3000}
 
 seed:
   admin:

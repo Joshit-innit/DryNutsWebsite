@@ -1,5 +1,6 @@
 server:
-  port: 8080
+  # Render (and most PaaS hosts) inject PORT.
+  port: ${PORT:8080}
 
 spring:
   application:
@@ -12,39 +13,40 @@ spring:
       globalcors:
         cors-configurations:
           '[/**]':
-            allowedOrigins:
-              - "http://localhost:3000"
-              - "http://127.0.0.1:3000"
+            # Comma-separated list, e.g. https://your-site.netlify.app
+            allowedOrigins: "${FRONTEND_ORIGINS:http://localhost:3000,http://127.0.0.1:3000}"
             allowedMethods: "*"
             allowedHeaders: "*"
             allowCredentials: true
+      # Each URI defaults to Eureka (lb://). Without Eureka, set the *_SERVICE_URL
+      # variables to the services' base URLs, e.g. https://nutrination-product.onrender.com
       routes:
         - id: product-service
-          uri: lb://product-service
+          uri: ${PRODUCT_SERVICE_URL:lb://product-service}
           predicates:
             - Path=/api/v1/products/**,/api/v1/categories/**
         - id: customer-service
-          uri: lb://customer-service
+          uri: ${CUSTOMER_SERVICE_URL:lb://customer-service}
           predicates:
             - Path=/api/v1/customers/**,/api/v1/auth/**
         - id: order-service
-          uri: lb://order-service
+          uri: ${ORDER_SERVICE_URL:lb://order-service}
           predicates:
             - Path=/api/v1/orders/**
         - id: product-openapi
-          uri: lb://product-service
+          uri: ${PRODUCT_SERVICE_URL:lb://product-service}
           predicates:
             - Path=/product-service/v3/api-docs
           filters:
             - RewritePath=/product-service/v3/api-docs, /v3/api-docs
         - id: customer-openapi
-          uri: lb://customer-service
+          uri: ${CUSTOMER_SERVICE_URL:lb://customer-service}
           predicates:
             - Path=/customer-service/v3/api-docs
           filters:
             - RewritePath=/customer-service/v3/api-docs, /v3/api-docs
         - id: order-openapi
-          uri: lb://order-service
+          uri: ${ORDER_SERVICE_URL:lb://order-service}
           predicates:
             - Path=/order-service/v3/api-docs
           filters:
@@ -52,8 +54,10 @@ spring:
 
 eureka:
   client:
+    # Set EUREKA_ENABLED=false where services reach each other by URL (e.g. Render).
+    enabled: ${EUREKA_ENABLED:true}
     service-url:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
 
 springdoc:
   swagger-ui:

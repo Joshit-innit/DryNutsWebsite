@@ -1,0 +1,124 @@
+# Render Blueprint for the Spring Boot backend (Dashboard → New → Blueprint).
+#
+# Four web services, no Eureka: on Render each service reaches the others
+# through its public https URL, which the *_SERVICE_URL variables hold.
+# Values marked `sync: false` are asked for when the Blueprint is created.
+# The service URLs are only known after the first deploy, so fill them in
+# then (Service → Environment) and redeploy the gateway and order service.
+#
+# Database: the Supabase project, one schema per service. Use the Session
+# pooler JDBC URL from Supabase → Connect, e.g.
+#   jdbc:postgresql://aws-0-<region>.pooler.supabase.com:5432/postgres?sslmode=require
+
+envVarGroups:
+  - name: nutrination-backend-shared
+    envVars:
+      - key: EUREKA_ENABLED
+        value: "false"
+      - key: DB_POOL_SIZE
+        value: "3"
+
+services:
+  - type: web
+    name: nutrination-gateway
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerContext: ./backend
+    dockerfilePath: ./backend/api-gateway/Dockerfile
+    buildFilter:
+      paths:
+        - backend/**
+    healthCheckPath: /actuator/health
+    envVars:
+      - fromGroup: nutrination-backend-shared
+      - key: FRONTEND_ORIGINS # e.g. https://your-site.netlify.app
+        sync: false
+      - key: PRODUCT_SERVICE_URL # https://nutrination-product.onrender.com
+        sync: false
+      - key: CUSTOMER_SERVICE_URL # https://nutrination-customer.onrender.com
+        sync: false
+      - key: ORDER_SERVICE_URL # https://nutrination-order.onrender.com
+        sync: false
+
+  - type: web
+    name: nutrination-product
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerContext: ./backend
+    dockerfilePath: ./backend/product-service/Dockerfile
+    buildFilter:
+      paths:
+        - backend/**
+    healthCheckPath: /actuator/health
+    envVars:
+      - fromGroup: nutrination-backend-shared
+      - key: PRODUCT_DB_URL
+        sync: false
+      - key: POSTGRES_USER # postgres.<project-ref>
+        sync: false
+      - key: POSTGRES_PASSWORD
+        sync: false
+      - key: PRODUCT_DB_SCHEMA
+        value: product_service
+      - key: FRONTEND_ORIGINS
+        sync: false
+
+  - type: web
+    name: nutrination-customer
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerContext: ./backend
+    dockerfilePath: ./backend/customer-service/Dockerfile
+    buildFilter:
+      paths:
+        - backend/**
+    healthCheckPath: /actuator/health
+    envVars:
+      - fromGroup: nutrination-backend-shared
+      - key: CUSTOMER_DB_URL
+        sync: false
+      - key: POSTGRES_USER
+        sync: false
+      - key: POSTGRES_PASSWORD
+        sync: false
+      - key: CUSTOMER_DB_SCHEMA
+        value: customer_service
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ADMIN_EMAIL
+        value: admin@nutrination.in
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: FRONTEND_ORIGINS
+        sync: false
+
+  - type: web
+    name: nutrination-order
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerContext: ./backend
+    dockerfilePath: ./backend/order-service/Dockerfile
+    buildFilter:
+      paths:
+        - backend/**
+    healthCheckPath: /actuator/health
+    envVars:
+      - fromGroup: nutrination-backend-shared
+      - key: ORDER_DB_URL
+        sync: false
+      - key: POSTGRES_USER
+        sync: false
+      - key: POSTGRES_PASSWORD
+        sync: false
+      - key: ORDER_DB_SCHEMA
+        value: order_service
+      - key: PRODUCT_SERVICE_URL
+        sync: false
+      - key: CUSTOMER_SERVICE_URL
+        sync: false
+      - key: FRONTEND_ORIGINS
+        sync: false
