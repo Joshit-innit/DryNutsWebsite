@@ -55,6 +55,8 @@ export default function Footer() {
         { label: "Track orders", href: "/account/orders" },
         { label: "Account", href: "/account" },
         { label: "Wishlist", href: "/account/wishlist" },
+        { label: "Returns", href: "/return-policy" },
+        { label: "Refunds", href: "/refund-policy" },
       ],
     },
   ];
@@ -108,8 +110,9 @@ export default function Footer() {
         <div className="flex flex-col gap-4 border-t border-white/10 py-6 text-[13px] text-white/45 sm:flex-row sm:items-center sm:justify-between">
           <p>© {new Date().getFullYear()} NutriNation Foods Pvt. Ltd. · Hand-graded in India</p>
           <div className="flex items-center gap-6">
-            <Link href="/contact" className="hover:text-white">Privacy</Link>
-            <Link href="/contact" className="hover:text-white">Terms</Link>
+            <Link href="/privacy-policy" className="hover:text-white">Privacy</Link>
+            <Link href="/return-policy" className="hover:text-white">Returns</Link>
+            <Link href="/refund-policy" className="hover:text-white">Refunds</Link>
             <Link href="/contact" className="hover:text-white">Contact</Link>
           </div>
         </div>

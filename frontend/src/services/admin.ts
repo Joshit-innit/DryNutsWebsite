@@ -1,5 +1,6 @@
 import { Product, Customer, Order } from "@/types";
 import { backendApi, unwrapData } from "@/lib/api/axios";
+import { computeRevenueAnalytics, RevenueAnalytics } from "@/lib/analytics";
 
 async function fetchList<T>(endpoint: string): Promise<T[]> {
   try {
@@ -10,51 +11,29 @@ async function fetchList<T>(endpoint: string): Promise<T[]> {
 }
 
 export const adminService = {
+  /** All revenue figures come from delivered orders in the database. */
+  async getRevenueAnalytics(): Promise<RevenueAnalytics> {
+    return computeRevenueAnalytics(await fetchList<Order>("/orders"));
+  },
+
   async getDashboardMetrics() {
     const [orders, customers, products] = await Promise.all([
       fetchList<Order>("/orders"),
       fetchList<Customer>("/customers"),
       fetchList<Product>("/products?scope=all"),
     ]);
-    const billable = orders.filter((o) => o.status !== "Cancelled" && o.status !== "Refunded");
-    const totalRevenue = billable.reduce((sum, o) => sum + o.total, 0);
+    const analytics = computeRevenueAnalytics(orders);
     const lowStockItems = products.filter((p) => p.variants.some((v) => v.stock < 25));
 
     return {
-      totalRevenue,
+      analytics,
+      totalRevenue: analytics.deliveredRevenue,
       totalOrders: orders.length,
       totalCustomers: customers.length,
       totalProducts: products.length,
       lowStockCount: lowStockItems.length,
-      averageOrderValue: billable.length ? Math.round(totalRevenue / billable.length) : 0,
-      revenueGrowth: "+18.4% vs last month",
-      ordersGrowth: "+12.2% vs last month",
-      customersGrowth: "+24.5% vs last month",
+      averageOrderValue: analytics.averageOrderValue,
     };
-  },
-
-  async getRevenueChartData() {
-    return [
-      { month: "Jan", revenue: 245000, orders: 120 },
-      { month: "Feb", revenue: 280000, orders: 142 },
-      { month: "Mar", revenue: 320000, orders: 165 },
-      { month: "Apr", revenue: 310000, orders: 158 },
-      { month: "May", revenue: 390000, orders: 198 },
-      { month: "Jun", revenue: 430000, orders: 215 },
-      { month: "Jul", revenue: 480000, orders: 240 },
-      { month: "Aug", revenue: 560000, orders: 284 },
-    ];
-  },
-
-  async getCategoryShareData() {
-    return [
-      { name: "Cashews", value: 28, fill: "#2D4A33" },
-      { name: "Almonds", value: 24, fill: "#6F8F4E" },
-      { name: "Walnuts", value: 18, fill: "#B9853C" },
-      { name: "Pistachios", value: 14, fill: "#9C5B33" },
-      { name: "Dates & Figs", value: 10, fill: "#D2A866" },
-      { name: "Combos & Gifts", value: 6, fill: "#1D1C1A" },
-    ];
   },
 
   async getAdminProducts(): Promise<Product[]> {

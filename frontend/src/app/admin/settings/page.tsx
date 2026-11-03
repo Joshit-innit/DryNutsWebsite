@@ -3,10 +3,11 @@
 import React, { useState } from "react";
 import { toast } from "sonner";
 import { Sliders, Save, ShieldCheck, Check } from "lucide-react";
+import { SUPPORT_EMAIL } from "@/lib/support";
 
 export default function AdminSettingsPage() {
   const [storeName, setStoreName] = useState("NutriNation Foods");
-  const [supportEmail, setSupportEmail] = useState("care@nutrination.in");
+  const [supportEmail, setSupportEmail] = useState(SUPPORT_EMAIL);
   const [freeShippingMin, setFreeShippingMin] = useState(999);
   const [gstRate, setGstRate] = useState(5); // 5% GST for unprocessed dry fruits
   const [nitrogenSealAudit, setNitrogenSealAudit] = useState(true);

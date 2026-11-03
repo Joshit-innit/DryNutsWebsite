@@ -44,14 +44,12 @@ export default function AdminDashboardPage() {
   useEffect(() => {
     async function load() {
       const m = await adminService.getDashboardMetrics();
-      const c = await adminService.getRevenueChartData();
-      const cat = await adminService.getCategoryShareData();
       const ord = await orderService.getOrders();
       const prods = await productService.getBestSellers();
 
       setMetrics(m);
-      setChartData(c);
-      setCategoryData(cat);
+      setChartData(m.analytics.monthly);
+      setCategoryData(m.analytics.categories);
       setRecentOrders(ord.slice(0, 5));
       setTopProducts(prods.slice(0, 4));
       setLoading(false);
@@ -94,7 +92,7 @@ export default function AdminDashboardPage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         <div className="bg-white rounded-2xl p-5 border border-brand-border shadow-xs">
           <div className="flex items-center justify-between text-brand-muted mb-2">
-            <span className="text-xs font-bold uppercase tracking-wider">Gross Revenue (MTD)</span>
+            <span className="text-xs font-bold uppercase tracking-wider">Delivered Revenue</span>
             <div className="w-8 h-8 rounded-lg bg-brand-green/10 text-brand-green flex items-center justify-center">
               <DollarSign className="w-4 h-4" />
             </div>
@@ -103,7 +101,7 @@ export default function AdminDashboardPage() {
             {formatPrice(metrics.totalRevenue)}
           </span>
           <span className="text-xs font-semibold text-brand-green flex items-center gap-1 mt-1">
-            <TrendingUp className="w-3.5 h-3.5" /> {metrics.revenueGrowth}
+            <TrendingUp className="w-3.5 h-3.5" /> {metrics.analytics.deliveredOrders} delivered orders
           </span>
         </div>
 
@@ -117,8 +115,8 @@ export default function AdminDashboardPage() {
           <span className="font-semibold tracking-[-0.035em] text-2xl text-brand-dark block">
             {metrics.totalOrders}
           </span>
-          <span className="text-xs font-semibold text-brand-green flex items-center gap-1 mt-1">
-            <TrendingUp className="w-3.5 h-3.5" /> {metrics.ordersGrowth}
+          <span className="text-xs text-brand-muted mt-1 block">
+            {metrics.analytics.pipelineOrders} in fulfilment
           </span>
         </div>
 
@@ -132,9 +130,7 @@ export default function AdminDashboardPage() {
           <span className="font-semibold tracking-[-0.035em] text-2xl text-brand-dark block">
             {metrics.totalCustomers}
           </span>
-          <span className="text-xs font-semibold text-brand-green flex items-center gap-1 mt-1">
-            <TrendingUp className="w-3.5 h-3.5" /> {metrics.customersGrowth}
-          </span>
+          <span className="text-xs text-brand-muted mt-1 block">Registered accounts</span>
         </div>
 
         <div className="bg-white rounded-2xl p-5 border border-brand-border shadow-xs">
@@ -160,12 +156,12 @@ export default function AdminDashboardPage() {
           <div className="flex items-center justify-between border-b border-brand-border pb-3">
             <div>
               <h3 className="font-semibold tracking-[-0.025em] text-base text-brand-dark">
-                Monthly Revenue & Demand Trends
+                Monthly Delivered Revenue
               </h3>
-              <p className="text-xs text-brand-muted">FY 2026 Sales Run Rate (in ₹ INR)</p>
+              <p className="text-xs text-brand-muted">From delivered orders (in ₹ INR)</p>
             </div>
             <span className="text-xs font-bold text-brand-green bg-brand-green/10 px-2.5 py-1 rounded-full">
-              Avg Order Value: ₹1,840
+              Avg Order Value: {formatPrice(metrics.averageOrderValue)}
             </span>
           </div>
 
@@ -180,9 +176,9 @@ export default function AdminDashboardPage() {
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#EBE7DF" />
                 <XAxis dataKey="month" stroke="#A29D93" fontSize={11} />
-                <YAxis stroke="#A29D93" fontSize={11} tickFormatter={(v) => `₹${v / 1000}k`} />
+                <YAxis stroke="#A29D93" fontSize={11} tickFormatter={(v) => (v >= 1000 ? `₹${Math.round(v / 1000)}k` : `₹${v}`)} />
                 <Tooltip
-                  formatter={(val: any) => [`₹${Number(val).toLocaleString("en-IN")}`, "Gross Sales"]}
+                  formatter={(val: any) => [`₹${Number(val).toLocaleString("en-IN")}`, "Delivered"]}
                   contentStyle={{ borderRadius: "12px", border: "1px solid #E4E0D8", fontSize: "12px" }}
                 />
                 <Area
@@ -202,9 +198,9 @@ export default function AdminDashboardPage() {
         <div className="lg:col-span-4 bg-white rounded-3xl border border-brand-border p-6 shadow-xs space-y-4">
           <div className="border-b border-brand-border pb-3">
             <h3 className="font-semibold tracking-[-0.025em] text-base text-brand-dark">
-              Category Sales Volume
+              Revenue by Category
             </h3>
-            <p className="text-xs text-brand-muted">By total kilogram weight sold</p>
+            <p className="text-xs text-brand-muted">Share of delivered line-item value</p>
           </div>
 
           <div className="h-72 w-full">
@@ -217,13 +213,14 @@ export default function AdminDashboardPage() {
                   innerRadius={55}
                   outerRadius={80}
                   paddingAngle={4}
-                  dataKey="value"
+                  dataKey="revenue"
+                  nameKey="name"
                 >
                   {categoryData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={entry.fill} />
                   ))}
                 </Pie>
-                <Tooltip formatter={(val) => [`${val}%`, "Share"]} />
+                <Tooltip formatter={(val: any, name: any) => [formatPrice(Number(val)), name]} />
                 <Legend iconType="circle" wrapperStyle={{ fontSize: "11px", paddingTop: "8px" }} />
               </PieChart>
             </ResponsiveContainer>

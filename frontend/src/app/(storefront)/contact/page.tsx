@@ -7,6 +7,7 @@ import * as z from "zod";
 import { toast } from "sonner";
 import FaqAccordion from "@/components/ui/FaqAccordion";
 import { STORE_FAQS } from "@/data/faqs";
+import { SUPPORT_EMAIL, SUPPORT_HOURS, SUPPORT_PHONE, SUPPORT_PHONE_HREF } from "@/lib/support";
 import {
   Mail,
   Phone,
@@ -87,8 +88,8 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h4 className="font-bold text-brand-dark">Direct Support Helpline</h4>
-                  <p className="text-brand-muted">+91 80 4920 1800 / +91 98765 43210</p>
-                  <p className="text-[10px] text-brand-muted">Monday - Saturday, 9:00 AM - 7:00 PM IST</p>
+                  <a href={SUPPORT_PHONE_HREF} className="text-brand-muted hover:text-brand-dark">{SUPPORT_PHONE}</a>
+                  <p className="text-[10px] text-brand-muted">{SUPPORT_HOURS}</p>
                 </div>
               </div>
 
@@ -98,7 +99,7 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h4 className="font-bold text-brand-dark">Email Concierge</h4>
-                  <p className="text-brand-muted">care@nutrination.in | corporate@nutrination.in</p>
+                  <a href={`mailto:${SUPPORT_EMAIL}`} className="text-brand-muted hover:text-brand-dark break-all">{SUPPORT_EMAIL}</a>
                 </div>
               </div>
             </div>
