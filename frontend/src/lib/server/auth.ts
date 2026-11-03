@@ -121,10 +121,21 @@ function ensureAdmin(): Promise<void> {
       const passwordChanged = !verifyPassword(adminPassword, existing.password_hash);
       if (!emailChanged && !passwordChanged) return;
 
+      let nextEmail = adminEmail;
+      if (emailChanged) {
+        // Another account already uses ADMIN_EMAIL: keep the admin's current email.
+        const { data: clash } = await supabase.from("app_users").select("id").eq("email", adminEmail).limit(1);
+        if (clash?.length) {
+          console.warn(`[auth] ADMIN_EMAIL is already used by another account; admin stays ${existing.email}.`);
+          nextEmail = existing.email;
+        }
+      }
+      if (nextEmail === existing.email && !passwordChanged) return;
+
       const { error: updateError } = await supabase
         .from("app_users")
         .update({
-          email: adminEmail,
+          email: nextEmail,
           ...(passwordChanged ? { password_hash: hashPassword(adminPassword) } : {}),
         })
         .eq("id", existing.id);
@@ -153,7 +164,8 @@ function ensureAdmin(): Promise<void> {
 }
 
 async function findUserByEmail(email: string): Promise<StoredUser | null> {
-  await ensureAdmin();
+  // A failed admin sync must not block everyone else from signing in.
+  await ensureAdmin().catch((error) => console.error("[auth] admin sync failed:", error));
   const { data, error } = await getSupabase().from("app_users").select("*").eq("email", email).limit(1);
   if (error) throw new Error(`Supabase: ${error.message}`);
   return data?.[0] ? toStoredUser(data[0]) : null;
