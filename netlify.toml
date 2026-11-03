@@ -14,3 +14,8 @@
 [build.environment]
   NODE_VERSION = "22"
   NEXT_TELEMETRY_DISABLED = "1"
+
+# Declared explicitly: auto-detection runs at the repo root (no Next.js there)
+# and skipped it, which uploaded .next as static files and 404'd every route.
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
