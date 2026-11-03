@@ -18,6 +18,7 @@ export async function POST(request: NextRequest) {
     if (error instanceof AuthError) {
       return Response.json({ message: error.message }, { status: error.status });
     }
+    console.error("[auth/login]", error);
     return Response.json({ message: "Could not sign in." }, { status: 500 });
   }
 }
