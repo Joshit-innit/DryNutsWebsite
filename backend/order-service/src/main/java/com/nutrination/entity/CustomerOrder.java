@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "customer_orders")
@@ -46,9 +47,20 @@ public class CustomerOrder {
     @Fetch(FetchMode.SUBSELECT)
     private List<OrderTimelineStep> timeline = new ArrayList<>();
 
+    /** Links children to this order and gives new ones an id (they use assigned, not generated, ids). */
     public void syncChildren() {
-        items.forEach(item -> item.setOrder(this));
-        timeline.forEach(step -> step.setOrder(this));
+        items.forEach(item -> {
+            item.setOrder(this);
+            if (item.getId() == null || item.getId().isBlank()) {
+                item.setId("item-" + UUID.randomUUID());
+            }
+        });
+        timeline.forEach(step -> {
+            step.setOrder(this);
+            if (step.getId() == null || step.getId().isBlank()) {
+                step.setId("step-" + UUID.randomUUID());
+            }
+        });
     }
 
     public String getId() { return id; }
