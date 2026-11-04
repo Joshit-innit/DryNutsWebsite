@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server";
-import { db } from "@/lib/server/db";
+import { db, StockError } from "@/lib/server/db";
 import { requireAdmin } from "@/lib/server/auth";
 import { OrderStatus } from "@/types";
 
@@ -41,9 +41,12 @@ export async function PATCH(request: NextRequest, context: OrderRouteContext) {
       };
     });
 
-    const updated = await db.updateOrder(order.id, { status, timeline });
+    const updated = await db.updateOrderStatus(order.id, status, timeline);
     return Response.json({ data: updated });
-  } catch {
+  } catch (error) {
+    if (error instanceof StockError) {
+      return Response.json({ message: error.message }, { status: 409 });
+    }
     return Response.json({ message: "Could not update order status." }, { status: 500 });
   }
 }

@@ -6,6 +6,9 @@ import { useParams } from "next/navigation";
 import { orderService } from "@/services/orders";
 import { Order, OrderStatus } from "@/types";
 import { formatPrice } from "@/lib/utils";
+import { apiErrorMessage } from "@/lib/auth-session";
+import { printPackingSlip } from "@/lib/order-documents";
+import { useStore } from "@/context/StoreContext";
 import { toast } from "sonner";
 import { ArrowLeft, CheckCircle2, Truck, Package, MapPin, Printer } from "lucide-react";
 import { OrderDetailSkeleton } from "@/components/ui/Skeleton";
@@ -14,6 +17,7 @@ export default function AdminOrderInspectPage() {
   const params = useParams();
   const id = params?.id as string;
 
+  const { storeSettings } = useStore();
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -28,10 +32,11 @@ export default function AdminOrderInspectPage() {
 
   const handleUpdateStatus = async (st: OrderStatus) => {
     if (!order) return;
-    const updated = await orderService.updateOrderStatus(order.id, st);
-    if (updated) {
-      setOrder(updated);
+    try {
+      setOrder(await orderService.updateOrderStatus(order.id, st));
       toast.success(`Fulfillment stage updated to: ${st}`);
+    } catch (error) {
+      toast.error(apiErrorMessage(error, "Could not update the order."));
     }
   };
 
@@ -59,7 +64,7 @@ export default function AdminOrderInspectPage() {
         </div>
 
         <button
-          onClick={() => toast.success("Printing warehouse packing slip...")}
+          onClick={() => printPackingSlip(order, storeSettings)}
           className="bg-white hover:bg-brand-cream border border-brand-border text-brand-dark text-xs font-bold px-4 py-2 rounded-xl transition-colors flex items-center gap-1.5"
         >
           <Printer className="w-4 h-4" />
@@ -77,7 +82,7 @@ export default function AdminOrderInspectPage() {
         </div>
 
         <div className="flex flex-wrap gap-2">
-          {["Pending", "Confirmed", "Packed", "Shipped", "Out for Delivery", "Delivered"].map((st) => (
+          {["Pending", "Confirmed", "Packed", "Shipped", "Out for Delivery", "Delivered", "Cancelled", "Refunded"].map((st) => (
             <button
               key={st}
               onClick={() => handleUpdateStatus(st as OrderStatus)}

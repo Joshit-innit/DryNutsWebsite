@@ -56,6 +56,12 @@ export const adminService = {
     return unwrapData<Product>(res);
   },
 
+  /** Adds units to one pack size and returns its new stock. */
+  async restockVariant(productId: string, variantId: string, quantity: number): Promise<number> {
+    const res = await backendApi.post(`/products/${encodeURIComponent(productId)}/restock`, { variantId, quantity });
+    return unwrapData<{ stock: number }>(res).stock;
+  },
+
   async deleteProduct(id: string): Promise<boolean> {
     try {
       await backendApi.delete(`/products/${encodeURIComponent(id)}`);

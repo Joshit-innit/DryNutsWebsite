@@ -6,6 +6,9 @@ import { useParams } from "next/navigation";
 import { orderService } from "@/services/orders";
 import { Order } from "@/types";
 import { formatPrice } from "@/lib/utils";
+import { downloadInvoice } from "@/lib/order-documents";
+import { getIncludedGst } from "@/lib/store-settings";
+import { useStore } from "@/context/StoreContext";
 import { toast } from "sonner";
 import {
   Package,
@@ -25,6 +28,7 @@ export default function OrderDetailsPage() {
   const params = useParams();
   const id = params?.id as string;
 
+  const { storeSettings } = useStore();
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -37,10 +41,13 @@ export default function OrderDetailsPage() {
     load();
   }, [id]);
 
-  const handleDownloadInvoice = () => {
-    toast.success("Downloading Tax Invoice PDF...", {
-      description: `Invoice for Order #${order?.orderNumber} generated.`,
-    });
+  const handleDownloadInvoice = async () => {
+    if (!order) return;
+    try {
+      await downloadInvoice(order, storeSettings);
+    } catch {
+      toast.error("Could not create the invoice. Please try again.");
+    }
   };
 
   if (loading) {
@@ -180,6 +187,9 @@ export default function OrderDetailsPage() {
               <span>Total Paid</span>
               <span className="text-brand-green">{formatPrice(order.total)}</span>
             </div>
+            <p className="text-right text-[11px]">
+              Includes {formatPrice(getIncludedGst(order.total, order.gstRate))} GST ({order.gstRate}%)
+            </p>
           </div>
         </div>
 

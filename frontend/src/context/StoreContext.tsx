@@ -1,13 +1,19 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { Product, CartItem, WeightVariant, Coupon, UserSession } from "@/types";
+import { Product, CartItem, WeightVariant, Coupon, UserSession, StoreSettings } from "@/types";
 import { toast } from "sonner";
 import { couponService } from "@/services/coupons";
+import { settingsService } from "@/services/settings";
+import { DEFAULT_STORE_SETTINGS, getDeliveryFee } from "@/lib/store-settings";
 import { getProductImage } from "@/lib/product-images";
 import { clearSession, loadSessionUser } from "@/lib/auth-session";
 
 interface StoreContextType {
+  // Saved store settings
+  storeSettings: StoreSettings;
+  refreshStoreSettings: () => Promise<void>;
+
   // Cart
   cart: CartItem[];
   addToCart: (product: Product, variant?: WeightVariant, quantity?: number) => void;
@@ -63,6 +69,20 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   // The server establishes a user session after successful authentication.
   const [user, setUser] = useState<UserSession | null>(null);
   const [activeRole, setActiveRole] = useState<"customer" | "admin" | "developer">("customer");
+
+  const [storeSettings, setStoreSettings] = useState<StoreSettings>(DEFAULT_STORE_SETTINGS);
+
+  const refreshStoreSettings = async () => {
+    try {
+      setStoreSettings(await settingsService.getSettings());
+    } catch {
+      // Keep what we have; the orders API still applies the saved settings.
+    }
+  };
+
+  useEffect(() => {
+    refreshStoreSettings();
+  }, []);
 
   // Load cart from localStorage on mount (hydration safe)
   useEffect(() => {
@@ -191,8 +211,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  // Free delivery over ₹999
-  const cartDeliveryFee = cartSubtotal >= 999 || cartSubtotal === 0 ? 0 : 99;
+  const cartDeliveryFee = getDeliveryFee(cartSubtotal, storeSettings.freeDeliveryMin);
   const cartTotal = Math.max(0, cartSubtotal - cartDiscount + cartDeliveryFee);
 
   const applyCouponCode = async (code: string): Promise<boolean> => {
@@ -239,6 +258,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   return (
     <StoreContext.Provider
       value={{
+        storeSettings,
+        refreshStoreSettings,
         cart,
         addToCart,
         removeFromCart,

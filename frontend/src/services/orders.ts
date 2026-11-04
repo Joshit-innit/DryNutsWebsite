@@ -1,5 +1,6 @@
 import { Order, OrderStatus, CartItem, Address } from "@/types";
 import { backendApi, unwrapData } from "@/lib/api/axios";
+import { DeliverySpeed } from "@/lib/store-settings";
 
 export const orderService = {
   async getOrders(): Promise<Order[]> {
@@ -25,6 +26,7 @@ export const orderService = {
     subtotal: number;
     discount: number;
     deliveryFee: number;
+    deliverySpeed: DeliverySpeed;
     total: number;
     paymentMethod: "UPI" | "Card" | "NetBanking" | "COD";
     shippingAddress: Address;
@@ -33,12 +35,8 @@ export const orderService = {
     return unwrapData<Order>(res);
   },
 
-  async updateOrderStatus(orderId: string, status: OrderStatus): Promise<Order | null> {
-    try {
-      const res = await backendApi.patch(`/orders/${encodeURIComponent(orderId)}/status`, { status });
-      return unwrapData<Order>(res);
-    } catch {
-      return null;
-    }
+  async updateOrderStatus(orderId: string, status: OrderStatus): Promise<Order> {
+    const res = await backendApi.patch(`/orders/${encodeURIComponent(orderId)}/status`, { status });
+    return unwrapData<Order>(res);
   },
 };

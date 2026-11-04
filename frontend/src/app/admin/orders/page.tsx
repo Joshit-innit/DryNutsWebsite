@@ -5,6 +5,7 @@ import Link from "next/link";
 import { orderService } from "@/services/orders";
 import { Order, OrderStatus } from "@/types";
 import { formatPrice } from "@/lib/utils";
+import { apiErrorMessage } from "@/lib/auth-session";
 import { toast } from "sonner";
 import { ShoppingBag, Search, Filter, ExternalLink, ChevronRight } from "lucide-react";
 import { TableRowsSkeleton } from "@/components/ui/Skeleton";
@@ -25,11 +26,13 @@ export default function AdminOrdersPage() {
   }, []);
 
   const handleStatusChange = async (orderId: string, newStatus: OrderStatus) => {
-    await orderService.updateOrderStatus(orderId, newStatus);
-    setOrders((prev) =>
-      prev.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o))
-    );
-    toast.success(`Order status updated to ${newStatus}`);
+    try {
+      const updated = await orderService.updateOrderStatus(orderId, newStatus);
+      setOrders((prev) => prev.map((o) => (o.id === orderId ? updated : o)));
+      toast.success(`Order status updated to ${newStatus}`);
+    } catch (error) {
+      toast.error(apiErrorMessage(error, "Could not update the order."));
+    }
   };
 
   const filtered = orders.filter((o) => {
@@ -83,6 +86,8 @@ export default function AdminOrdersPage() {
             <option value="Shipped">Shipped</option>
             <option value="Out for Delivery">Out for Delivery</option>
             <option value="Delivered">Delivered</option>
+            <option value="Cancelled">Cancelled</option>
+            <option value="Refunded">Refunded</option>
           </select>
         </div>
       </div>
@@ -140,6 +145,8 @@ export default function AdminOrdersPage() {
                       <option value="Shipped">Shipped</option>
                       <option value="Out for Delivery">Out for Delivery</option>
                       <option value="Delivered">Delivered</option>
+                      <option value="Cancelled">Cancelled</option>
+                      <option value="Refunded">Refunded</option>
                     </select>
                   </td>
                   <td className="py-3 px-4 text-right">

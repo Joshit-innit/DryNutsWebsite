@@ -7,13 +7,25 @@
  */
 
 import { getSupabase } from "@/lib/server/supabase";
-import { Product, Category, Order, Coupon, Review, Customer, LandingImage } from "@/types";
+import { SUPPORT_EMAIL } from "@/lib/support";
+import { DEFAULT_STORE_SETTINGS } from "@/lib/store-settings";
+import { Product, Category, Order, Coupon, Review, Customer, LandingImage, StoreSettings } from "@/types";
 
 type Row = Record<string, any>;
 
 function check<T>(result: { data: T; error: { message: string } | null }): T {
   if (result.error) throw new Error(`Supabase: ${result.error.message}`);
   return result.data;
+}
+
+/** Raised for problems a person can act on, such as an item running out. */
+export class StockError extends Error {}
+
+const STOCK_ERROR_CODE = "NN001";
+
+function checkStock<T>(result: { data: T; error: { message: string; code?: string } | null }): T {
+  if (result.error?.code === STOCK_ERROR_CODE) throw new StockError(result.error.message);
+  return check(result);
 }
 
 const num = (v: unknown) => (v === null || v === undefined ? 0 : Number(v));
@@ -93,6 +105,7 @@ function toOrder(r: Row): Order {
     subtotal: num(r.subtotal),
     discount: num(r.discount),
     deliveryFee: num(r.delivery_fee),
+    gstRate: num(r.gst_rate),
     total: num(r.total),
     status: r.status,
     paymentMethod: r.payment_method,
@@ -107,7 +120,7 @@ function toOrder(r: Row): Order {
 function fromOrder(o: Partial<Order> & { customerId?: string | null }): Row {
   const map: Record<string, string> = {
     id: "id", orderNumber: "order_number", date: "order_date", items: "items", subtotal: "subtotal",
-    discount: "discount", deliveryFee: "delivery_fee", total: "total", status: "status",
+    discount: "discount", deliveryFee: "delivery_fee", gstRate: "gst_rate", total: "total", status: "status",
     paymentMethod: "payment_method", paymentStatus: "payment_status",
     shippingAddress: "shipping_address", estimatedDelivery: "estimated_delivery",
     trackingNumber: "tracking_number", timeline: "timeline", customerId: "customer_id",
@@ -118,6 +131,16 @@ function fromOrder(o: Partial<Order> & { customerId?: string | null }): Row {
     if (value !== undefined) row[column] = value;
   }
   return row;
+}
+
+function toSettings(r: Row): StoreSettings {
+  return {
+    storeName: r.store_name,
+    supportEmail: r.support_email || SUPPORT_EMAIL,
+    freeDeliveryMin: num(r.free_delivery_min),
+    gstRate: num(r.gst_rate),
+    enforcePackingChecklist: r.enforce_packing_checklist,
+  };
 }
 
 function toCoupon(r: Row): Coupon {
@@ -262,6 +285,40 @@ export const db = {
     return (rows?.length ?? 0) > 0;
   },
 
+  async restockVariant(productId: string, variantId: string, quantity: number): Promise<number> {
+    return checkStock(
+      await getSupabase().rpc("change_variant_stock", {
+        p_product_id: productId,
+        p_variant_id: variantId,
+        p_delta: quantity,
+      })
+    ) as number;
+  },
+
+  // ---- Store settings ----
+  async getSettings(): Promise<StoreSettings> {
+    const rows = check(await getSupabase().from("store_settings").select("*").limit(1));
+    return rows?.[0] ? toSettings(rows[0]) : DEFAULT_STORE_SETTINGS;
+  },
+
+  async saveSettings(settings: StoreSettings): Promise<StoreSettings> {
+    const row = check(
+      await getSupabase()
+        .from("store_settings")
+        .upsert({
+          id: true,
+          store_name: settings.storeName,
+          support_email: settings.supportEmail,
+          free_delivery_min: settings.freeDeliveryMin,
+          gst_rate: settings.gstRate,
+          enforce_packing_checklist: settings.enforcePackingChecklist,
+        })
+        .select("*")
+        .single()
+    );
+    return toSettings(row);
+  },
+
   // ---- Categories ----
   async getCategories(): Promise<Category[]> {
     const rows = check(
@@ -290,18 +347,17 @@ export const db = {
   },
 
   async createOrder(order: Order, customerId?: string | null): Promise<Order> {
-    const row = check(
-      await getSupabase().from("orders").insert(fromOrder({ ...order, customerId })).select("*").single()
+    const row = checkStock(
+      await getSupabase().rpc("place_order", { p_order: fromOrder({ ...order, customerId: customerId ?? null }) })
     );
     return toOrder(row);
   },
 
-  async updateOrder(id: string, updates: Partial<Order>): Promise<Order | null> {
-    const { id: _id, ...rest } = updates;
-    const rows = check(
-      await getSupabase().from("orders").update(fromOrder(rest)).eq("id", id).select("*")
+  async updateOrderStatus(id: string, status: Order["status"], timeline: Order["timeline"]): Promise<Order> {
+    const row = checkStock(
+      await getSupabase().rpc("update_order_status", { p_order_id: id, p_status: status, p_timeline: timeline })
     );
-    return rows?.[0] ? toOrder(rows[0]) : null;
+    return toOrder(row);
   },
 
   // ---- Coupons ----

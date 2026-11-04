@@ -1,20 +1,44 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Sliders, Save, ShieldCheck, Check } from "lucide-react";
-import { SUPPORT_EMAIL } from "@/lib/support";
+import { Save } from "lucide-react";
+import { useStore } from "@/context/StoreContext";
+import { apiErrorMessage } from "@/lib/auth-session";
+import { DEFAULT_STORE_SETTINGS } from "@/lib/store-settings";
+import { settingsService } from "@/services/settings";
+import { StoreSettings } from "@/types";
 
 export default function AdminSettingsPage() {
-  const [storeName, setStoreName] = useState("NutriNation Foods");
-  const [supportEmail, setSupportEmail] = useState(SUPPORT_EMAIL);
-  const [freeShippingMin, setFreeShippingMin] = useState(999);
-  const [gstRate, setGstRate] = useState(5); // 5% GST for unprocessed dry fruits
-  const [nitrogenSealAudit, setNitrogenSealAudit] = useState(true);
+  const { refreshStoreSettings } = useStore();
+  const [settings, setSettings] = useState<StoreSettings>(DEFAULT_STORE_SETTINGS);
+  const [status, setStatus] = useState<"loading" | "ready" | "failed">("loading");
+  const [saving, setSaving] = useState(false);
 
-  const handleSave = (e: React.FormEvent) => {
+  useEffect(() => {
+    settingsService
+      .getSettings()
+      .then((saved) => {
+        setSettings(saved);
+        setStatus("ready");
+      })
+      .catch(() => setStatus("failed"));
+  }, []);
+
+  const update = (changes: Partial<StoreSettings>) => setSettings((prev) => ({ ...prev, ...changes }));
+
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success("Store operational settings saved successfully!");
+    setSaving(true);
+    try {
+      setSettings(await settingsService.saveSettings(settings));
+      await refreshStoreSettings();
+      toast.success("Store operational settings saved successfully!");
+    } catch (error) {
+      toast.error(apiErrorMessage(error, "Could not save store settings."));
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -29,6 +53,11 @@ export default function AdminSettingsPage() {
         <p className="text-xs text-brand-muted mt-0.5">
           Configure GST tax calculation, free shipping thresholds, and compliance checks.
         </p>
+        {status === "failed" && (
+          <p role="alert" className="text-xs text-red-600 font-semibold mt-2">
+            Could not load the saved settings, so saving is turned off. Refresh to try again.
+          </p>
+        )}
       </div>
 
       <form onSubmit={handleSave} className="space-y-6">
@@ -42,8 +71,8 @@ export default function AdminSettingsPage() {
               <label className="block font-bold mb-1">Brand Name</label>
               <input
                 type="text"
-                value={storeName}
-                onChange={(e) => setStoreName(e.target.value)}
+                value={settings.storeName}
+                onChange={(e) => update({ storeName: e.target.value })}
                 className="w-full p-2.5 bg-brand-cream border border-brand-border rounded-xl focus:outline-none focus:border-brand-green font-semibold"
               />
             </div>
@@ -51,8 +80,8 @@ export default function AdminSettingsPage() {
               <label className="block font-bold mb-1">Support Email</label>
               <input
                 type="email"
-                value={supportEmail}
-                onChange={(e) => setSupportEmail(e.target.value)}
+                value={settings.supportEmail}
+                onChange={(e) => update({ supportEmail: e.target.value })}
                 className="w-full p-2.5 bg-brand-cream border border-brand-border rounded-xl focus:outline-none focus:border-brand-green"
               />
             </div>
@@ -69,8 +98,9 @@ export default function AdminSettingsPage() {
               <label className="block font-bold mb-1">Free Delivery Minimum Order (₹)</label>
               <input
                 type="number"
-                value={freeShippingMin}
-                onChange={(e) => setFreeShippingMin(Number(e.target.value))}
+                min={0}
+                value={settings.freeDeliveryMin}
+                onChange={(e) => update({ freeDeliveryMin: Number(e.target.value) })}
                 className="w-full p-2.5 bg-brand-cream border border-brand-border rounded-xl focus:outline-none focus:border-brand-green font-bold text-brand-green"
               />
             </div>
@@ -78,8 +108,11 @@ export default function AdminSettingsPage() {
               <label className="block font-bold mb-1">Standard Dry Fruit GST Rate (%)</label>
               <input
                 type="number"
-                value={gstRate}
-                onChange={(e) => setGstRate(Number(e.target.value))}
+                min={0}
+                max={100}
+                step="0.01"
+                value={settings.gstRate}
+                onChange={(e) => update({ gstRate: Number(e.target.value) })}
                 className="w-full p-2.5 bg-brand-cream border border-brand-border rounded-xl focus:outline-none focus:border-brand-green font-bold"
               />
             </div>
@@ -89,8 +122,8 @@ export default function AdminSettingsPage() {
             <label className="flex items-center gap-2 cursor-pointer font-bold text-brand-dark">
               <input
                 type="checkbox"
-                checked={nitrogenSealAudit}
-                onChange={(e) => setNitrogenSealAudit(e.target.checked)}
+                checked={settings.enforcePackingChecklist}
+                onChange={(e) => update({ enforcePackingChecklist: e.target.checked })}
                 className="w-4 h-4 rounded text-brand-green accent-brand-green"
               />
               <span>Enforce mandatory Clean-room Nitrogen Flush Inspection Checklist before order dispatch</span>
@@ -101,10 +134,11 @@ export default function AdminSettingsPage() {
         <div className="flex justify-end">
           <button
             type="submit"
-            className="bg-brand-dark hover:bg-black text-white text-xs font-bold px-8 py-3 rounded-xl shadow-xs transition-colors flex items-center gap-2"
+            disabled={status !== "ready" || saving}
+            className="bg-brand-dark hover:bg-black text-white text-xs font-bold px-8 py-3 rounded-xl shadow-xs transition-colors flex items-center gap-2 disabled:opacity-50"
           >
             <Save className="w-4 h-4" />
-            <span>Save Operational Rules</span>
+            <span>{saving ? "Saving..." : "Save Operational Rules"}</span>
           </button>
         </div>
       </form>

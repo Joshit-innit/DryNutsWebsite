@@ -128,6 +128,7 @@ export interface Order {
   subtotal: number;
   discount: number;
   deliveryFee: number;
+  gstRate: number; // rate at the time of the order; prices include GST
   total: number;
   status: OrderStatus;
   paymentMethod: "UPI" | "Card" | "NetBanking" | "COD";
@@ -136,6 +137,14 @@ export interface Order {
   estimatedDelivery: string;
   trackingNumber?: string;
   timeline: OrderTimelineStep[];
+}
+
+export interface StoreSettings {
+  storeName: string;
+  supportEmail: string;
+  freeDeliveryMin: number;
+  gstRate: number;
+  enforcePackingChecklist: boolean;
 }
 
 export interface Customer {

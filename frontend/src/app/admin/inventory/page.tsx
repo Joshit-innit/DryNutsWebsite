@@ -3,13 +3,17 @@
 import React, { useState, useEffect } from "react";
 import { adminService } from "@/services/admin";
 import { Product } from "@/types";
+import { apiErrorMessage } from "@/lib/auth-session";
 import { toast } from "sonner";
 import { Sliders, AlertTriangle, CheckCircle2, RefreshCw, Plus } from "lucide-react";
 import { TableRowsSkeleton } from "@/components/ui/Skeleton";
 
+const RESTOCK_UNITS = 50;
+
 export default function AdminInventoryPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [restocking, setRestocking] = useState<string | null>(null);
 
   useEffect(() => {
     async function load() {
@@ -20,15 +24,31 @@ export default function AdminInventoryPage() {
     load();
   }, []);
 
-  const handleRestock = (productName: string, variantWeight: string) => {
-    toast.success(`Restock batch allocated for ${productName} (${variantWeight})`, {
-      description: "+50 units added to warehouse inventory.",
-    });
+  const handleRestock = async (productId: string, variantId: string, productName: string, variantWeight: string) => {
+    setRestocking(variantId);
+    try {
+      const stock = await adminService.restockVariant(productId, variantId, RESTOCK_UNITS);
+      setProducts((prev) =>
+        prev.map((p) =>
+          p.id === productId
+            ? { ...p, variants: p.variants.map((v) => (v.id === variantId ? { ...v, stock } : v)) }
+            : p
+        )
+      );
+      toast.success(`Restocked ${productName} (${variantWeight})`, {
+        description: `+${RESTOCK_UNITS} units added. ${stock} now available.`,
+      });
+    } catch (error) {
+      toast.error(apiErrorMessage(error, "Could not update stock."));
+    } finally {
+      setRestocking(null);
+    }
   };
 
   const allVariants = products.flatMap((p) =>
     p.variants.map((v) => ({
       productId: p.id,
+      variantId: v.id,
       productName: p.name,
       image: p.images[0],
       categoryName: p.categoryName,
@@ -135,11 +155,12 @@ export default function AdminInventoryPage() {
                     </td>
                     <td className="py-3 px-4 text-right">
                       <button
-                        onClick={() => handleRestock(item.productName, item.weight)}
-                        className="text-xs bg-brand-beige hover:bg-brand-green hover:text-white text-brand-dark font-bold px-3 py-1.5 rounded-lg transition-colors inline-flex items-center gap-1"
+                        onClick={() => handleRestock(item.productId, item.variantId, item.productName, item.weight)}
+                        disabled={restocking === item.variantId}
+                        className="text-xs bg-brand-beige hover:bg-brand-green hover:text-white text-brand-dark font-bold px-3 py-1.5 rounded-lg transition-colors inline-flex items-center gap-1 disabled:opacity-50"
                       >
                         <Plus className="w-3.5 h-3.5" />
-                        <span>+50 Units</span>
+                        <span>+{RESTOCK_UNITS} Units</span>
                       </button>
                     </td>
                   </tr>

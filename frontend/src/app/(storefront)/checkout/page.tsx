@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useStore } from "@/context/StoreContext";
 import { orderService } from "@/services/orders";
 import { formatPrice } from "@/lib/utils";
+import { apiErrorMessage } from "@/lib/auth-session";
+import { getDeliveryFee, getIncludedGst } from "@/lib/store-settings";
 import { Address, Order } from "@/types";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -42,7 +44,7 @@ const addressSchema = z.object({
 type AddressFormData = z.infer<typeof addressSchema>;
 
 export default function CheckoutPage() {
-  const { cart, cartSubtotal, cartDiscount, cartDeliveryFee, cartTotal, clearCart } = useStore();
+  const { cart, cartSubtotal, cartDiscount, cartDeliveryFee, storeSettings, refreshStoreSettings, clearCart } = useStore();
   const [currentStep, setCurrentStep] = useState<1 | 2 | 3 | 4 | 5>(1);
 
   // Address State
@@ -97,6 +99,9 @@ export default function CheckoutPage() {
     toast.success("Shipping address saved");
   };
 
+  const finalDeliveryFee = getDeliveryFee(cartSubtotal, storeSettings.freeDeliveryMin, deliverySpeed);
+  const finalTotal = Math.max(0, cartSubtotal - cartDiscount + finalDeliveryFee);
+
   const handlePlaceOrder = async () => {
     setIsPlacingOrder(true);
     try {
@@ -104,8 +109,9 @@ export default function CheckoutPage() {
         items: cart,
         subtotal: cartSubtotal,
         discount: cartDiscount,
-        deliveryFee: deliverySpeed === "express" ? 99 : cartDeliveryFee,
-        total: cartTotal + (deliverySpeed === "express" ? 99 : 0),
+        deliveryFee: finalDeliveryFee,
+        deliverySpeed,
+        total: finalTotal,
         paymentMethod,
         shippingAddress: selectedAddress,
       });
@@ -128,15 +134,13 @@ export default function CheckoutPage() {
       toast.success("Order Placed Successfully!", {
         description: `Order #${order.orderNumber} is confirmed.`,
       });
-    } catch {
-      toast.error("Failed to place order. Please try again.");
+    } catch (error) {
+      await refreshStoreSettings();
+      toast.error(apiErrorMessage(error, "Failed to place order. Please try again."));
     } finally {
       setIsPlacingOrder(false);
     }
   };
-
-  const finalDeliveryFee = deliverySpeed === "express" ? 99 : cartDeliveryFee;
-  const finalTotal = cartTotal + (deliverySpeed === "express" ? 99 : 0);
 
   const steps = [
     { num: 1, label: "Bag Review" },
@@ -390,16 +394,18 @@ export default function CheckoutPage() {
                     <div>
                       <div className="flex items-center gap-2">
                         <span className="font-bold text-sm text-brand-dark">Standard Insured Ground/Air</span>
-                        <span className="text-[10px] bg-brand-green/20 text-brand-green font-bold px-2 py-0.5 rounded-full">
-                          FREE
-                        </span>
+                        {cartDeliveryFee === 0 && (
+                          <span className="text-[10px] bg-brand-green/20 text-brand-green font-bold px-2 py-0.5 rounded-full">
+                            FREE
+                          </span>
+                        )}
                       </div>
                       <p className="text-xs text-brand-muted mt-1">
                         Estimated delivery: 2-3 business days. Sealed in temperature-controlled transit.
                       </p>
                     </div>
                   </div>
-                  <span className="font-bold text-sm text-brand-green">₹0</span>
+                  <span className="font-bold text-sm text-brand-green">{formatPrice(cartDeliveryFee)}</span>
                 </label>
 
                 {/* Express Priority Air */}
@@ -652,6 +658,9 @@ export default function CheckoutPage() {
                 <span>Total Amount</span>
                 <span className="text-xl text-brand-green">{formatPrice(finalTotal)}</span>
               </div>
+              <p className="text-right text-[11px]">
+                Includes {formatPrice(getIncludedGst(finalTotal, storeSettings.gstRate))} GST ({storeSettings.gstRate}%)
+              </p>
             </div>
 
             <div className="p-4 rounded-xl bg-brand-cream/60 border border-brand-border space-y-2 text-[11px] text-brand-muted">

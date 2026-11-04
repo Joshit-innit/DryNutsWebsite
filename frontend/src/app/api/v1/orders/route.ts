@@ -1,8 +1,9 @@
 import crypto from "crypto";
 import { NextRequest } from "next/server";
-import { db } from "@/lib/server/db";
+import { db, StockError } from "@/lib/server/db";
 import { getRequestUser } from "@/lib/server/auth";
-import { Order } from "@/types";
+import { getDeliveryFee } from "@/lib/store-settings";
+import { CartItem, Order } from "@/types";
 
 export const dynamic = "force-dynamic";
 
@@ -31,7 +32,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const items = Array.isArray(body.items) ? body.items : [];
+    const items: CartItem[] = Array.isArray(body.items) ? body.items : [];
     const paymentMethod = String(body.paymentMethod || "");
 
     if (!items.length) {
@@ -44,16 +45,41 @@ export async function POST(request: NextRequest) {
       return Response.json({ message: "A shipping address is required." }, { status: 400 });
     }
 
+    const validItems = items.every(
+      (item) => item?.productId && item?.variantId && Number.isInteger(item.quantity) && item.quantity > 0
+    );
+    if (!validItems) {
+      return Response.json({ message: "Your cart has an invalid item." }, { status: 400 });
+    }
+
+    // The saved settings decide the delivery charge. A tab opened before an admin
+    // changed them is asked to review the new total instead of being charged it silently.
+    const settings = await db.getSettings();
+    const subtotal = items.reduce((sum, item) => sum + Number(item.price) * item.quantity, 0);
+    const discount = Number(body.discount || 0);
+    const deliveryFee = getDeliveryFee(
+      subtotal,
+      settings.freeDeliveryMin,
+      body.deliverySpeed === "express" ? "express" : "standard"
+    );
+    if (Number(body.deliveryFee) !== deliveryFee) {
+      return Response.json(
+        { message: "The delivery charge has changed. Please review your total and try again." },
+        { status: 409 }
+      );
+    }
+
     const suffix = crypto.randomBytes(4).toString("hex");
     const order: Order = {
       id: `ord-${Date.now()}-${suffix}`,
       orderNumber: `NN-${new Date().getFullYear()}-${suffix.toUpperCase()}`,
       date: isoDate(),
       items,
-      subtotal: Number(body.subtotal || 0),
-      discount: Number(body.discount || 0),
-      deliveryFee: Number(body.deliveryFee || 0),
-      total: Number(body.total || 0),
+      subtotal,
+      discount,
+      deliveryFee,
+      gstRate: settings.gstRate,
+      total: Math.max(0, subtotal - discount + deliveryFee),
       status: "Confirmed",
       paymentMethod: paymentMethod as Order["paymentMethod"],
       paymentStatus: paymentMethod === "COD" ? "Pending" : "Paid",
@@ -72,7 +98,10 @@ export async function POST(request: NextRequest) {
 
     const created = await db.createOrder(order, user?.role === "CUSTOMER" ? user.sub : null);
     return Response.json({ data: created }, { status: 201 });
-  } catch {
+  } catch (error) {
+    if (error instanceof StockError) {
+      return Response.json({ message: error.message }, { status: 409 });
+    }
     return Response.json({ message: "Could not place your order." }, { status: 500 });
   }
 }

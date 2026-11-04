@@ -25,7 +25,7 @@ import {
 import { useStore } from "@/context/StoreContext";
 import { backendApi, unwrapData } from "@/lib/api/axios";
 import { AuthResponse, apiErrorMessage, isAdminRole, saveSession } from "@/lib/auth-session";
-import { cn } from "@/lib/utils";
+import { cn, formatPrice } from "@/lib/utils";
 
 export type AuthMode = "signin" | "register";
 
@@ -67,7 +67,6 @@ const PANEL_COPY: Record<AuthMode, { eyebrow: string; title: string; body: strin
 
 const PERKS = [
   { icon: Leaf, label: "Hand-graded harvests" },
-  { icon: Truck, label: "Free delivery over ₹999" },
   { icon: ShieldCheck, label: "Secure checkout" },
 ];
 
@@ -86,7 +85,12 @@ function destinationFor(role: string, next?: string): string {
 export default function AuthPanel({ initialMode = "signin", next }: { initialMode?: AuthMode; next?: string }) {
   const [mode, setMode] = useState<AuthMode>(initialMode);
   const router = useRouter();
-  const { user, setUser, logout } = useStore();
+  const { user, setUser, logout, storeSettings } = useStore();
+  const perks = [
+    PERKS[0],
+    { icon: Truck, label: `Free delivery over ${formatPrice(storeSettings.freeDeliveryMin)}` },
+    PERKS[1],
+  ];
 
   const switchMode = (nextMode: AuthMode) => {
     setMode(nextMode);
@@ -143,7 +147,7 @@ export default function AuthPanel({ initialMode = "signin", next }: { initialMod
                 <h2 className="font-serif text-4xl leading-tight text-white sm:text-5xl">{copy.title}</h2>
                 <p className="text-sm leading-relaxed text-white/75 sm:text-base">{copy.body}</p>
                 <ul className="grid grid-cols-1 gap-3 border-t border-white/15 pt-5 text-xs text-white/80 sm:grid-cols-3">
-                  {PERKS.map(({ icon: Icon, label }) => (
+                  {perks.map(({ icon: Icon, label }) => (
                     <li key={label} className="flex items-center gap-2">
                       <Icon className="h-4 w-4 flex-shrink-0 text-brand-saffron" />
                       {label}
