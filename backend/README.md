@@ -42,11 +42,21 @@ mvn -pl order-service spring-boot:run
 
 ## Frontend Connection
 
-Create `.env.local` in the frontend project root:
+The browser never calls the gateway directly. Next.js forwards sign-in to it and keeps the token in an HttpOnly cookie, so add this to `frontend/.env.local`, with `AUTH_SECRET` set to the same value as this backend's `JWT_SECRET`:
 
 ```bash
-NEXT_PUBLIC_API_URL=http://localhost:8080/api/v1
+BACKEND_URL=http://localhost:8080
 ```
+
+Sign-in needs `api-gateway` and `customer-service` running. The other services are optional for the storefront.
+
+## Load Balancing and Circuit Breakers
+
+Every gateway route, and the order service's Feign clients, go through Spring Cloud LoadBalancer (round robin). Instances come from Eureka, or from `PRODUCT_SERVICE_URL`, `CUSTOMER_SERVICE_URL` and `ORDER_SERVICE_URL`, which take comma-separated lists when Eureka is off.
+
+Each downstream service has a Resilience4j circuit breaker. It opens at a 50% failure rate over the last 10 calls (at least 5), stays open for `CIRCUIT_OPEN_DURATION` (default 20s), then lets 3 trial calls through. While open, the gateway answers `503` with a JSON body and `Retry-After` without calling the service. 4xx responses never count as failures. Only GETs are retried, because repeating a login or an order is not safe.
+
+`GATEWAY_TIMEOUT` (default 10s) caps each call. Keep it above Render's cold start (70s in `render.yaml`).
 
 The gateway has CORS enabled for:
 

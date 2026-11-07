@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 type RestockRouteContext = { params: Promise<{ slug: string }> };
 
 export async function POST(request: NextRequest, context: RestockRouteContext) {
-  const denied = requireAdmin(request);
+  const denied = await requireAdmin(request);
   if (denied) return denied;
 
   const { slug: productId } = await context.params;

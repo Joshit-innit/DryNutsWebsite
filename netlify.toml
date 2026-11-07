@@ -2,9 +2,9 @@
 # automatically and serves pages plus the /api/v1 route handlers as functions.
 #
 # Set these in Site configuration → Environment variables (server-side only):
-#   SUPABASE_URL, SUPABASE_SECRET_KEY, AUTH_SECRET (32+ chars),
-#   ADMIN_EMAIL, ADMIN_PASSWORD
-# Leave NEXT_PUBLIC_API_URL unset so the app uses its own /api/v1 routes.
+#   SUPABASE_URL, SUPABASE_SECRET_KEY, ADMIN_EMAIL (public support address),
+#   BACKEND_URL   the Spring gateway, e.g. https://nutrination-gateway.onrender.com
+#   AUTH_SECRET   must equal JWT_SECRET on the customer-service (Render)
 
 [build]
   base = "frontend"

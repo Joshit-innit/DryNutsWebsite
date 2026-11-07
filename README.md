@@ -38,7 +38,7 @@ All store data (catalogue, accounts, orders, coupons, reviews and customers) liv
 - **Admin console** with revenue and conversion analytics, product CRUD, inventory thresholds, fulfilment pipeline, customers, coupons, promotions, review moderation and editorial content.
 - **Operations console (CMD)** with service health, a service registry, database and cache views, logs, background jobs, deployments, security and audit screens.
 - **Built-in API explorer** that documents and live-tests the REST endpoints from inside the app.
-- **JWT authentication** with role-based access (`ADMIN` / `CUSTOMER`), enforced in the UI and on the server.
+- **Server-side authentication** with role-based access (`ADMIN` / `CUSTOMER`): the Spring Customer Service signs in users, the session is an HttpOnly cookie, and pages and APIs are guarded on the server.
 - **Supabase database** with versioned SQL migrations, seed data and Row Level Security that blocks all direct public access.
 
 ---
@@ -110,42 +110,47 @@ All store data (catalogue, accounts, orders, coupons, reviews and customers) liv
 
 ```
                     ┌────────────────────────────────────┐
-                    │  Next.js Frontend                  │
-                    │  App Router · React · Tailwind     │
+                    │  Browser (HttpOnly session cookie) │
+                    └─────────────────┬──────────────────┘
+                                      │ same-origin /api/v1
+                    ┌─────────────────▼──────────────────┐
+                    │  Next.js  ·  proxy.ts page guard   │
+                    │  Route Handlers verify the token   │
                     └──────┬──────────────────────┬──────┘
-          REST /api/v1     │                      │     REST /api/v1
-          (default)        │                      │     (optional)
-            ┌──────────────▼───────┐   ┌──────────▼───────────┐
-            │ Next.js Route        │   │ API Gateway          │
-            │ Handlers (server)    │   │ Spring Cloud · CORS  │
-            └──────────┬───────────┘   └──────────┬───────────┘
-                       │                          │  lb:// routing
-                       │           ┌──────────────┼──────────────┐
-                       │           │              │              │
-                       │     ┌─────▼─────┐  ┌─────▼─────┐  ┌─────▼─────┐
-                       │     │  Product  │  │ Customer  │  │   Order   │
-                       │     │  Service  │  │  Service  │  │  Service  │
-                       │     └─────┬─────┘  └─────┬─────┘  └─────┬─────┘
-                       │           │              │              │
-            ┌──────────▼───────────▼──────────────▼──────────────▼──────┐
+          store data       │                      │  sign-in only
+                           │           ┌──────────▼───────────┐
+                           │           │ API Gateway          │
+                           │           │ round-robin balancer │
+                           │           │ circuit breakers     │
+                           │           └──────────┬───────────┘
+                           │                      │  lb:// routing
+                           │       ┌──────────────┼──────────────┐
+                           │       │              │              │
+                           │ ┌─────▼─────┐  ┌─────▼─────┐  ┌─────▼─────┐
+                           │ │  Product  │  │ Customer  │  │   Order   │
+                           │ │  Service  │  │  Service  │  │  Service  │
+                           │ └─────┬─────┘  └─────┬─────┘  └─────┬─────┘
+                           │       │              │              │
+            ┌──────────────▼───────▼──────────────▼──────────────▼──────┐
             │                   Supabase  (PostgreSQL)                  │
-            │  public schema: storefront data, accounts · RLS enabled   │
+            │  public schema: storefront data · RLS enabled             │
             │  product_service · customer_service · order_service       │
             └───────────────────────────────────────────────────────────┘
 
-     Spring services register with Eureka and call each other through OpenFeign.
+     Accounts live in customer_service. Spring services find each other through
+     Eureka, or through the *_SERVICE_URL lists where Eureka is off.
      Locally they can use Docker PostgreSQL instead of Supabase.
 ```
 
 | Service | Responsibility |
 | --- | --- |
 | **Supabase** | Managed PostgreSQL holding all store data. The Next.js server connects with a server-only secret key; Row Level Security blocks direct public access. Schema changes ship as SQL migrations in `supabase/migrations`. |
-| **Next.js Route Handlers** | The default API: products, categories, auth, orders, coupons, reviews and customers, served from Supabase. |
+| **Next.js Route Handlers** | The API the browser calls: products, categories, orders, coupons, reviews and customers, served from Supabase. Sign-in is forwarded to the Customer Service; the token it signs is kept in an HttpOnly cookie and verified here. |
 | **Discovery Server** | Netflix Eureka registry. Every service registers here so nothing depends on hard-coded addresses. |
-| **API Gateway** | Single entry point for the frontend. Routes `/api/v1/**` to the right service with load-balanced lookups and handles CORS centrally. |
+| **API Gateway** | Single entry point for the frontend. Routes `/api/v1/**` to the right service through a round-robin load balancer, wraps each service in a Resilience4j circuit breaker with a JSON fallback, retries safe GETs and handles CORS centrally. |
 | **Product Service** | Products, weight variants, nutrition info and categories. |
-| **Customer Service** | Registration, login, BCrypt password hashing, JWT issuance and validation, customer profiles and addresses. |
-| **Order Service** | Order creation, status updates and a fulfilment timeline. Calls Product and Customer services through **OpenFeign**. |
+| **Customer Service** | The sign-in authority: registration, login, BCrypt password hashing, JWT issuance and validation, customer profiles and addresses. |
+| **Order Service** | Order creation, status updates and a fulfilment timeline. Calls Product and Customer services through **OpenFeign**, load balanced and behind circuit breakers. |
 
 Each service exposes **OpenAPI / Swagger UI** documentation and **Spring Boot Actuator** health endpoints.
 
@@ -164,7 +169,7 @@ The frontend deploys from `netlify.toml` with Netlify's Next.js runtime. The fou
 <img src="docs/screenshots/render-services.jpg" alt="Render Blueprint with all four services deployed" width="100%"/>
 <p align="center"><sub><b>Render</b>: gateway, product, customer and order services deployed on Docker in Frankfurt</sub></p>
 
-Render's free plan puts idle services to sleep, so the first request after a quiet spell takes about a minute.
+Render's free plan puts idle services to sleep, so the first request after a quiet spell takes about a minute. Sign-in handles this: the form says the service is waking, waits for it, and retries by itself.
 
 ---
 
@@ -204,13 +209,13 @@ Render's free plan puts idle services to sleep, so the first request after a qui
 
 **Selling a premium product online.** Dry fruits sell on trust and quality. The storefront uses editorial typography, real harvest photography, origin and grade details and a calm palette to make the products feel premium, the way a well-designed physical store would.
 
-**A real database without running a server farm.** Next.js Route Handlers read and write Supabase directly and mirror the Spring API contract, so the whole store (catalogue, sign-in, checkout, orders and the admin console) works with persistent data without starting the microservice stack. When the Spring services are running, the same frontend switches to them through one environment variable.
+**A real database without running a server farm.** Next.js Route Handlers read and write Supabase directly, so the catalogue, checkout, orders and the admin console work without the rest of the microservice stack. Only sign-in needs Spring, and sessions already issued keep working if it goes down, because Next.js verifies the signed token itself.
 
 **Separation of concerns at scale.** Products, customers and orders change at different rates and carry different risk. Splitting them into independently deployable services, each with its own database or schema, keeps failures contained and lets each area evolve on its own.
 
 **Service-to-service communication without tight coupling.** Eureka discovery and OpenFeign clients let the Order Service validate products and customers by service name rather than by hard-coded host. The gateway gives the frontend one stable origin.
 
-**Secure, role-aware access.** Stateless JWTs carry the user's role. The admin console is guarded on the client, and every write is checked again on the server, so hiding a button is never the only protection. Supabase tables have Row Level Security turned on with no public policies, so only the server, holding the secret key, can touch the data. Passwords are hashed and secrets come from environment configuration.
+**Secure, role-aware access.** Stateless JWTs carry the user's role. `proxy.ts` guards the admin and CMD consoles on the server before they render, and every write is checked again in its route handler. Sessions live in an HttpOnly cookie that page scripts cannot read. Supabase tables have Row Level Security turned on with no public policies, so only the server, holding the secret key, can touch the data. Passwords are hashed and secrets come from environment configuration.
 
 **Running a store, not just a storefront.** Inventory thresholds, a fulfilment pipeline with a per-order timeline, coupons, promotions, review moderation and analytics give staff the tools to operate the business day to day.
 

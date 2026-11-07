@@ -43,6 +43,7 @@ public class JwtService {
             payload.put("iss", "nutrination-customer-service");
             payload.put("sub", subject.customerId());
             payload.put("email", subject.email());
+            payload.put("name", subject.name());
             payload.put("role", subject.role());
             payload.put("iat", now.getEpochSecond());
             payload.put("exp", now.plus(ttl).getEpochSecond());
@@ -88,5 +89,5 @@ public class JwtService {
         return Base64.getUrlEncoder().withoutPadding().encodeToString(mac.doFinal(value.getBytes(StandardCharsets.US_ASCII)));
     }
 
-    public record CustomerTokenSubject(String customerId, String email, String role) {}
+    public record CustomerTokenSubject(String customerId, String name, String email, String role) {}
 }

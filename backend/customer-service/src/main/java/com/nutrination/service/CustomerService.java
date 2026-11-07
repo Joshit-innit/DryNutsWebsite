@@ -66,12 +66,17 @@ public class CustomerService {
         return customerRepository.save(customer);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public Customer authenticate(String email, String password) {
         Customer customer = customerRepository.findByEmailIgnoreCase(email.trim())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password"));
         if (customer.getPasswordHash() == null || !passwordEncoder.matches(password, customer.getPasswordHash())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password");
+        }
+        // Accounts migrated with an older hash move to the current one on first sign-in.
+        if (passwordEncoder.upgradeEncoding(customer.getPasswordHash())) {
+            customer.setPasswordHash(passwordEncoder.encode(password));
+            customerRepository.save(customer);
         }
         return customer;
     }

@@ -1,6 +1,7 @@
 package com.nutrination.config;
 
 import com.nutrination.security.JwtAuthenticationFilter;
+import com.nutrination.security.MigratingPasswordEncoder;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -44,7 +45,7 @@ public class SecurityConfig {
 
     @Bean
     PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(12);
+        return new MigratingPasswordEncoder(new BCryptPasswordEncoder(12));
     }
 
     @Bean

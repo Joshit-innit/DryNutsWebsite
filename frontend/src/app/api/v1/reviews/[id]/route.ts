@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 type ReviewRouteContext = { params: Promise<{ id: string }> };
 
 export async function DELETE(request: NextRequest, context: ReviewRouteContext) {
-  const denied = requireAdmin(request);
+  const denied = await requireAdmin(request);
   if (denied) return denied;
 
   const { id } = await context.params;

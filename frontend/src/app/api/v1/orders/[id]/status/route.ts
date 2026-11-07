@@ -13,7 +13,7 @@ const STATUSES: OrderStatus[] = [
 const PROGRESSION: OrderStatus[] = ["Pending", "Confirmed", "Packed", "Shipped", "Out for Delivery", "Delivered"];
 
 export async function PATCH(request: NextRequest, context: OrderRouteContext) {
-  const denied = requireAdmin(request);
+  const denied = await requireAdmin(request);
   if (denied) return denied;
 
   const { id } = await context.params;

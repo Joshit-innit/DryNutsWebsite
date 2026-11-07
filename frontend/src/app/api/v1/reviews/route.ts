@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 /** Reviews are not shown on the storefront; only admins can list them for moderation. */
 export async function GET(request: NextRequest) {
-  const denied = requireAdmin(request);
+  const denied = await requireAdmin(request);
   if (denied) return denied;
   const productId = request.nextUrl.searchParams.get("productId") || undefined;
   try {
@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const user = getRequestUser(request);
+  const user = await getRequestUser(request);
   if (!user) {
     return Response.json({ message: "Please sign in to write a review." }, { status: 401 });
   }

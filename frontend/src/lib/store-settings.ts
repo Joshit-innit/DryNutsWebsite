@@ -13,6 +13,9 @@ export const EXPRESS_DELIVERY_FEE = 99;
 
 export type DeliverySpeed = "standard" | "express";
 
+/** No payment gateway is connected yet, so cash on delivery is the only way to pay. */
+export const ONLINE_PAYMENTS_ENABLED = false;
+
 /** Shared by the cart and the orders API so both always agree on the charge. */
 export function getDeliveryFee(subtotal: number, freeDeliveryMin: number, speed: DeliverySpeed = "standard") {
   if (subtotal === 0) return 0;

@@ -2,12 +2,21 @@ import crypto from "crypto";
 import { NextRequest } from "next/server";
 import { db, StockError } from "@/lib/server/db";
 import { getRequestUser } from "@/lib/server/auth";
-import { getDeliveryFee } from "@/lib/store-settings";
+import { getCouponDiscount, getCouponProblem, priceCart, PricingError } from "@/lib/order-pricing";
+import { getDeliveryFee, ONLINE_PAYMENTS_ENABLED } from "@/lib/store-settings";
 import { CartItem, Order } from "@/types";
 
 export const dynamic = "force-dynamic";
 
 const PAYMENT_METHODS = ["UPI", "Card", "NetBanking", "COD"] as const;
+
+function isCompleteAddress(address: Record<string, unknown> | null | undefined) {
+  if (!address || typeof address !== "object") return false;
+  const filled = ["name", "phone", "street", "city", "state"].every(
+    (field) => typeof address[field] === "string" && address[field].trim()
+  );
+  return filled && /^[1-9][0-9]{5}$/.test(String(address.pincode));
+}
 
 function isoDate(offsetDays = 0) {
   return new Date(Date.now() + offsetDays * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
@@ -15,7 +24,7 @@ function isoDate(offsetDays = 0) {
 
 /** Admins see every order; signed-in customers see their own. */
 export async function GET(request: NextRequest) {
-  const user = getRequestUser(request);
+  const user = await getRequestUser(request);
   if (!user) {
     return Response.json({ message: "Please sign in to view your orders." }, { status: 401 });
   }
@@ -28,43 +37,60 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const user = getRequestUser(request);
+  const user = await getRequestUser(request);
 
   try {
     const body = await request.json();
-    const items: CartItem[] = Array.isArray(body.items) ? body.items : [];
+    const cart: CartItem[] = Array.isArray(body.items) ? body.items : [];
     const paymentMethod = String(body.paymentMethod || "");
 
-    if (!items.length) {
+    if (!cart.length) {
       return Response.json({ message: "Your cart is empty." }, { status: 400 });
     }
     if (!PAYMENT_METHODS.includes(paymentMethod as (typeof PAYMENT_METHODS)[number])) {
       return Response.json({ message: "Choose a valid payment method." }, { status: 400 });
     }
-    if (!body.shippingAddress || typeof body.shippingAddress !== "object") {
-      return Response.json({ message: "A shipping address is required." }, { status: 400 });
+    if (paymentMethod !== "COD" && !ONLINE_PAYMENTS_ENABLED) {
+      return Response.json({ message: "Online payment is not available yet. Please choose cash on delivery." }, { status: 400 });
+    }
+    if (!isCompleteAddress(body.shippingAddress)) {
+      return Response.json({ message: "Please complete your delivery address." }, { status: 400 });
     }
 
-    const validItems = items.every(
+    const validItems = cart.every(
       (item) => item?.productId && item?.variantId && Number.isInteger(item.quantity) && item.quantity > 0
     );
     if (!validItems) {
       return Response.json({ message: "Your cart has an invalid item." }, { status: 400 });
     }
 
-    // The saved settings decide the delivery charge. A tab opened before an admin
-    // changed them is asked to review the new total instead of being charged it silently.
+    // Everything that decides the amount comes from the database. The browser only
+    // says what it wants, and a total that no longer matches is sent back for review.
+    const productIds = [...new Set(cart.map((item) => item.productId))];
+    const products = await Promise.all(productIds.map((id) => db.getProductBySlug(id)));
+    const { items, subtotal } = priceCart(cart, products.filter((product) => product !== undefined));
+
+    let discount = 0;
+    const couponCode = String(body.couponCode || "").trim();
+    if (couponCode) {
+      const coupon = await db.getCouponByCode(couponCode);
+      const problem = getCouponProblem(coupon, subtotal);
+      if (!coupon || problem) {
+        return Response.json({ message: problem }, { status: 409 });
+      }
+      discount = getCouponDiscount(coupon, subtotal);
+    }
+
     const settings = await db.getSettings();
-    const subtotal = items.reduce((sum, item) => sum + Number(item.price) * item.quantity, 0);
-    const discount = Number(body.discount || 0);
     const deliveryFee = getDeliveryFee(
       subtotal,
       settings.freeDeliveryMin,
       body.deliverySpeed === "express" ? "express" : "standard"
     );
-    if (Number(body.deliveryFee) !== deliveryFee) {
+    const total = Math.max(0, subtotal - discount + deliveryFee);
+    if (Number(body.total) !== total) {
       return Response.json(
-        { message: "The delivery charge has changed. Please review your total and try again." },
+        { message: "Your total has changed. Please review it and try again." },
         { status: 409 }
       );
     }
@@ -79,10 +105,10 @@ export async function POST(request: NextRequest) {
       discount,
       deliveryFee,
       gstRate: settings.gstRate,
-      total: Math.max(0, subtotal - discount + deliveryFee),
+      total,
       status: "Confirmed",
       paymentMethod: paymentMethod as Order["paymentMethod"],
-      paymentStatus: paymentMethod === "COD" ? "Pending" : "Paid",
+      paymentStatus: "Pending",
       shippingAddress: body.shippingAddress,
       estimatedDelivery: isoDate(4),
       trackingNumber: `EXP-${crypto.randomBytes(4).toString("hex").toUpperCase()}`,
@@ -99,7 +125,7 @@ export async function POST(request: NextRequest) {
     const created = await db.createOrder(order, user?.role === "CUSTOMER" ? user.sub : null);
     return Response.json({ data: created }, { status: 201 });
   } catch (error) {
-    if (error instanceof StockError) {
+    if (error instanceof StockError || error instanceof PricingError) {
       return Response.json({ message: error.message }, { status: 409 });
     }
     return Response.json({ message: "Could not place your order." }, { status: 500 });

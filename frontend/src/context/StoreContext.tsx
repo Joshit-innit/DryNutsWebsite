@@ -7,7 +7,8 @@ import { couponService } from "@/services/coupons";
 import { settingsService } from "@/services/settings";
 import { DEFAULT_STORE_SETTINGS, getDeliveryFee } from "@/lib/store-settings";
 import { getProductImage } from "@/lib/product-images";
-import { clearSession, loadSessionUser } from "@/lib/auth-session";
+import { getCouponDiscount } from "@/lib/order-pricing";
+import { endSession, fetchSessionUser } from "@/lib/auth-session";
 
 interface StoreContextType {
   // Saved store settings
@@ -45,7 +46,7 @@ interface StoreContextType {
   // User & Portal Role Switcher
   user: UserSession | null;
   setUser: (user: UserSession | null) => void;
-  logout: () => void;
+  logout: () => Promise<void>;
   activeRole: "customer" | "admin" | "developer";
   setActiveRole: (role: "customer" | "admin" | "developer") => void;
 }
@@ -86,7 +87,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 
   // Load cart from localStorage on mount (hydration safe)
   useEffect(() => {
-    setUser(loadSessionUser());
+    fetchSessionUser().then(setUser);
     try {
       const saved = localStorage.getItem("nn_cart");
       if (saved) {
@@ -198,18 +199,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
   const cartSubtotal = cart.reduce((total, item) => total + item.price * item.quantity, 0);
 
-  // Discount calculation
-  let cartDiscount = 0;
-  if (appliedCoupon) {
-    if (appliedCoupon.discountType === "percentage") {
-      cartDiscount = Math.round((cartSubtotal * appliedCoupon.discountValue) / 100);
-      if (appliedCoupon.maxDiscount && cartDiscount > appliedCoupon.maxDiscount) {
-        cartDiscount = appliedCoupon.maxDiscount;
-      }
-    } else {
-      cartDiscount = appliedCoupon.discountValue;
-    }
-  }
+  const cartDiscount = appliedCoupon ? getCouponDiscount(appliedCoupon, cartSubtotal) : 0;
 
   const cartDeliveryFee = getDeliveryFee(cartSubtotal, storeSettings.freeDeliveryMin);
   const cartTotal = Math.max(0, cartSubtotal - cartDiscount + cartDeliveryFee);
@@ -249,8 +239,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 
   const isInWishlist = (productId: string) => wishlist.includes(productId);
 
-  const logout = () => {
-    clearSession();
+  const logout = async () => {
+    await endSession().catch(() => undefined);
     setUser(null);
     setActiveRole("customer");
   };

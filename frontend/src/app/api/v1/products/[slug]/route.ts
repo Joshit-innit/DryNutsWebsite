@@ -14,7 +14,7 @@ type ProductRouteContext = {
 export async function GET(request: NextRequest, context: ProductRouteContext) {
   const { slug } = await context.params;
   const product = await db.getProductBySlug(slug);
-  const isAdmin = getRequestUser(request)?.role === "ADMIN";
+  const isAdmin = (await getRequestUser(request))?.role === "ADMIN";
 
   if (!product || (product.status !== "published" && !isAdmin)) {
     return Response.json({ message: "Product not found." }, { status: 404 });
@@ -24,7 +24,7 @@ export async function GET(request: NextRequest, context: ProductRouteContext) {
 }
 
 export async function PATCH(request: NextRequest, context: ProductRouteContext) {
-  const denied = requireAdmin(request);
+  const denied = await requireAdmin(request);
   if (denied) return denied;
 
   const { slug } = await context.params;
@@ -64,7 +64,7 @@ export async function PUT(request: NextRequest, context: ProductRouteContext) {
 }
 
 export async function DELETE(request: NextRequest, context: ProductRouteContext) {
-  const denied = requireAdmin(request);
+  const denied = await requireAdmin(request);
   if (denied) return denied;
 
   const { slug } = await context.params;

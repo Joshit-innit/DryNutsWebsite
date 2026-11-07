@@ -12,7 +12,7 @@ type OrderRouteContext = { params: Promise<{ id: string }> };
  */
 export async function GET(request: NextRequest, context: OrderRouteContext) {
   const { id } = await context.params;
-  const user = getRequestUser(request);
+  const user = await getRequestUser(request);
 
   try {
     const order = await db.getOrderById(id);

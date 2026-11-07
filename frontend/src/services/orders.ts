@@ -23,10 +23,9 @@ export const orderService = {
 
   async createOrder(data: {
     items: CartItem[];
-    subtotal: number;
-    discount: number;
-    deliveryFee: number;
+    couponCode?: string;
     deliverySpeed: DeliverySpeed;
+    /** The total the customer saw. The server prices the order itself and compares. */
     total: number;
     paymentMethod: "UPI" | "Card" | "NetBanking" | "COD";
     shippingAddress: Address;

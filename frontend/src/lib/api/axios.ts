@@ -1,25 +1,14 @@
 import axios from "axios";
-import { ACCESS_TOKEN_STORAGE_KEY } from "@/lib/auth-constants";
 
+/**
+ * Always same-origin: the session is an HttpOnly cookie on this site, so the browser
+ * sends it automatically and scripts never handle a token.
+ */
 export const backendApi = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "/api/v1",
+  baseURL: "/api/v1",
   headers: {
     "Content-Type": "application/json",
   },
-  // Authentication uses an explicit bearer token, not ambient browser cookies.
-  withCredentials: false,
-});
-
-backendApi.interceptors.request.use((config) => {
-  if (typeof window !== "undefined") {
-    const token = sessionStorage.getItem(ACCESS_TOKEN_STORAGE_KEY);
-
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-  }
-
-  return config;
 });
 
 export function unwrapData<T>(response: { data: { data?: T } | T }): T {

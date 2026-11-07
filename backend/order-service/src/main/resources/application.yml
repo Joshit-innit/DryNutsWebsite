@@ -26,6 +26,40 @@ spring:
           create_namespaces: true
     open-in-view: false
 
+# Used when Eureka is off; takes a comma-separated list. Blank means "ask Eureka".
+nutrination:
+  services:
+    product-service: ${PRODUCT_SERVICE_URL:}
+    customer-service: ${CUSTOMER_SERVICE_URL:}
+
+# Feign's default read timeout is a minute, which would hold a checkout open.
+spring.cloud.openfeign.client.config.default:
+  connect-timeout: 5000
+  read-timeout: ${FEIGN_READ_TIMEOUT:10000}
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        sliding-window-type: COUNT_BASED
+        sliding-window-size: 10
+        minimum-number-of-calls: 5
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: ${CIRCUIT_OPEN_DURATION:20s}
+        permitted-number-of-calls-in-half-open-state: 3
+        automatic-transition-from-open-to-half-open-enabled: true
+        # A 4xx means the service answered; the caller's request was the problem.
+        ignore-exceptions:
+          - feign.FeignException$BadRequest
+          - feign.FeignException$Unauthorized
+          - feign.FeignException$Forbidden
+          - feign.FeignException$NotFound
+    instances:
+      productClient:
+        base-config: default
+      customerClient:
+        base-config: default
+
 eureka:
   client:
     # Set EUREKA_ENABLED=false where services reach each other by URL (e.g. Render).

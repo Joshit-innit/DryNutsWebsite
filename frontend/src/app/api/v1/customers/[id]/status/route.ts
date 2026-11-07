@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 type CustomerRouteContext = { params: Promise<{ id: string }> };
 
 export async function PATCH(request: NextRequest, context: CustomerRouteContext) {
-  const denied = requireAdmin(request);
+  const denied = await requireAdmin(request);
   if (denied) return denied;
 
   const { id } = await context.params;

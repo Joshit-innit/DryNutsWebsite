@@ -18,39 +18,127 @@ spring:
             allowedMethods: "*"
             allowedHeaders: "*"
             allowCredentials: true
-      # Each URI defaults to Eureka (lb://). Without Eureka, set the *_SERVICE_URL
-      # variables to the services' base URLs, e.g. https://nutrination-product.onrender.com
+      # Every route goes through the round-robin load balancer. Instances come from
+      # Eureka, or, where Eureka is off, from the *_SERVICE_URL variables, which take a
+      # comma-separated list, e.g. https://a.onrender.com,https://b.onrender.com
+      #
+      # Filter order matters: Retry sits inside CircuitBreaker, so a request that
+      # exhausts its retries counts as one failure. Only GETs are retried, because
+      # repeating a login or an order is not safe.
+      httpclient:
+        connect-timeout: 5000
       routes:
         - id: product-service
-          uri: ${PRODUCT_SERVICE_URL:lb://product-service}
+          uri: lb://product-service
           predicates:
             - Path=/api/v1/products/**,/api/v1/categories/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: productService
+                fallbackUri: forward:/fallback/product-service
+                statusCodes:
+                  - BAD_GATEWAY
+                  - SERVICE_UNAVAILABLE
+                  - GATEWAY_TIMEOUT
+            - name: Retry
+              args:
+                retries: 1
+                methods: GET
+                statuses: BAD_GATEWAY,SERVICE_UNAVAILABLE,GATEWAY_TIMEOUT
         - id: customer-service
-          uri: ${CUSTOMER_SERVICE_URL:lb://customer-service}
+          uri: lb://customer-service
           predicates:
             - Path=/api/v1/customers/**,/api/v1/auth/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: customerService
+                fallbackUri: forward:/fallback/customer-service
+                statusCodes:
+                  - BAD_GATEWAY
+                  - SERVICE_UNAVAILABLE
+                  - GATEWAY_TIMEOUT
+            - name: Retry
+              args:
+                retries: 1
+                methods: GET
+                statuses: BAD_GATEWAY,SERVICE_UNAVAILABLE,GATEWAY_TIMEOUT
         - id: order-service
-          uri: ${ORDER_SERVICE_URL:lb://order-service}
+          uri: lb://order-service
           predicates:
             - Path=/api/v1/orders/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: orderService
+                fallbackUri: forward:/fallback/order-service
+                statusCodes:
+                  - BAD_GATEWAY
+                  - SERVICE_UNAVAILABLE
+                  - GATEWAY_TIMEOUT
+            - name: Retry
+              args:
+                retries: 1
+                methods: GET
+                statuses: BAD_GATEWAY,SERVICE_UNAVAILABLE,GATEWAY_TIMEOUT
         - id: product-openapi
-          uri: ${PRODUCT_SERVICE_URL:lb://product-service}
+          uri: lb://product-service
           predicates:
             - Path=/product-service/v3/api-docs
           filters:
             - RewritePath=/product-service/v3/api-docs, /v3/api-docs
         - id: customer-openapi
-          uri: ${CUSTOMER_SERVICE_URL:lb://customer-service}
+          uri: lb://customer-service
           predicates:
             - Path=/customer-service/v3/api-docs
           filters:
             - RewritePath=/customer-service/v3/api-docs, /v3/api-docs
         - id: order-openapi
-          uri: ${ORDER_SERVICE_URL:lb://order-service}
+          uri: lb://order-service
           predicates:
             - Path=/order-service/v3/api-docs
           filters:
             - RewritePath=/order-service/v3/api-docs, /v3/api-docs
+
+# Used when Eureka is off. Blank means "ask Eureka".
+nutrination:
+  services:
+    product-service: ${PRODUCT_SERVICE_URL:}
+    customer-service: ${CUSTOMER_SERVICE_URL:}
+    order-service: ${ORDER_SERVICE_URL:}
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        sliding-window-type: COUNT_BASED
+        sliding-window-size: 10
+        minimum-number-of-calls: 5
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: ${CIRCUIT_OPEN_DURATION:20s}
+        permitted-number-of-calls-in-half-open-state: 3
+        automatic-transition-from-open-to-half-open-enabled: true
+    instances:
+      productService:
+        base-config: default
+      customerService:
+        base-config: default
+      orderService:
+        base-config: default
+  timelimiter:
+    configs:
+      default:
+        # Render's free plan takes about a minute to wake a service: set GATEWAY_TIMEOUT
+        # above that there, or every cold start would count against the breaker.
+        timeout-duration: ${GATEWAY_TIMEOUT:10s}
+    instances:
+      productService:
+        base-config: default
+      customerService:
+        base-config: default
+      orderService:
+        base-config: default
 
 eureka:
   client:

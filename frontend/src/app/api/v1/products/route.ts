@@ -76,13 +76,13 @@ function applyFilters(products: Product[], request: NextRequest, includeUnpublis
 export async function GET(request: NextRequest) {
   // Drafts and archived products are only listed for admins who ask for them.
   const includeUnpublished =
-    request.nextUrl.searchParams.get("scope") === "all" && getRequestUser(request)?.role === "ADMIN";
+    request.nextUrl.searchParams.get("scope") === "all" && (await getRequestUser(request))?.role === "ADMIN";
   const products = (await db.getProducts()).map(normalizeProductImages);
   return Response.json({ data: applyFilters(products, request, includeUnpublished) });
 }
 
 export async function POST(request: NextRequest) {
-  const denied = requireAdmin(request);
+  const denied = await requireAdmin(request);
   if (denied) return denied;
 
   try {

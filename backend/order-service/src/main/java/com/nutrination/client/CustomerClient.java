@@ -6,7 +6,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(name = "customer-service", url = "${CUSTOMER_SERVICE_URL:}", configuration = ForwardAuthorizationConfig.class)
+@FeignClient(name = "customer-service", configuration = ForwardAuthorizationConfig.class)
 public interface CustomerClient {
     @GetMapping("/api/v1/customers/{id}")
     ApiResponse<Map<String, Object>> getCustomer(@PathVariable("id") String id);

@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 
 /** Admin image upload (multipart/form-data, field "file"). Returns the public URL. */
 export async function POST(request: NextRequest) {
-  const denied = requireAdmin(request);
+  const denied = await requireAdmin(request);
   if (denied) return denied;
 
   try {

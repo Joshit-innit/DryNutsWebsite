@@ -1,6 +1,5 @@
 import { LandingImage } from "@/types";
 import { backendApi, unwrapData } from "@/lib/api/axios";
-import { ACCESS_TOKEN_STORAGE_KEY } from "@/lib/auth-constants";
 import { apiErrorMessage } from "@/lib/auth-session";
 
 export const landingService = {
@@ -26,13 +25,10 @@ export const landingService = {
 
   /** Uploads an image file and returns its public URL. */
   async upload(file: File): Promise<string> {
-    const token = sessionStorage.getItem(ACCESS_TOKEN_STORAGE_KEY);
     const body = new FormData();
     body.append("file", file);
-    const base = process.env.NEXT_PUBLIC_API_URL || "/api/v1";
-    const res = await fetch(`${base}/uploads`, {
+    const res = await fetch("/api/v1/uploads", {
       method: "POST",
-      headers: token ? { Authorization: `Bearer ${token}` } : undefined,
       body,
     });
     const json = await res.json().catch(() => ({}));

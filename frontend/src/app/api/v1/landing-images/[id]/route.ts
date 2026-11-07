@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 type LandingRouteContext = { params: Promise<{ id: string }> };
 
 export async function PATCH(request: NextRequest, context: LandingRouteContext) {
-  const denied = requireAdmin(request);
+  const denied = await requireAdmin(request);
   if (denied) return denied;
 
   const { id } = await context.params;
@@ -33,7 +33,7 @@ export async function PATCH(request: NextRequest, context: LandingRouteContext) 
 }
 
 export async function DELETE(request: NextRequest, context: LandingRouteContext) {
-  const denied = requireAdmin(request);
+  const denied = await requireAdmin(request);
   if (denied) return denied;
 
   const { id } = await context.params;

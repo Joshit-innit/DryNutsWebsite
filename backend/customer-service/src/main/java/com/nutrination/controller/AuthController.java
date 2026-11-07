@@ -29,6 +29,12 @@ public class AuthController {
         this.jwtService = jwtService;
     }
 
+    /** Lets callers tell a sleeping service from a wrong password; touches no data. */
+    @GetMapping("/ping")
+    public ApiResponse<Map<String, Object>> ping() {
+        return ApiResponse.ok(Map.of("available", true));
+    }
+
     @GetMapping("/check")
     public ApiResponse<Map<String, Object>> check(Authentication authentication) {
         if (authentication == null || !(authentication.getPrincipal() instanceof AuthenticatedUser user)) {
@@ -70,7 +76,7 @@ public class AuthController {
 
     private AuthResponse tokenFor(Customer customer) {
         String role = customer.getRole() == null ? "CUSTOMER" : customer.getRole().toUpperCase();
-        String token = jwtService.issue(new JwtService.CustomerTokenSubject(customer.getId(), customer.getEmail(), role));
+        String token = jwtService.issue(new JwtService.CustomerTokenSubject(customer.getId(), customer.getName(), customer.getEmail(), role));
         return new AuthResponse(token, "Bearer", jwtService.expiresInSeconds(), customer.getId(), customer.getName(), customer.getEmail(), role);
     }
 }

@@ -1,24 +1,19 @@
 import { NextRequest } from "next/server";
-import { AuthError, login } from "@/lib/server/auth";
+import { forwardCredentials } from "@/lib/server/auth-backend";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
-  try {
-    const body = await request.json();
-    const email = String(body.email || "");
-    const password = String(body.password || "");
+  const body = await request.json().catch(() => ({}));
+  const email = String(body.email || "").trim();
+  const password = String(body.password || "");
 
-    if (!email || !password) {
-      return Response.json({ message: "Email and password are required." }, { status: 400 });
-    }
-
-    return Response.json({ data: await login(email, password) });
-  } catch (error) {
-    if (error instanceof AuthError) {
-      return Response.json({ message: error.message }, { status: error.status });
-    }
-    console.error("[auth/login]", error);
-    return Response.json({ message: "Could not sign in." }, { status: 500 });
+  if (!email || !password) {
+    return Response.json({ message: "Email and password are required." }, { status: 400 });
   }
+
+  return forwardCredentials("/login", { email, password }, {
+    400: "Please enter a valid email address.",
+    401: "Invalid email or password.",
+  });
 }

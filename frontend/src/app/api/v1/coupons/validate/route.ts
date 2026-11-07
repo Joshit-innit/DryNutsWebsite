@@ -1,5 +1,6 @@
 import { NextRequest } from "next/server";
 import { db } from "@/lib/server/db";
+import { getCouponDiscount, getCouponProblem } from "@/lib/order-pricing";
 
 export const dynamic = "force-dynamic";
 
@@ -10,26 +11,12 @@ export async function POST(request: NextRequest) {
     const subtotal = Number(body.subtotal || 0);
 
     const coupon = code ? await db.getCouponByCode(code) : undefined;
-    const today = new Date().toISOString().split("T")[0];
-    const exhausted = coupon?.usageLimit !== undefined && coupon.usageCount >= coupon.usageLimit;
-
-    if (!coupon || coupon.status !== "active" || coupon.expiryDate < today || exhausted) {
-      return Response.json({ data: { valid: false, discount: 0, message: "Invalid or expired promo code." } });
+    const problem = getCouponProblem(coupon, subtotal);
+    if (!coupon || problem) {
+      return Response.json({ data: { valid: false, discount: 0, message: problem } });
     }
 
-    if (subtotal < coupon.minOrderValue) {
-      return Response.json({
-        data: {
-          valid: false,
-          discount: 0,
-          message: `Add items worth ₹${coupon.minOrderValue - subtotal} more to apply code ${coupon.code}.`,
-        },
-      });
-    }
-
-    let discount =
-      coupon.discountType === "percentage" ? Math.round((subtotal * coupon.discountValue) / 100) : coupon.discountValue;
-    if (coupon.maxDiscount && discount > coupon.maxDiscount) discount = coupon.maxDiscount;
+    const discount = getCouponDiscount(coupon, subtotal);
 
     return Response.json({
       data: {

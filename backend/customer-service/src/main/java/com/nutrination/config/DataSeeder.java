@@ -20,6 +20,10 @@ public class DataSeeder {
                                     @Value("${seed.admin.email}") String adminEmail,
                                     @Value("${seed.admin.password}") String adminPassword) {
         return args -> {
+            // Without a configured password, seeding an admin would mean shipping a known one.
+            if (adminPassword == null || adminPassword.isBlank()) {
+                return;
+            }
             // Older databases were seeded without a password hash, which made the admin unable to sign in.
             customerRepository.findByEmailIgnoreCase(adminEmail).ifPresent(existing -> {
                 if (existing.getPasswordHash() == null) {

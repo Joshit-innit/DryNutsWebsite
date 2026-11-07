@@ -44,12 +44,13 @@ frontend:
 seed:
   admin:
     email: ${ADMIN_EMAIL:admin@nutrination.in}
-    password: ${ADMIN_PASSWORD:NutriAdmin@2026}
+    password: ${ADMIN_PASSWORD:}
 
 security:
   jwt:
     secret: ${JWT_SECRET}
-    ttl: ${JWT_TTL:PT15M}
+    # The session cookie lives as long as the token, and there is no refresh flow.
+    ttl: ${JWT_TTL:PT8H}
 
 management:
   endpoints:

@@ -6,6 +6,9 @@ import com.nutrination.entity.CustomerOrder;
 import com.nutrination.entity.OrderTimelineStep;
 import com.nutrination.repository.OrderRepository;
 import feign.FeignException;
+import io.github.resilience4j.circuitbreaker.CallNotPermittedException;
+import io.github.resilience4j.circuitbreaker.CircuitBreaker;
+import io.github.resilience4j.circuitbreaker.CircuitBreakerRegistry;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.util.List;
@@ -21,11 +24,16 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final ProductClient productClient;
     private final CustomerClient customerClient;
+    private final CircuitBreaker productBreaker;
+    private final CircuitBreaker customerBreaker;
 
-    public OrderService(OrderRepository orderRepository, ProductClient productClient, CustomerClient customerClient) {
+    public OrderService(OrderRepository orderRepository, ProductClient productClient, CustomerClient customerClient,
+                        CircuitBreakerRegistry circuitBreakers) {
         this.orderRepository = orderRepository;
         this.productClient = productClient;
         this.customerClient = customerClient;
+        this.productBreaker = circuitBreakers.circuitBreaker("productClient");
+        this.customerBreaker = circuitBreakers.circuitBreaker("customerClient");
     }
 
     @Transactional(readOnly = true)
@@ -51,7 +59,8 @@ public class OrderService {
         order.setDate(order.getDate() == null ? LocalDate.now() : order.getDate());
         order.setEstimatedDelivery(order.getEstimatedDelivery() == null ? LocalDate.now().plusDays(4) : order.getEstimatedDelivery());
         order.setTrackingNumber(order.getTrackingNumber() == null ? trackingNumber() : order.getTrackingNumber());
-        order.setPaymentStatus("COD".equalsIgnoreCase(order.getPaymentMethod()) ? "Pending" : "Paid");
+        // No payment gateway is connected, so nothing here can have been paid yet.
+        order.setPaymentStatus("Pending");
         if (order.getTimeline().isEmpty()) {
             order.setTimeline(defaultTimeline());
         }
@@ -62,7 +71,9 @@ public class OrderService {
     /** customer-service only returns the record to that customer or an admin (token forwarded by the client). */
     private void verifyCustomer(String customerId) {
         try {
-            customerClient.getCustomer(customerId);
+            customerBreaker.executeRunnable(() -> customerClient.getCustomer(customerId));
+        } catch (CallNotPermittedException e) {
+            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Customer service unavailable", e);
         } catch (FeignException.Unauthorized e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Sign in to place an order for a customer account");
         } catch (FeignException.Forbidden e) {
@@ -77,7 +88,9 @@ public class OrderService {
 
     private void verifyProduct(String productId) {
         try {
-            productClient.getProduct(productId);
+            productBreaker.executeRunnable(() -> productClient.getProduct(productId));
+        } catch (CallNotPermittedException e) {
+            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Product service unavailable", e);
         } catch (FeignException.NotFound e) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unknown product: " + productId);
         } catch (FeignException e) {
