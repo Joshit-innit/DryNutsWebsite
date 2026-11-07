@@ -355,10 +355,7 @@ function BestSellersContent() {
     <div className="pb-24">
       {/* Header */}
       <header className="mx-auto max-w-[1440px] px-4 pb-10 pt-12 sm:px-6 sm:pt-16 lg:px-12">
-        <nav className="text-[13px] text-brand-muted" aria-label="Breadcrumb">
-          <Link href="/" className="hover:text-brand-dark">Home</Link> <span aria-hidden>/</span> <span className="text-brand-dark">Best sellers</span>
-        </nav>
-        <div className="mt-6 flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+        <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="section-label mb-4">Customer favourites</p>
             <h1 className="text-[clamp(2.75rem,7vw,6rem)] font-bold leading-[0.92] tracking-[-0.055em]">

@@ -7,7 +7,6 @@ import { categoryService } from "@/services/categories";
 import { productService } from "@/services/products";
 import { Category, Product, CategorySlug } from "@/types";
 import ProductCard from "@/components/products/ProductCard";
-import { ChevronRight } from "lucide-react";
 import { ProductGridSkeleton } from "@/components/ui/Skeleton";
 
 export default function CategoryPage() {
@@ -55,38 +54,13 @@ export default function CategoryPage() {
     <div className="space-y-12 pb-16">
       {/* Category Hero Banner */}
       {category && (
-        <section className="relative bg-brand-dark text-white py-20 sm:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden min-h-[22rem] flex items-end">
-          <div className="absolute inset-0 z-0">
-            <img
-              src={category.bannerImage || category.image}
-              alt={category.name}
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-brand-dark/60" />
-          </div>
-
-          <div className="max-w-7xl mx-auto relative z-10">
-            {/* Breadcrumb */}
-            <div className="flex items-center gap-1.5 text-xs text-white/60 mb-4">
-              <Link href="/" className="hover:text-white transition-colors">Home</Link>
-              <ChevronRight className="w-3 h-3" />
-              <Link href="/products" className="hover:text-white transition-colors">Categories</Link>
-              <ChevronRight className="w-3 h-3" />
-              <span className="text-brand-saffron font-semibold">{category.name}</span>
-            </div>
-
-            <div className="max-w-3xl space-y-4">
-              <span className="eyebrow text-brand-saffron">NutriNation collection</span>
-
-              <h1 className="font-serif font-medium text-4xl sm:text-6xl text-white tracking-tight">
-                {category.name}
-              </h1>
-
-              <p className="text-base sm:text-lg text-white/80 font-sans leading-relaxed">
-                Explore available {category.name.toLowerCase()}, compare pack sizes, and choose what suits your table.
-              </p>
-            </div>
-          </div>
+        <section className="relative bg-brand-dark overflow-hidden min-h-[22rem]">
+          <h1 className="sr-only">{category.name}</h1>
+          <img
+            src={category.bannerImage || category.image}
+            alt={category.name}
+            className="absolute inset-0 w-full h-full object-cover"
+          />
         </section>
       )}
 

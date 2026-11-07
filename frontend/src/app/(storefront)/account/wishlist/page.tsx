@@ -6,7 +6,7 @@ import { useStore } from "@/context/StoreContext";
 import { productService } from "@/services/products";
 import { Product } from "@/types";
 import ProductCard from "@/components/products/ProductCard";
-import { Heart, ShoppingBag, ArrowRight, ChevronRight } from "lucide-react";
+import { Heart, ShoppingBag, ArrowRight } from "lucide-react";
 
 export default function WishlistPage() {
   const { wishlist } = useStore();
@@ -20,13 +20,6 @@ export default function WishlistPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8 min-h-[70vh]">
-      {/* Breadcrumb */}
-      <div className="flex items-center gap-1.5 text-xs text-brand-muted">
-        <Link href="/account" className="hover:text-brand-green">My Account</Link>
-        <ChevronRight className="w-3 h-3" />
-        <span className="text-brand-dark font-semibold">Saved Wishlist</span>
-      </div>
-
       <div className="flex items-center justify-between border-b border-brand-border pb-6">
         <div>
           <span className="text-xs uppercase font-bold tracking-widest text-brand-orange">

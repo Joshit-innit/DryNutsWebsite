@@ -5,7 +5,7 @@ import Link from "next/link";
 import { orderService } from "@/services/orders";
 import { Order, OrderStatus } from "@/types";
 import { formatPrice } from "@/lib/utils";
-import { Package, ArrowRight, Clock, CheckCircle2, ChevronRight } from "lucide-react";
+import { Package, ArrowRight, Clock, CheckCircle2 } from "lucide-react";
 import { LoadingRegion, Skeleton } from "@/components/ui/Skeleton";
 
 export default function AccountOrdersPage() {
@@ -26,13 +26,6 @@ export default function AccountOrdersPage() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
-      {/* Breadcrumb */}
-      <div className="flex items-center gap-1.5 text-xs text-brand-muted">
-        <Link href="/account" className="hover:text-brand-green">My Account</Link>
-        <ChevronRight className="w-3 h-3" />
-        <span className="text-brand-dark font-semibold">Order History & Tracking</span>
-      </div>
-
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-brand-border pb-6">
         <div>
           <span className="text-xs uppercase font-bold tracking-widest text-brand-green">

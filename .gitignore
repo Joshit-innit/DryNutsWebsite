@@ -26,3 +26,10 @@ npm-debug.log*
 
 # Java build output
 target/
+
+# Local Netlify folder
+.netlify
+
+# Machine-local Impeccable state (the root design.json sidecar is tracked)
+.impeccable/config.local.json
+frontend/.impeccable/

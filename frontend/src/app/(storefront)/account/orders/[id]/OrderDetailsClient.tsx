@@ -18,7 +18,6 @@ import {
   MapPin,
   Download,
   ArrowLeft,
-  ChevronRight,
   ShieldCheck,
   Sparkles,
 } from "lucide-react";
@@ -67,15 +66,6 @@ export default function OrderDetailsPage() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
-      {/* Breadcrumb */}
-      <div className="flex items-center gap-1.5 text-xs text-brand-muted">
-        <Link href="/account" className="hover:text-brand-green">My Account</Link>
-        <ChevronRight className="w-3 h-3" />
-        <Link href="/account/orders" className="hover:text-brand-green">Orders</Link>
-        <ChevronRight className="w-3 h-3" />
-        <span className="text-brand-dark font-semibold">#{order.orderNumber}</span>
-      </div>
-
       {/* Header */}
       <div className="bg-white rounded-3xl border border-brand-border p-6 sm:p-8 shadow-card flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>

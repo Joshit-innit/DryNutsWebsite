@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowRight, ChevronRight, Heart, Minus, PackageOpen, Plus, ShoppingBag } from "lucide-react";
+import { ArrowRight, Heart, Minus, PackageOpen, Plus, ShoppingBag } from "lucide-react";
 import { productService } from "@/services/products";
 import { Product } from "@/types";
 import { useStore } from "@/context/StoreContext";
@@ -82,14 +82,6 @@ export default function ProductDetailPage() {
 
   return (
     <div className="mx-auto max-w-7xl px-5 py-8 sm:px-8 sm:py-12 lg:px-10">
-      <nav aria-label="Breadcrumb" className="mb-8 flex items-center gap-1.5 overflow-hidden text-xs text-brand-muted">
-        <Link href="/" className="hover:text-brand-green">Home</Link>
-        <ChevronRight className="h-3 w-3 shrink-0" />
-        <Link href="/products" className="hover:text-brand-green">Collection</Link>
-        <ChevronRight className="h-3 w-3 shrink-0" />
-        <Link href={`/category/${product.category}`} className="hover:text-brand-green">{product.categoryName}</Link>
-      </nav>
-
       <section className="grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-16">
         <div className="lg:col-span-7">
           <div className="relative aspect-square overflow-hidden" style={{ backgroundColor: image.background }}>

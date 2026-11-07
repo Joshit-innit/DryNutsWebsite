@@ -1,0 +1,545 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-06T18:49:09Z",
+  "title": "Design System: NutriNation",
+  "extensions": {
+    "colorMeta": {
+      "primary": {
+        "role": "primary",
+        "displayName": "Pistachio Forest",
+        "canonical": "#2D4A33",
+        "tonalRamp": [
+          "#020F04",
+          "#122C18",
+          "#2D4A33",
+          "#4C6A51",
+          "#6C8C72",
+          "#8FAE95",
+          "#B9D0BD",
+          "#E7F2E8"
+        ]
+      },
+      "primary-deep": {
+        "role": "primary",
+        "displayName": "Deep Forest",
+        "canonical": "#1E3423",
+        "tonalRamp": [
+          "#030E06",
+          "#162A1B",
+          "#324836",
+          "#506855",
+          "#718A76",
+          "#94AD98",
+          "#BCCFC0",
+          "#E8F1EA"
+        ]
+      },
+      "orchard-olive": {
+        "role": "primary",
+        "displayName": "Orchard Olive",
+        "canonical": "#6F8F4E",
+        "tonalRamp": [
+          "#060E00",
+          "#192B00",
+          "#304C05",
+          "#4E6C2C",
+          "#6E8E4D",
+          "#91B172",
+          "#BAD3A4",
+          "#E7F3DC"
+        ]
+      },
+      "honey-brown": {
+        "role": "secondary",
+        "displayName": "Honey Brown",
+        "canonical": "#946422",
+        "tonalRamp": [
+          "#140800",
+          "#362001",
+          "#5D3901",
+          "#85560E",
+          "#A87738",
+          "#CB9B5F",
+          "#E7C297",
+          "#FEEBD6"
+        ]
+      },
+      "honey-gold": {
+        "role": "secondary",
+        "displayName": "Honey Gold",
+        "canonical": "#B9853C",
+        "tonalRamp": [
+          "#130900",
+          "#352000",
+          "#5B3A02",
+          "#845604",
+          "#AA772C",
+          "#CD9A57",
+          "#E8C292",
+          "#FEEBD4"
+        ]
+      },
+      "honey-light": {
+        "role": "secondary",
+        "displayName": "Light Honey",
+        "canonical": "#D2A866",
+        "tonalRamp": [
+          "#130900",
+          "#332101",
+          "#583C02",
+          "#7F590E",
+          "#A27A38",
+          "#C59E60",
+          "#E2C497",
+          "#FBECD6"
+        ]
+      },
+      "terracotta": {
+        "role": "tertiary",
+        "displayName": "Terracotta",
+        "canonical": "#9C5B33",
+        "tonalRamp": [
+          "#180500",
+          "#3E1901",
+          "#692F02",
+          "#8E4E26",
+          "#B27048",
+          "#D6936D",
+          "#F0BDA0",
+          "#FEEADF"
+        ]
+      },
+      "gallery-canvas": {
+        "role": "neutral",
+        "displayName": "Gallery Canvas",
+        "canonical": "#F5F3EE",
+        "tonalRamp": [
+          "#0C0B09",
+          "#262522",
+          "#43423E",
+          "#63615D",
+          "#84827E",
+          "#A7A5A0",
+          "#CAC9C6",
+          "#EFEEED"
+        ]
+      },
+      "surface-white": {
+        "role": "neutral",
+        "displayName": "Surface White",
+        "canonical": "#FFFFFF",
+        "tonalRamp": [
+          "#0B0B0B",
+          "#252525",
+          "#424242",
+          "#616161",
+          "#828282",
+          "#A5A5A5",
+          "#C9C9C9",
+          "#EEEEEE"
+        ]
+      },
+      "warm-linen": {
+        "role": "neutral",
+        "displayName": "Warm Linen",
+        "canonical": "#EBE7DF",
+        "tonalRamp": [
+          "#0D0B08",
+          "#27251F",
+          "#45423B",
+          "#64615A",
+          "#85827B",
+          "#A8A59D",
+          "#CBC9C3",
+          "#F0EEEB"
+        ]
+      },
+      "charcoal-ink": {
+        "role": "neutral",
+        "displayName": "Charcoal Ink",
+        "canonical": "#1D1C1A",
+        "tonalRamp": [
+          "#0C0B0A",
+          "#262523",
+          "#434240",
+          "#62615F",
+          "#838280",
+          "#A6A5A2",
+          "#CAC9C7",
+          "#EFEEED"
+        ]
+      },
+      "stone-muted": {
+        "role": "neutral",
+        "displayName": "Stone",
+        "canonical": "#6B675F",
+        "tonalRamp": [
+          "#0D0B07",
+          "#28251E",
+          "#45423A",
+          "#656159",
+          "#868279",
+          "#A9A59C",
+          "#CCC9C2",
+          "#F0EEEB"
+        ]
+      },
+      "hairline": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "#E4E0D8",
+        "tonalRamp": [
+          "#0D0B08",
+          "#27251F",
+          "#45423B",
+          "#64615A",
+          "#85827B",
+          "#A8A59D",
+          "#CBC9C3",
+          "#F0EEEB"
+        ]
+      },
+      "hairline-strong": {
+        "role": "neutral",
+        "displayName": "Strong Hairline",
+        "canonical": "#D3CEC3",
+        "tonalRamp": [
+          "#0D0B07",
+          "#28251D",
+          "#464238",
+          "#656157",
+          "#868278",
+          "#A9A59A",
+          "#CCC9C1",
+          "#F0EEEA"
+        ]
+      },
+      "cmd-bg": {
+        "role": "cmd",
+        "displayName": "CMD Background",
+        "canonical": "#0B0F14",
+        "tonalRamp": [
+          "#090B0F",
+          "#21252B",
+          "#3E4249",
+          "#5D6268",
+          "#7D838A",
+          "#A0A6AC",
+          "#C5C9CF",
+          "#ECEFF1"
+        ]
+      },
+      "cmd-card": {
+        "role": "cmd",
+        "displayName": "CMD Card",
+        "canonical": "#12171F",
+        "tonalRamp": [
+          "#080B10",
+          "#20252D",
+          "#3C424C",
+          "#5B626C",
+          "#7C838D",
+          "#9FA5B0",
+          "#C4C9D1",
+          "#ECEFF3"
+        ]
+      },
+      "cmd-border": {
+        "role": "cmd",
+        "displayName": "CMD Border",
+        "canonical": "#232A35",
+        "tonalRamp": [
+          "#080B12",
+          "#1F252F",
+          "#3B424E",
+          "#5A626E",
+          "#7A8390",
+          "#9DA6B3",
+          "#C3CAD4",
+          "#EBEFF4"
+        ]
+      },
+      "cmd-text": {
+        "role": "cmd",
+        "displayName": "CMD Text",
+        "canonical": "#D0D7DE",
+        "tonalRamp": [
+          "#090B0E",
+          "#21262A",
+          "#3D4348",
+          "#5C6268",
+          "#7D838A",
+          "#9FA6AC",
+          "#C5CACF",
+          "#ECEFF1"
+        ]
+      },
+      "cmd-muted": {
+        "role": "cmd",
+        "displayName": "CMD Muted",
+        "canonical": "#7D8590",
+        "tonalRamp": [
+          "#080B10",
+          "#1F262E",
+          "#3B434C",
+          "#5A626C",
+          "#7B838E",
+          "#9EA6B1",
+          "#C4CAD2",
+          "#ECEFF3"
+        ]
+      },
+      "cmd-accent": {
+        "role": "cmd",
+        "displayName": "CMD Accent",
+        "canonical": "#4BA3E3",
+        "tonalRamp": [
+          "#000C1A",
+          "#012841",
+          "#02466E",
+          "#03679F",
+          "#2E89C8",
+          "#5BADEB",
+          "#96D0FF",
+          "#E1F1FE"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Hero product names over photography."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section headings."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Product names on cards."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Default reading text."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Buttons, navigation and section labels."
+      },
+      "eyebrow": {
+        "displayName": "Eyebrow",
+        "purpose": "Small uppercase metadata labels."
+      },
+      "accent": {
+        "displayName": "Accent",
+        "purpose": "An occasional italic phrase in Fraunces."
+      }
+    },
+    "shadows": [
+      {
+        "name": "subtle",
+        "value": "0 1px 2px rgba(0, 0, 0, 0.03), 0 4px 12px rgba(0, 0, 0, 0.02)",
+        "purpose": "The barest separation for small elements."
+      },
+      {
+        "name": "card",
+        "value": "0 10px 30px -10px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.02)",
+        "purpose": "Soft ambient lift for panels that need it."
+      },
+      {
+        "name": "hover",
+        "value": "0 20px 40px -12px rgba(0, 0, 0, 0.1), 0 2px 6px rgba(0, 0, 0, 0.03)",
+        "purpose": "Product card hover and all floating layers."
+      },
+      {
+        "name": "glow",
+        "value": "0 0 30px rgba(185, 133, 60, 0.18)",
+        "purpose": "A rare honey glow. Decorative only."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-luxury",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "The signature ease for images, scenes and reveals."
+      },
+      {
+        "name": "ease-spring",
+        "value": "cubic-bezier(0.34, 1.56, 0.64, 1)",
+        "purpose": "A slight overshoot, defined in Tailwind."
+      },
+      {
+        "name": "duration-state",
+        "value": "180ms",
+        "purpose": "Default interface state changes."
+      },
+      {
+        "name": "duration-image",
+        "value": "700ms",
+        "purpose": "Image zoom on hover."
+      },
+      {
+        "name": "duration-hero",
+        "value": "900ms",
+        "purpose": "Hero panel expansion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "xl",
+        "value": "1280px"
+      },
+      {
+        "name": "2xl",
+        "value": "1536px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The main action. Charcoal, 12px radius.",
+      "html": "<button class=\"ds-btn-primary\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z\"/><path d=\"M3 6h18\"/><path d=\"M16 10a4 4 0 0 1-8 0\"/></svg>Add</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 14px; background: #1D1C1A; color: #fff; border: 0; border-radius: 12px; font: 500 13px 'Inter Tight', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; cursor: pointer; transition: background-color 180ms ease, transform 180ms ease; } .ds-btn-primary:hover { background: #000; } .ds-btn-primary:active { transform: scale(0.98); } .ds-btn-primary:focus-visible { outline: 2px solid #2D4A33; outline-offset: 3px; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "A quieter alternative beside a primary action.",
+      "html": "<button class=\"ds-btn-secondary\">Gift boxes</button>",
+      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; height: 40px; padding: 0 16px; background: transparent; color: #1D1C1A; border: 1px solid rgba(29, 28, 26, 0.8); border-radius: 12px; font: 500 14px 'Inter Tight', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; cursor: pointer; transition: background-color 180ms ease, color 180ms ease; } .ds-btn-secondary:hover { background: #1D1C1A; color: #fff; } .ds-btn-secondary:focus-visible { outline: 2px solid #2D4A33; outline-offset: 3px; }"
+    },
+    {
+      "name": "Search Field",
+      "kind": "input",
+      "refersTo": "input-search",
+      "description": "Recessed header search that turns white on focus.",
+      "html": "<label class=\"ds-search\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><circle cx=\"11\" cy=\"11\" r=\"8\"/><path d=\"m21 21-4.3-4.3\"/></svg><input type=\"search\" placeholder=\"Search almonds, dates, gifts…\" aria-label=\"Search products\"></label>",
+      "css": ".ds-search { position: relative; display: flex; align-items: center; width: 300px; max-width: 100%; color: #6B675F; } .ds-search svg { position: absolute; left: 16px; } .ds-search input { width: 100%; height: 40px; padding: 0 16px 0 40px; background: #EBE7DF; color: #1D1C1A; border: 1px solid transparent; border-radius: 12px; font: 400 14px 'Inter Tight', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; outline: none; transition: all 250ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-search input::placeholder { color: #6B675F; } .ds-search input:focus { background: #fff; border-color: #1D1C1A; box-shadow: 0 0 0 2px #1D1C1A; }"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "Standard form input for checkout and accounts.",
+      "html": "<input class=\"ds-input\" type=\"text\" placeholder=\"PIN code\" aria-label=\"PIN code\">",
+      "css": ".ds-input { width: 240px; max-width: 100%; padding: 12px; background: #fff; color: #1D1C1A; border: 1px solid #E4E0D8; border-radius: 12px; font: 400 14px 'Inter Tight', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; outline: none; transition: all 250ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-input::placeholder { color: #6B675F; } .ds-input:focus { border-color: #1D1C1A; box-shadow: 0 0 0 2px #1D1C1A; }"
+    },
+    {
+      "name": "Weight Selector",
+      "kind": "chip",
+      "refersTo": "weight-chip",
+      "description": "Pack size choice on product cards.",
+      "html": "<div class=\"ds-weights\"><button class=\"ds-weight is-selected\" aria-pressed=\"true\">250g</button><button class=\"ds-weight\" aria-pressed=\"false\">500g</button><button class=\"ds-weight\" aria-pressed=\"false\">1kg</button></div>",
+      "css": ".ds-weights { display: flex; gap: 6px; } .ds-weight { min-width: 48px; padding: 4px 10px; background: #fff; color: #6B675F; border: 1px solid #E4E0D8; border-radius: 10px; font: 500 12px 'Inter Tight', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; cursor: pointer; transition: color 180ms ease, border-color 180ms ease; } .ds-weight:hover { border-color: #1D1C1A; color: #1D1C1A; } .ds-weight.is-selected { background: #1D1C1A; border-color: #1D1C1A; color: #fff; } .ds-weight:focus-visible { outline: 2px solid #2D4A33; outline-offset: 2px; }"
+    },
+    {
+      "name": "Product Card",
+      "kind": "card",
+      "refersTo": "card-product",
+      "description": "Flat white card with hairline rows, lifting on hover.",
+      "html": "<article class=\"ds-card\"><div class=\"ds-card-image\"></div><div class=\"ds-card-body\"><h3>Sample product name</h3></div><div class=\"ds-card-row\"><span>Origin</span><span class=\"ds-card-muted\">To be confirmed</span></div><div class=\"ds-card-row\"><div><strong>₹449</strong> <s class=\"ds-card-muted\">₹549</s></div><button><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z\"/><path d=\"M3 6h18\"/><path d=\"M16 10a4 4 0 0 1-8 0\"/></svg>Add</button></div></article>",
+      "css": ".ds-card { width: 280px; max-width: 100%; overflow: hidden; background: #fff; border-radius: 16px; box-shadow: 0 0 0 1px rgba(228, 224, 216, 0.7); font-family: 'Inter Tight', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: #1D1C1A; transition: box-shadow 300ms ease; } .ds-card:hover { box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.1), 0 2px 6px rgba(0, 0, 0, 0.03); } .ds-card-image { aspect-ratio: 5 / 4; background: #EBE7DF; } .ds-card-body { padding: 20px 20px 16px; } .ds-card h3 { margin: 0; font-size: 19px; font-weight: 600; line-height: 1.18; letter-spacing: -0.03em; } .ds-card-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 20px; border-top: 1px solid #E4E0D8; font-size: 13px; } .ds-card-row strong { font-size: 17px; font-weight: 600; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; } .ds-card-muted { color: #6B675F; } .ds-card button { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 14px; background: #1D1C1A; color: #fff; border: 0; border-radius: 12px; font: 500 13px 'Inter Tight', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; cursor: pointer; transition: background-color 180ms ease; } .ds-card button:hover { background: #000; } .ds-card button:focus-visible { outline: 2px solid #2D4A33; outline-offset: 3px; }"
+    },
+    {
+      "name": "Header Navigation",
+      "kind": "nav",
+      "description": "Wordmark with dot, with text links in softened ink.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Main\"><a class=\"ds-logo\" href=\"#\">NutriNation<span></span></a><a class=\"ds-link is-active\" href=\"#\">Shop</a><a class=\"ds-link\" href=\"#\">Best sellers</a><a class=\"ds-link\" href=\"#\">Combos</a></nav>",
+      "css": ".ds-nav { display: flex; align-items: center; gap: 28px; height: 68px; padding: 0 24px; background: #F5F3EE; font-family: 'Inter Tight', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; } .ds-logo { display: flex; align-items: baseline; color: #1D1C1A; font-size: 23px; font-weight: 700; letter-spacing: -0.055em; text-decoration: none; line-height: 1; } .ds-logo span { width: 7px; height: 7px; margin-left: 2px; border-radius: 50%; background: #2D4A33; } .ds-link { color: rgba(29, 28, 26, 0.75); font-size: 15px; font-weight: 500; letter-spacing: -0.01em; text-decoration: none; transition: color 180ms ease; } .ds-link:hover, .ds-link.is-active { color: #1D1C1A; } .ds-link:focus-visible { outline: 2px solid #2D4A33; outline-offset: 3px; }"
+    },
+    {
+      "name": "Harvest Gallery Panels",
+      "kind": "custom",
+      "description": "Signature hero: tall photo frames where the active one expands. Shown here with tonal placeholders.",
+      "html": "<div class=\"ds-gallery\"><div class=\"ds-panel is-active\"><span>Product name</span></div><div class=\"ds-panel\"></div><div class=\"ds-panel\"></div><div class=\"ds-panel\"></div></div>",
+      "css": ".ds-gallery { display: flex; gap: 12px; height: 240px; width: 480px; max-width: 100%; font-family: 'Inter Tight', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; } .ds-panel { flex: 1; display: flex; align-items: flex-end; padding: 16px; overflow: hidden; border-radius: 22px; background: #DDD7CB; transition: flex-grow 900ms cubic-bezier(0.16, 1, 0.3, 1); } .ds-panel:nth-child(2) { background: #1E3423; } .ds-panel:nth-child(3) { background: #946422; } .ds-panel:nth-child(4) { background: #6F8F4E; } .ds-panel.is-active { flex-grow: 5; background: #2D4A33; } .ds-gallery:hover .ds-panel.is-active { flex-grow: 3; } .ds-panel span { color: #fff; font-size: 28px; font-weight: 700; line-height: 0.95; letter-spacing: -0.045em; } @media (prefers-reduced-motion: reduce) { .ds-panel { transition: none; } }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Harvest Gallery",
+    "overview": "NutriNation is a quiet gallery where the produce is the artwork and the interface is the wall. The mood is refined, spare and premium. A warm off-white canvas, tight charcoal headlines and very little colour step back so that large food photography, price and weight can carry the page.\n\nRestraint is what makes it feel premium. Hierarchy comes from scale and tight tracking rather than colour or decoration, and detail shows up in small things: thin warm hairlines, dotted dividers, tabular prices and a soft underline on links.\n\nThe storefront is expressive where it persuades, mainly on the home page. The admin console uses the same palette and type at a working density, with a dark charcoal sidebar. The CMD console is a separate staff-only theme (see Colors).",
+    "keyCharacteristics": [
+      "Warm gallery-neutral canvas with charcoal ink.",
+      "One typeface doing nearly all the work, set tight and large.",
+      "Photography as the main source of colour.",
+      "Actions in charcoal; green reserved for brand and selection.",
+      "Flat surfaces with thin hairlines, lifting only when something floats.",
+      "Slow, confident motion on one signature ease."
+    ],
+    "rules": [
+      {
+        "name": "The Ink Acts Rule",
+        "body": "Primary actions are Charcoal Ink, not green. Pistachio Forest marks selection and brand; if green is doing the selling, the screen has too much of it.",
+        "section": "colors"
+      },
+      {
+        "name": "The Produce Is the Colour Rule",
+        "body": "Saturated colour comes from photography. Interface colour stays small enough that it never competes with the food.",
+        "section": "colors"
+      },
+      {
+        "name": "The Separate Rooms Rule",
+        "body": "CMD tokens never appear on the storefront or admin, and storefront tokens never restyle CMD.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Voice Rule",
+        "body": "Inter Tight sets everything except the rare accent phrase. Fraunces italic is seasoning: a few words, never a full heading or paragraph.",
+        "section": "typography"
+      },
+      {
+        "name": "The Wordmark Rule",
+        "body": "The logo is \"NutriNation\" in Inter Tight bold at -0.055em tracking, followed by a small round dot in green. Caveat and Casanova are loaded but almost unused, so don't introduce them into new work.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat Until It Floats Rule",
+        "body": "If a surface isn't being hovered and isn't above the page, it gets a hairline, not a shadow.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Opaque Surface Rule",
+        "body": "Surfaces are opaque. Background blur is limited to the sticky header, the floating dock and small chips that sit directly on photographs.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Twelve Pixel Rule",
+        "body": "Buttons are 12px rounded rectangles. Pills are for status and small toggles, like the staff portal switcher. Square buttons are not part of the system. Existing pill and square buttons (`.btn-primary`, `.btn-ghost`, and \"Continue to checkout\" on the product page) predate this standard and should move to it when touched.",
+        "section": "shapes"
+      }
+    ],
+    "dos": [
+      "**Do** let photography supply the colour, and keep it large and well cropped.",
+      "**Do** use Charcoal Ink for primary actions and Pistachio Forest for selection, links and focus.",
+      "**Do** use Gallery Canvas as the page background, with white reserved for surfaces on top of it.",
+      "**Do** use 12px rounded rectangles for all new buttons.",
+      "**Do** build hierarchy with size and tight tracking before reaching for colour.",
+      "**Do** show prices with tabular numbers, with MRP in Stone beside the selling price.",
+      "**Do** honour reduced motion on anything that animates."
+    ],
+    "donts": [
+      "**Don't** add new pill or square buttons.",
+      "**Don't** add shadows to surfaces at rest.",
+      "**Don't** add glass effects; `.glass-panel` and `.glass-dark` are kept only for older components.",
+      "**Don't** set headings or long text in Fraunces, or introduce Caveat or Casanova into new work.",
+      "**Don't** use `cmd-*` colours or monospace styling on the storefront or admin.",
+      "**Don't** use red except for errors and the wishlisted heart."
+    ]
+  }
+}
