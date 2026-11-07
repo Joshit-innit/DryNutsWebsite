@@ -129,7 +129,7 @@ resilience4j:
   timelimiter:
     configs:
       default:
-        # Render's free plan takes about a minute to wake a service: set GATEWAY_TIMEOUT
+        # Render's free plan can take over 90 seconds to wake a service: set GATEWAY_TIMEOUT
         # above that there, or every cold start would count against the breaker.
         timeout-duration: ${GATEWAY_TIMEOUT:10s}
     instances:

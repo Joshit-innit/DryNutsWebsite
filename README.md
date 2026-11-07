@@ -169,7 +169,7 @@ The frontend deploys from `netlify.toml` with Netlify's Next.js runtime. The fou
 <img src="docs/screenshots/render-services.jpg" alt="Render Blueprint with all four services deployed" width="100%"/>
 <p align="center"><sub><b>Render</b>: gateway, product, customer and order services deployed on Docker in Frankfurt</sub></p>
 
-Render's free plan puts idle services to sleep, so the first request after a quiet spell takes about a minute. Sign-in handles this: the form says the service is waking, waits for it, and retries by itself.
+Render's free plan puts idle services to sleep, so the first request after a quiet spell can take a couple of minutes. Sign-in handles this: the form says the service is waking, waits for it, and retries by itself.
 
 ---
 

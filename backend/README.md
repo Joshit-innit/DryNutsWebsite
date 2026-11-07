@@ -56,7 +56,7 @@ Every gateway route, and the order service's Feign clients, go through Spring Cl
 
 Each downstream service has a Resilience4j circuit breaker. It opens at a 50% failure rate over the last 10 calls (at least 5), stays open for `CIRCUIT_OPEN_DURATION` (default 20s), then lets 3 trial calls through. While open, the gateway answers `503` with a JSON body and `Retry-After` without calling the service. 4xx responses never count as failures. Only GETs are retried, because repeating a login or an order is not safe.
 
-`GATEWAY_TIMEOUT` (default 10s) caps each call. Keep it above Render's cold start (70s in `render.yaml`).
+`GATEWAY_TIMEOUT` (default 10s) caps each call. Keep it above Render's cold start (120s in `render.yaml`).
 
 The gateway has CORS enabled for:
 

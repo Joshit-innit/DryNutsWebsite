@@ -10,7 +10,8 @@ export interface AuthResponse {
 }
 
 const WAKE_POLL_MS = 4000;
-const WAKE_LIMIT_MS = 100_000;
+// Render wakes the gateway and then the customer service: measured at over 2.5 minutes.
+const WAKE_LIMIT_MS = 180_000;
 
 export function isAdminRole(role?: string | null): boolean {
   return role?.toUpperCase() === "ADMIN";

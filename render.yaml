@@ -40,9 +40,10 @@ services:
     healthCheckPath: /actuator/health
     envVars:
       - fromGroup: nutrination-backend-shared
-      # Above Render's roughly one-minute wake-up, so a cold start doesn't trip the breaker.
+      # Above a free-plan service's wake-up (measured at over 90s), so a cold start
+      # doesn't trip the breaker.
       - key: GATEWAY_TIMEOUT
-        value: 70s
+        value: 120s
       - key: FRONTEND_ORIGINS # e.g. https://your-site.netlify.app
         sync: false
       - key: PRODUCT_SERVICE_URL # https://nutrination-product.onrender.com

@@ -163,7 +163,7 @@ function SubmitButton({ busy, waking, idle, working }: { busy: boolean; waking: 
       </button>
       {waking && (
         <p role="status" className="mt-3 text-[13px] leading-relaxed text-brand-muted">
-          Our sign-in service is waking up, which can take up to a minute. You don&apos;t need to do anything.
+          Our sign-in service is waking up, which can take a couple of minutes. You don&apos;t need to do anything.
         </p>
       )}
     </div>
