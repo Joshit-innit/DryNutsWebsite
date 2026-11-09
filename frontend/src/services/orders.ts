@@ -1,4 +1,4 @@
-import { Order, OrderStatus, CartItem, Address } from "@/types";
+import { Order, OrderQuote, OrderStatus, CartItem, Address } from "@/types";
 import { backendApi, unwrapData } from "@/lib/api/axios";
 import { DeliverySpeed } from "@/lib/store-settings";
 
@@ -19,6 +19,11 @@ export const orderService = {
     } catch {
       return null;
     }
+  },
+
+  async getQuote(data: { items: CartItem[]; couponCode?: string; deliverySpeed: DeliverySpeed }): Promise<OrderQuote> {
+    const res = await backendApi.post("/orders/quote", data);
+    return unwrapData<OrderQuote>(res);
   },
 
   async createOrder(data: {

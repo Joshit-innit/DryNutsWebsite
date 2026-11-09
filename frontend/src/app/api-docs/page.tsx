@@ -41,10 +41,22 @@ export default function ApiDocsPage() {
     },
     {
       method: "POST",
-      path: "/api/v1/coupons",
-      description: "Validate a promotional coupon code against an active basket subtotal.",
+      path: "/api/v1/coupons/validate",
+      description: "Check a coupon against the signed-in account and a basket subtotal.",
       category: "Checkout",
       sampleBody: JSON.stringify({ code: "FIRSTBUY", subtotal: 1500 }, null, 2),
+    },
+    {
+      method: "GET",
+      path: "/api/v1/coupons/mine",
+      description: "List the signed-in account's available, used and recently expired coupons.",
+      category: "Checkout",
+    },
+    {
+      method: "POST",
+      path: "/api/v1/orders/quote",
+      description: "Price a cart on the server without placing an order.",
+      category: "Checkout",
     },
     {
       method: "GET",

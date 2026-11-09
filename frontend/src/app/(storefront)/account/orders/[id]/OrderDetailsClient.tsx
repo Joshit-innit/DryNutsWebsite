@@ -165,7 +165,7 @@ export default function OrderDetailsPage() {
             </div>
             {order.discount > 0 && (
               <div className="flex justify-between text-brand-green">
-                <span>Discount Applied</span>
+                <span>{order.couponCode ? `Coupon ${order.couponCode}` : "Discount Applied"}</span>
                 <span>-{formatPrice(order.discount)}</span>
               </div>
             )}

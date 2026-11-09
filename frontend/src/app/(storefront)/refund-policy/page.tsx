@@ -34,6 +34,7 @@ export default function RefundPolicyPage() {
                 are refunded in full when the whole order is cancelled or the problem was our fault.
               </p>
               <p>For a partial refund, coupon discounts are shared out across the items in proportion to their price.</p>
+              <p>A coupon can be used once per account. If you cancel before your order ships, the coupon returns to your account. After that it stays used.</p>
             </>
           ),
         },

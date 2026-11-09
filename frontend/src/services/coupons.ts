@@ -1,4 +1,4 @@
-import { Coupon } from "@/types";
+import { Coupon, CouponWallet } from "@/types";
 import { backendApi, unwrapData } from "@/lib/api/axios";
 
 export { reviewService } from "@/services/reviews";
@@ -28,5 +28,15 @@ export const couponService = {
   async createCoupon(newCoupon: Coupon): Promise<Coupon> {
     const res = await backendApi.post("/coupons", newCoupon);
     return unwrapData<Coupon>(res);
+  },
+
+  async updateCoupon(code: string, changes: Pick<Partial<Coupon>, "expiryDate" | "status">): Promise<Coupon> {
+    const res = await backendApi.patch(`/coupons/${encodeURIComponent(code)}`, changes);
+    return unwrapData<Coupon>(res);
+  },
+
+  async getMyCoupons(): Promise<CouponWallet> {
+    const res = await backendApi.get("/coupons/mine");
+    return unwrapData<CouponWallet>(res);
   },
 };

@@ -2,8 +2,9 @@ import crypto from "crypto";
 import { NextRequest } from "next/server";
 import { db, StockError } from "@/lib/server/db";
 import { getRequestUser } from "@/lib/server/auth";
-import { getCouponDiscount, getCouponProblem, priceCart, PricingError } from "@/lib/order-pricing";
-import { getDeliveryFee, ONLINE_PAYMENTS_ENABLED } from "@/lib/store-settings";
+import { buildBill } from "@/lib/server/billing";
+import { PricingError } from "@/lib/order-pricing";
+import { ONLINE_PAYMENTS_ENABLED } from "@/lib/store-settings";
 import { CartItem, Order } from "@/types";
 
 export const dynamic = "force-dynamic";
@@ -64,30 +65,16 @@ export async function POST(request: NextRequest) {
       return Response.json({ message: "Your cart has an invalid item." }, { status: 400 });
     }
 
-    // Everything that decides the amount comes from the database. The browser only
-    // says what it wants, and a total that no longer matches is sent back for review.
-    const productIds = [...new Set(cart.map((item) => item.productId))];
-    const products = await Promise.all(productIds.map((id) => db.getProductBySlug(id)));
-    const { items, subtotal } = priceCart(cart, products.filter((product) => product !== undefined));
-
-    let discount = 0;
-    const couponCode = String(body.couponCode || "").trim();
-    if (couponCode) {
-      const coupon = await db.getCouponByCode(couponCode);
-      const problem = getCouponProblem(coupon, subtotal);
-      if (!coupon || problem) {
-        return Response.json({ message: problem }, { status: 409 });
-      }
-      discount = getCouponDiscount(coupon, subtotal);
+    const { items, subtotal, coupon, couponProblem, discount, deliveryFee, total, settings } = await buildBill(cart, {
+      couponCode: String(body.couponCode || ""),
+      deliverySpeed: body.deliverySpeed === "express" ? "express" : "standard",
+      userId: user?.sub,
+    });
+    if (couponProblem) {
+      return Response.json({ message: couponProblem }, { status: 409 });
     }
 
-    const settings = await db.getSettings();
-    const deliveryFee = getDeliveryFee(
-      subtotal,
-      settings.freeDeliveryMin,
-      body.deliverySpeed === "express" ? "express" : "standard"
-    );
-    const total = Math.max(0, subtotal - discount + deliveryFee);
+    // A total that no longer matches what the customer saw goes back for review.
     if (Number(body.total) !== total) {
       return Response.json(
         { message: "Your total has changed. Please review it and try again." },
@@ -103,6 +90,7 @@ export async function POST(request: NextRequest) {
       items,
       subtotal,
       discount,
+      couponCode: coupon?.code,
       deliveryFee,
       gstRate: settings.gstRate,
       total,
@@ -122,7 +110,7 @@ export async function POST(request: NextRequest) {
       ],
     };
 
-    const created = await db.createOrder(order, user?.role === "CUSTOMER" ? user.sub : null);
+    const created = await db.createOrder(order, user?.role === "CUSTOMER" ? user.sub : null, user?.sub);
     return Response.json({ data: created }, { status: 201 });
   } catch (error) {
     if (error instanceof StockError || error instanceof PricingError) {

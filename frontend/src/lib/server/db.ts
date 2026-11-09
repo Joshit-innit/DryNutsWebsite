@@ -9,7 +9,7 @@
 import { getSupabase } from "@/lib/server/supabase";
 import { SUPPORT_EMAIL } from "@/lib/support";
 import { DEFAULT_STORE_SETTINGS } from "@/lib/store-settings";
-import { Product, Category, Order, Coupon, Review, Customer, LandingImage, StoreSettings } from "@/types";
+import { Product, Category, Order, Coupon, CouponRedemption, Review, Customer, LandingImage, StoreSettings } from "@/types";
 
 type Row = Record<string, any>;
 
@@ -104,6 +104,7 @@ function toOrder(r: Row): Order {
     items: r.items ?? [],
     subtotal: num(r.subtotal),
     discount: num(r.discount),
+    couponCode: optStr(r.coupon_code),
     deliveryFee: num(r.delivery_fee),
     gstRate: num(r.gst_rate),
     total: num(r.total),
@@ -120,7 +121,7 @@ function toOrder(r: Row): Order {
 function fromOrder(o: Partial<Order> & { customerId?: string | null }): Row {
   const map: Record<string, string> = {
     id: "id", orderNumber: "order_number", date: "order_date", items: "items", subtotal: "subtotal",
-    discount: "discount", deliveryFee: "delivery_fee", gstRate: "gst_rate", total: "total", status: "status",
+    discount: "discount", couponCode: "coupon_code", deliveryFee: "delivery_fee", gstRate: "gst_rate", total: "total", status: "status",
     paymentMethod: "payment_method", paymentStatus: "payment_status",
     shippingAddress: "shipping_address", estimatedDelivery: "estimated_delivery",
     trackingNumber: "tracking_number", timeline: "timeline", customerId: "customer_id",
@@ -346,9 +347,16 @@ export const db = {
     return { ...toOrder(rows[0]), customerId: optStr(rows[0].customer_id) };
   },
 
-  async createOrder(order: Order, customerId?: string | null): Promise<Order> {
+  /**
+   * customerId is who the order belongs to; redeemedBy is the account spending any
+   * coupon. They differ for an admin testing the store, whose orders have no customer.
+   */
+  async createOrder(order: Order, customerId?: string | null, redeemedBy?: string | null): Promise<Order> {
     const row = checkStock(
-      await getSupabase().rpc("place_order", { p_order: fromOrder({ ...order, customerId: customerId ?? null }) })
+      await getSupabase().rpc("place_order", {
+        p_order: fromOrder({ ...order, customerId: customerId ?? null }),
+        p_customer_id: redeemedBy ?? null,
+      })
     );
     return toOrder(row);
   },
@@ -378,6 +386,46 @@ export const db = {
   async createCoupon(coupon: Coupon): Promise<Coupon> {
     const row = check(await getSupabase().from("coupons").insert(fromCoupon(coupon)).select("*").single());
     return toCoupon(row);
+  },
+
+  async updateCoupon(code: string, changes: Pick<Partial<Coupon>, "expiryDate" | "status">): Promise<Coupon | undefined> {
+    const row: Row = {};
+    if (changes.expiryDate !== undefined) row.expiry_date = changes.expiryDate;
+    if (changes.status !== undefined) row.status = changes.status;
+    const rows = check(await getSupabase().from("coupons").update(row).eq("code", code).select("*"));
+    return rows?.[0] ? toCoupon(rows[0]) : undefined;
+  },
+
+  /** Coupons this account has spent. A cancelled order's coupon doesn't count. */
+  async getRedemptions(customerId: string): Promise<CouponRedemption[]> {
+    const rows = check(
+      await getSupabase()
+        .from("coupon_redemptions")
+        .select("coupon_code, order_id, discount, redeemed_at, orders(order_number)")
+        .eq("customer_id", customerId)
+        .is("released_at", null)
+        .order("redeemed_at", { ascending: false })
+    );
+    return (rows ?? []).map((r: Row) => ({
+      couponCode: r.coupon_code,
+      orderId: r.order_id,
+      orderNumber: r.orders?.order_number ?? "",
+      discount: num(r.discount),
+      redeemedAt: r.redeemed_at,
+    }));
+  },
+
+  async hasRedeemed(code: string, customerId: string): Promise<boolean> {
+    const rows = check(
+      await getSupabase()
+        .from("coupon_redemptions")
+        .select("id")
+        .eq("coupon_code", code.trim().toUpperCase())
+        .eq("customer_id", customerId)
+        .is("released_at", null)
+        .limit(1)
+    );
+    return (rows ?? []).length > 0;
   },
 
   // ---- Reviews ----

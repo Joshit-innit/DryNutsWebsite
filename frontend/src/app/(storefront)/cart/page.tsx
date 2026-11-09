@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useStore } from "@/context/StoreContext";
+import { CouponField } from "@/components/cart/CouponField";
 import { formatPrice } from "@/lib/utils";
 import { productService } from "@/services/products";
 import { Product } from "@/types";
@@ -32,25 +33,15 @@ export default function CartPage() {
     cartDeliveryFee,
     cartTotal,
     appliedCoupon,
-    applyCouponCode,
-    removeCoupon,
   } = useStore();
 
   const [catalogue, setCatalogue] = useState<Product[]>([]);
-  const [couponCode, setCouponCode] = useState("");
 
   useEffect(() => {
     productService.getAllProducts().then(setCatalogue);
   }, []);
   const [giftNote, setGiftNote] = useState("");
   const [isGift, setIsGift] = useState(false);
-
-  const handleApplyCoupon = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (couponCode.trim()) {
-      await applyCouponCode(couponCode);
-    }
-  };
 
   const recommendedItems = catalogue.filter((p) => !cart.some((c) => c.productId === p.id)).slice(0, 4);
 
@@ -185,38 +176,7 @@ export default function CartPage() {
                 Order Summary
               </h3>
 
-              {/* Promo Code Form */}
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-2">
-                  Have a Promo Code?
-                </label>
-                {appliedCoupon ? (
-                  <div className="flex items-center justify-between p-3 rounded-xl bg-brand-green/10 border border-brand-green/30 text-xs">
-                    <span className="font-bold text-brand-green">
-                      Code {appliedCoupon.code} applied (-{formatPrice(cartDiscount)})
-                    </span>
-                    <button onClick={removeCoupon} className="text-red-500 font-bold hover:underline">
-                      Remove
-                    </button>
-                  </div>
-                ) : (
-                  <form onSubmit={handleApplyCoupon} className="flex gap-2">
-                    <input
-                      type="text"
-                      placeholder="e.g. FIRSTBUY"
-                      value={couponCode}
-                      onChange={(e) => setCouponCode(e.target.value)}
-                      className="flex-1 text-xs px-3 py-2.5 border border-brand-border rounded-xl focus:outline-none focus:border-brand-green uppercase font-semibold"
-                    />
-                    <button
-                      type="submit"
-                      className="bg-brand-dark hover:bg-brand-dark-light text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-colors"
-                    >
-                      Apply
-                    </button>
-                  </form>
-                )}
-              </div>
+              <CouponField />
 
               {/* Pricing Line Items */}
               <div className="space-y-2 text-xs text-brand-muted pt-2 border-t border-brand-border">

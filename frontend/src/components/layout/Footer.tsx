@@ -55,6 +55,7 @@ export default function Footer() {
         { label: "Track orders", href: "/account/orders" },
         { label: "Account", href: "/account" },
         { label: "Wishlist", href: "/account/wishlist" },
+        { label: "Coupons", href: "/account/coupons" },
         { label: "Returns", href: "/return-policy" },
         { label: "Refunds", href: "/refund-policy" },
       ],

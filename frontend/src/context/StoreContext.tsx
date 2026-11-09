@@ -1,13 +1,13 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { Product, CartItem, WeightVariant, Coupon, UserSession, StoreSettings } from "@/types";
+import { Product, CartItem, WeightVariant, Coupon, OrderQuote, UserSession, StoreSettings } from "@/types";
 import { toast } from "sonner";
 import { couponService } from "@/services/coupons";
 import { settingsService } from "@/services/settings";
 import { DEFAULT_STORE_SETTINGS, getDeliveryFee } from "@/lib/store-settings";
 import { getProductImage } from "@/lib/product-images";
-import { getCouponDiscount } from "@/lib/order-pricing";
+import { getCouponDiscount, getCouponProblem } from "@/lib/order-pricing";
 import { endSession, fetchSessionUser } from "@/lib/auth-session";
 
 interface StoreContextType {
@@ -33,6 +33,8 @@ interface StoreContextType {
   appliedCoupon: Coupon | null;
   applyCouponCode: (code: string) => Promise<boolean>;
   removeCoupon: () => void;
+  /** Takes the server's working of the bill: current prices, and whether the coupon still stands. */
+  applyQuote: (quote: OrderQuote) => void;
 
   // Wishlist
   wishlist: string[]; // product IDs
@@ -221,6 +223,35 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     toast.info("Coupon removed");
   };
 
+  const applyQuote = (quote: OrderQuote) => {
+    const priced = (item: CartItem) =>
+      quote.items.find((line) => line.productId === item.productId && line.variantId === item.variantId);
+    setCart((prev) => {
+      const changed = prev.some((item) => {
+        const line = priced(item);
+        return line && (line.price !== item.price || line.mrp !== item.mrp);
+      });
+      return changed ? prev.map((item) => ({ ...item, ...priced(item), quantity: item.quantity })) : prev;
+    });
+    setAppliedCoupon(quote.coupon);
+  };
+
+  // Coupons belong to an account, so one never carries over to the next.
+  const userId = user?.id;
+  useEffect(() => {
+    setAppliedCoupon(null);
+  }, [userId]);
+
+  // Taking items out can drop the bag below the coupon's minimum.
+  useEffect(() => {
+    if (!appliedCoupon || cart.length === 0) return;
+    const problem = getCouponProblem(appliedCoupon, cartSubtotal);
+    if (problem) {
+      setAppliedCoupon(null);
+      toast.info(`Coupon ${appliedCoupon.code} removed. ${problem}`);
+    }
+  }, [appliedCoupon, cart.length, cartSubtotal]);
+
   // Wishlist operations
   const toggleWishlist = (product: Product) => {
     setWishlist((prev) => {
@@ -265,6 +296,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         appliedCoupon,
         applyCouponCode,
         removeCoupon,
+        applyQuote,
         wishlist,
         toggleWishlist,
         isInWishlist,

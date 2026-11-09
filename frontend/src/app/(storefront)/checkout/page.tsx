@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,6 +12,7 @@ import { apiErrorMessage } from "@/lib/auth-session";
 import { downloadInvoice } from "@/lib/order-documents";
 import { DeliverySpeed, getDeliveryFee, getIncludedGst, ONLINE_PAYMENTS_ENABLED } from "@/lib/store-settings";
 import { formatPrice } from "@/lib/utils";
+import { CouponField } from "@/components/cart/CouponField";
 import { FloatingInput } from "@/components/watermelon/floating-input";
 import { SelectionCard } from "@/components/watermelon/selection-card";
 import { Order } from "@/types";
@@ -39,8 +40,17 @@ const formatDate = (isoDate: string) =>
   new Date(isoDate).toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "long" });
 
 export default function CheckoutPage() {
-  const { cart, cartSubtotal, cartDiscount, appliedCoupon, storeSettings, refreshStoreSettings, clearCart, user } =
-    useStore();
+  const {
+    cart,
+    cartSubtotal,
+    cartDiscount,
+    appliedCoupon,
+    applyQuote,
+    storeSettings,
+    refreshStoreSettings,
+    clearCart,
+    user,
+  } = useStore();
   const [deliverySpeed, setDeliverySpeed] = useState<DeliverySpeed>("standard");
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("COD");
   const [orderError, setOrderError] = useState<string | null>(null);
@@ -64,6 +74,39 @@ export default function CheckoutPage() {
   const deliveryFee = deliverySpeed === "express" ? expressFee : standardFee;
   const total = Math.max(0, cartSubtotal - cartDiscount + deliveryFee);
 
+  const couponCode = appliedCoupon?.code;
+  const cartLines = cart.map((item) => `${item.productId}:${item.variantId}:${item.quantity}`).join();
+
+  // Saved bags can outlive a price change or a coupon, so the server has the last word
+  // on the bill before the customer commits to it.
+  const checkBill = useCallback(
+    async (isCurrent: () => boolean = () => true) => {
+      if (cart.length === 0) return;
+      try {
+        const quote = await orderService.getQuote({ items: cart, couponCode, deliverySpeed });
+        if (!isCurrent()) return;
+        applyQuote(quote);
+        if (quote.couponProblem) {
+          setOrderError(`Coupon ${couponCode} was removed. ${quote.couponProblem}`);
+        } else if (quote.subtotal !== cartSubtotal) {
+          setOrderError("Some prices have changed since you added them. Your total is up to date.");
+        }
+      } catch (error) {
+        if (isCurrent()) setOrderError(apiErrorMessage(error, "We couldn't check your total. Please try again."));
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- cartLines stands in for the cart; applyQuote isn't stable.
+    [cartLines, couponCode, cartSubtotal, deliverySpeed]
+  );
+
+  useEffect(() => {
+    let current = true;
+    checkBill(() => current);
+    return () => {
+      current = false;
+    };
+  }, [checkBill]);
+
   const placeOrder = async (address: AddressValues) => {
     setOrderError(null);
     try {
@@ -84,8 +127,9 @@ export default function CheckoutPage() {
       clearCart();
       window.scrollTo({ top: 0 });
     } catch (error) {
-      await refreshStoreSettings();
       setOrderError(apiErrorMessage(error, "We couldn't place your order. Please try again."));
+      await refreshStoreSettings();
+      await checkBill();
     }
   };
 
@@ -241,6 +285,10 @@ export default function CheckoutPage() {
             ))}
           </ul>
 
+          <div className="mt-5 border-t border-dotted border-[#D3CEC3] pt-5">
+            <CouponField />
+          </div>
+
           <dl className="mt-5 space-y-2.5 border-t border-dotted border-[#D3CEC3] pt-5 text-[14px]">
             <Row label="Subtotal" value={formatPrice(cartSubtotal)} />
             {cartDiscount > 0 && <Row label={`Coupon ${appliedCoupon?.code}`} value={`−${formatPrice(cartDiscount)}`} accent />}
@@ -316,6 +364,9 @@ function Confirmation({ order, onInvoice }: { order: Order; onInvoice: () => voi
           <Row label="Order number" value={order.orderNumber} />
           <Row label="Estimated delivery" value={formatDate(order.estimatedDelivery)} />
           <Row label="Delivering to" value={`${order.shippingAddress.city}, ${order.shippingAddress.pincode}`} />
+          {order.discount > 0 && (
+            <Row label={`Coupon ${order.couponCode}`} value={`−${formatPrice(order.discount)}`} accent />
+          )}
         </div>
         <div className="mt-4 flex items-baseline justify-between border-t border-dotted border-[#D3CEC3] pt-4">
           <dt className="text-[15px] font-medium">To pay on delivery</dt>

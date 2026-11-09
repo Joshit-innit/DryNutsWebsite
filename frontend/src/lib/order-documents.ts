@@ -93,7 +93,9 @@ export async function downloadInvoice(order: Order, settings: StoreSettings) {
   };
 
   totalRow("Subtotal", rupees(order.subtotal));
-  if (order.discount > 0) totalRow("Discount", `- ${rupees(order.discount)}`);
+  if (order.discount > 0) {
+    totalRow(order.couponCode ? `Coupon ${order.couponCode}` : "Discount", `- ${rupees(order.discount)}`);
+  }
   totalRow("Delivery", order.deliveryFee === 0 ? "FREE" : rupees(order.deliveryFee));
   doc.setFont("helvetica", "bold").setFontSize(11);
   totalRow("Total", rupees(order.total));

@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useStore } from "@/context/StoreContext";
+import { CouponField } from "@/components/cart/CouponField";
 import { formatPrice } from "@/lib/utils";
 import {
   X,
@@ -10,7 +11,6 @@ import {
   Trash2,
   Plus,
   Minus,
-  Sparkles,
   ArrowRight,
   ShieldCheck,
 } from "lucide-react";
@@ -27,12 +27,8 @@ export default function CartDrawer() {
     cartDeliveryFee,
     cartTotal,
     appliedCoupon,
-    applyCouponCode,
-    removeCoupon,
   } = useStore();
 
-  const [couponInput, setCouponInput] = useState("");
-  const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
 
   React.useEffect(() => {
     if (!isCartOpen) return;
@@ -46,14 +42,6 @@ export default function CartDrawer() {
   }, [isCartOpen, setIsCartOpen]);
 
   if (!isCartOpen) return null;
-
-  const handleApplyCoupon = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!couponInput.trim()) return;
-    setIsApplyingCoupon(true);
-    await applyCouponCode(couponInput);
-    setIsApplyingCoupon(false);
-  };
 
   return (
     <div className="fixed inset-0 z-50 overflow-hidden bg-black/50 transition-opacity animate-in fade-in duration-200" role="dialog" aria-modal="true" aria-label="Shopping bag">
@@ -165,38 +153,7 @@ export default function CartDrawer() {
           {/* Drawer Footer (Summary & Checkout CTA) */}
           {cart.length > 0 && (
             <div className="p-5 border-t border-brand-border bg-brand-cream/30 space-y-4">
-              {/* Coupon Input */}
-              {appliedCoupon ? (
-                <div className="flex items-center justify-between p-2.5 rounded-xl bg-brand-green/10 border border-brand-green/30 text-xs">
-                  <div className="flex items-center gap-1.5 text-brand-green font-semibold">
-                    <Sparkles className="w-4 h-4 text-brand-saffron" />
-                    <span>Coupon <strong>{appliedCoupon.code}</strong> applied (-{formatPrice(cartDiscount)})</span>
-                  </div>
-                  <button
-                    onClick={removeCoupon}
-                    className="text-red-500 hover:underline text-[11px] font-bold"
-                  >
-                    Remove
-                  </button>
-                </div>
-              ) : (
-                <form onSubmit={handleApplyCoupon} className="flex gap-2">
-                  <input
-                    type="text"
-                    placeholder="Enter Coupon Code (e.g. FIRSTBUY)"
-                    value={couponInput}
-                    onChange={(e) => setCouponInput(e.target.value)}
-                    className="flex-1 text-xs px-3 py-2 border border-brand-border rounded-xl focus:outline-none focus:border-brand-green uppercase font-semibold placeholder:normal-case"
-                  />
-                  <button
-                    type="submit"
-                    disabled={isApplyingCoupon}
-                    className="bg-brand-dark hover:bg-brand-dark-light text-white text-xs font-semibold px-4 py-2 rounded-xl transition-colors"
-                  >
-                    Apply
-                  </button>
-                </form>
-              )}
+              <CouponField />
 
               {/* Price Breakdown */}
               <div className="space-y-1.5 text-xs text-brand-muted">

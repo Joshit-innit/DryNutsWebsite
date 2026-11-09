@@ -127,6 +127,7 @@ export interface Order {
   items: CartItem[];
   subtotal: number;
   discount: number;
+  couponCode?: string;
   deliveryFee: number;
   gstRate: number; // rate at the time of the order; prices include GST
   total: number;
@@ -172,6 +173,34 @@ export interface Coupon {
   usageCount: number;
   usageLimit?: number;
   status: "active" | "expired" | "disabled";
+}
+
+/** A coupon this account has spent, and the order it went on. */
+export interface CouponRedemption {
+  couponCode: string;
+  orderId: string;
+  orderNumber: string;
+  discount: number;
+  redeemedAt: string;
+}
+
+/** What an account can see about coupons, split the way a customer thinks about them. */
+export interface CouponWallet {
+  available: Coupon[];
+  used: (CouponRedemption & { description: string })[];
+  expired: Coupon[];
+}
+
+/** The server's own working of what a cart costs. */
+export interface OrderQuote {
+  items: CartItem[];
+  subtotal: number;
+  coupon: Coupon | null;
+  /** Why the requested coupon was left off, if it was. */
+  couponProblem: string | null;
+  discount: number;
+  deliveryFee: number;
+  total: number;
 }
 
 export interface Review {

@@ -6,13 +6,14 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useStore } from "@/context/StoreContext";
 import { orderService } from "@/services/orders";
+import { couponService } from "@/services/coupons";
 import { Order } from "@/types";
 import { formatPrice } from "@/lib/utils";
 import {
   User,
   ShoppingBag,
   Heart,
-  MapPin,
+  Ticket,
   Shield,
   LogOut,
   ChevronRight,
@@ -34,6 +35,7 @@ export default function AccountDashboardPage() {
   };
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
+  const [availableCoupons, setAvailableCoupons] = useState<number | null>(null);
 
   useEffect(() => {
     async function load() {
@@ -42,6 +44,10 @@ export default function AccountDashboardPage() {
       setLoading(false);
     }
     load();
+    couponService
+      .getMyCoupons()
+      .then((wallet) => setAvailableCoupons(wallet.available.length))
+      .catch(() => undefined);
   }, []);
 
   const latestOrder = orders[0];
@@ -119,6 +125,17 @@ export default function AccountDashboardPage() {
             </span>
           </Link>
 
+          <Link
+            href="/account/coupons"
+            className="flex items-center justify-between p-3 rounded-xl text-brand-dark hover:bg-brand-cream font-semibold text-xs transition-colors"
+          >
+            <div className="flex items-center gap-2.5">
+              <Ticket className="w-4 h-4 text-brand-muted" />
+              <span>Your Coupons</span>
+            </div>
+            <ChevronRight className="w-4 h-4 text-brand-muted" />
+          </Link>
+
           <div className="pt-4 border-t border-brand-border">
             <button onClick={handleSignOut} className="flex items-center gap-2.5 p-3 rounded-xl text-red-500 hover:bg-red-50 font-bold text-xs w-full transition-colors">
               <LogOut className="w-4 h-4" />
@@ -149,14 +166,17 @@ export default function AccountDashboardPage() {
               <p className="text-[11px] text-brand-muted mt-1">Saved dry fruits</p>
             </div>
 
-            <div className="bg-white rounded-2xl p-5 border border-brand-border shadow-xs">
+            <Link
+              href="/account/coupons"
+              className="bg-white rounded-2xl p-5 border border-brand-border shadow-xs transition-colors hover:border-brand-muted"
+            >
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-bold uppercase tracking-wider text-brand-muted">Saved Addresses</span>
-                <MapPin className="w-4 h-4 text-brand-saffron" />
+                <span className="text-xs font-bold uppercase tracking-wider text-brand-muted">Coupons</span>
+                <Ticket className="w-4 h-4 text-brand-saffron" />
               </div>
-              <span className="font-serif font-black text-2xl text-brand-dark">2</span>
-              <p className="text-[11px] text-brand-muted mt-1">Home & Office</p>
-            </div>
+              <span className="font-serif font-black text-2xl text-brand-dark">{availableCoupons ?? "–"}</span>
+              <p className="text-[11px] text-brand-muted mt-1">Ready to use</p>
+            </Link>
           </div>
 
           {/* Active Order Card */}
