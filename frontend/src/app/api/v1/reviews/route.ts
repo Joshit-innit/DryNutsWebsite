@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { db } from "@/lib/server/db";
 import { getRequestUser, requireAdmin } from "@/lib/server/auth";
+import { DAY, tooManyRequests, withinLimits } from "@/lib/server/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -22,6 +23,10 @@ export async function POST(request: NextRequest) {
     return Response.json({ message: "Please sign in to write a review." }, { status: 401 });
   }
 
+  if (!(await withinLimits({ key: `review:user:${user.sub}`, max: 10, windowSeconds: DAY }))) {
+    return tooManyRequests("You've written several reviews today. Please come back tomorrow.", DAY);
+  }
+
   try {
     const body = await request.json();
     const productId = String(body.productId || "");
@@ -39,15 +44,20 @@ export async function POST(request: NextRequest) {
       return Response.json({ message: "Rating must be between 1 and 5." }, { status: 400 });
     }
 
+    if (await db.hasReviewed(user.sub, product.id)) {
+      return Response.json({ message: "You've already reviewed this product." }, { status: 409 });
+    }
+
     const review = await db.createReview({
+      customerId: user.sub,
       productId: product.id,
       customerName,
       location: String(body.location || "").slice(0, 120),
       rating,
       title: String(body.title || "").slice(0, 200),
       comment: String(body.comment || "").slice(0, 4000),
-      // Purchase verification is not implemented yet, so never trust the client flag.
-      verifiedPurchase: false,
+      // Decided here from delivered orders, never from what the browser sends.
+      verifiedPurchase: await db.hasReceivedProduct(user.sub, product.id),
     });
     return Response.json({ data: review }, { status: 201 });
   } catch {

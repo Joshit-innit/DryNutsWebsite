@@ -34,7 +34,12 @@ eureka:
       defaultZone: ${EUREKA_URL:http://localhost:8761/eureka/}
 
 springdoc:
+  # Off unless asked for: a public map of every endpoint only helps attackers.
+  # Set API_DOCS_ENABLED=true locally to browse Swagger UI.
+  api-docs:
+    enabled: ${API_DOCS_ENABLED:false}
   swagger-ui:
+    enabled: ${API_DOCS_ENABLED:false}
     path: /swagger-ui.html
 
 frontend:

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SITE_URL } from "@/lib/site";
 import { Fraunces, Inter_Tight } from "next/font/google";
 import "./globals.css";
 import { StoreProvider } from "@/context/StoreContext";
@@ -25,6 +26,7 @@ const accent = Fraunces({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "NutriNation — Nourish Naturally | Premium Dry Fruits",
   description:
     "NutriNation offers cashews, pistachios, almonds, walnuts, raisins, dates, dried apricots, dry figs, prunes, combos, and gift boxes.",
@@ -35,7 +37,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "NutriNation — Premium Indian Dry Fruits",
     description: "A focused collection of dry fruits, combos, and gift boxes.",
-    url: "https://nutrination.in",
+    url: "/",
     siteName: "NutriNation",
     images: [
       {

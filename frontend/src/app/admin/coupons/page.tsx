@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { couponService } from "@/services/coupons";
-import { Coupon } from "@/types";
+import { Coupon, CouponChanges } from "@/types";
 import { apiErrorMessage } from "@/lib/auth-session";
 import { formatCouponDate, isCouponExpired, todayInStore } from "@/lib/order-pricing";
 import { formatPrice } from "@/lib/utils";
@@ -36,6 +36,7 @@ export default function AdminCouponsPage() {
   const [maxDiscount, setMaxDiscount] = useState("");
   const [usageLimit, setUsageLimit] = useState("");
   const [expiryDate, setExpiryDate] = useState("");
+  const [listed, setListed] = useState(true);
   const [saving, setSaving] = useState(false);
 
   // Changing the expiry date of one row
@@ -66,6 +67,7 @@ export default function AdminCouponsPage() {
       usageCount: 0,
       usageLimit: usageLimit ? Number(usageLimit) : undefined,
       status: "active",
+      listed,
     };
 
     setSaving(true);
@@ -80,6 +82,7 @@ export default function AdminCouponsPage() {
       setMaxDiscount("");
       setUsageLimit("");
       setExpiryDate("");
+      setListed(true);
       toast.success(`Promo code ${created.code} activated!`);
     } catch (error) {
       toast.error(apiErrorMessage(error, "Could not create the coupon."));
@@ -88,7 +91,7 @@ export default function AdminCouponsPage() {
     }
   };
 
-  const updateCoupon = async (coupon: Coupon, changes: Pick<Partial<Coupon>, "expiryDate" | "status">) => {
+  const updateCoupon = async (coupon: Coupon, changes: CouponChanges) => {
     try {
       const updated = await couponService.updateCoupon(coupon.code, changes);
       setCoupons((current) => replaceCoupon(current, updated));
@@ -147,7 +150,12 @@ export default function AdminCouponsPage() {
                     {c.code}
                   </span>
                 </td>
-                <td className="py-3 px-3 text-brand-dark max-w-xs">{c.description}</td>
+                <td className="py-3 px-3 text-brand-dark max-w-xs">
+                  {c.description}
+                  {c.listed === false && (
+                    <span className="mt-1 block text-[11px] text-brand-muted">Unlisted: only works for people given the code</span>
+                  )}
+                </td>
                 <td className="py-3 px-3 font-bold text-brand-dark">
                   {c.discountType === "percentage" ? `${c.discountValue}% OFF` : `₹${c.discountValue} FLAT OFF`}
                 </td>
@@ -209,6 +217,13 @@ export default function AdminCouponsPage() {
                     className="font-bold text-brand-muted hover:underline"
                   >
                     {c.status === "disabled" ? "Enable" : "Disable"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => updateCoupon(c, { listed: c.listed === false })}
+                    className="font-bold text-brand-muted hover:underline"
+                  >
+                    {c.listed === false ? "Show in wallets" : "Hide from wallets"}
                   </button>
                 </td>
               </tr>
@@ -318,6 +333,21 @@ export default function AdminCouponsPage() {
                 </div>
               </div>
               <p className="text-[11px] text-brand-muted">These three are optional. Leave them blank for no limit.</p>
+
+              <label className="flex items-start gap-2.5 pt-1">
+                <input
+                  type="checkbox"
+                  checked={listed}
+                  onChange={(e) => setListed(e.target.checked)}
+                  className="mt-0.5 h-4 w-4 accent-brand-green"
+                />
+                <span>
+                  <span className="block font-bold">Show in customers&apos; coupon wallets</span>
+                  <span className="block text-[11px] text-brand-muted">
+                    Untick for a private code, such as one for staff or a single customer. It still works when typed in.
+                  </span>
+                </span>
+              </label>
 
               <div className="flex gap-2 pt-3">
                 <button

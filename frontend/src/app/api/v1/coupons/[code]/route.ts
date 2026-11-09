@@ -2,13 +2,13 @@ import { NextRequest } from "next/server";
 import { db } from "@/lib/server/db";
 import { requireAdmin } from "@/lib/server/auth";
 import { isValidExpiry } from "@/lib/order-pricing";
-import { Coupon } from "@/types";
+import { Coupon, CouponChanges } from "@/types";
 
 export const dynamic = "force-dynamic";
 
 type CouponRouteContext = { params: Promise<{ code: string }> };
 
-/** Admins can move a coupon's expiry date or switch it off. Past uses are never changed. */
+/** Admins can move a coupon's expiry date, switch it off, or list it. Past uses are never changed. */
 export async function PATCH(request: NextRequest, context: CouponRouteContext) {
   const denied = await requireAdmin(request);
   if (denied) return denied;
@@ -24,10 +24,12 @@ export async function PATCH(request: NextRequest, context: CouponRouteContext) {
       return Response.json({ message: "Invalid coupon status." }, { status: 400 });
     }
 
-    const coupon = await db.updateCoupon(decodeURIComponent(code).toUpperCase(), {
-      expiryDate: body.expiryDate,
-      status: body.status,
-    });
+    if (body.listed !== undefined && typeof body.listed !== "boolean") {
+      return Response.json({ message: "Invalid listing choice." }, { status: 400 });
+    }
+
+    const changes: CouponChanges = { expiryDate: body.expiryDate, status: body.status, listed: body.listed };
+    const coupon = await db.updateCoupon(decodeURIComponent(code).toUpperCase(), changes);
     if (!coupon) return Response.json({ message: "Coupon not found." }, { status: 404 });
     return Response.json({ data: coupon });
   } catch {

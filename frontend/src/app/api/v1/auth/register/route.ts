@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { forwardCredentials } from "@/lib/server/auth-backend";
 import { getSupabase } from "@/lib/server/supabase";
+import { HOUR, clientIp, tooManyRequests, withinLimits } from "@/lib/server/rate-limit";
 
 export const dynamic = "force-dynamic";
 
@@ -20,6 +21,10 @@ export async function POST(request: NextRequest) {
   }
   if (password.length < 12 || password.length > 128) {
     return Response.json({ message: "Password must be 12 to 128 characters." }, { status: 400 });
+  }
+
+  if (!(await withinLimits({ key: `register:ip:${clientIp(request)}`, max: 5, windowSeconds: HOUR }))) {
+    return tooManyRequests("Too many new accounts from this connection. Please try again in an hour.", HOUR);
   }
 
   return forwardCredentials(

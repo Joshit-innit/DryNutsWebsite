@@ -173,7 +173,12 @@ export interface Coupon {
   usageCount: number;
   usageLimit?: number;
   status: "active" | "expired" | "disabled";
+  /** Shown in customers' coupon wallets. Unlisted coupons work only for those given the code. */
+  listed?: boolean;
 }
+
+/** What an admin can change on an existing coupon. Past uses are never changed. */
+export type CouponChanges = Pick<Partial<Coupon>, "expiryDate" | "status" | "listed">;
 
 /** A coupon this account has spent, and the order it went on. */
 export interface CouponRedemption {

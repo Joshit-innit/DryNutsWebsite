@@ -3,7 +3,8 @@ import { SESSION_COOKIE, verifyToken } from "@/lib/server/session";
 
 /** Staff consoles need an admin. /admin/login only redirects, so it stays open. */
 const isStaffPath = (path: string) =>
-  path !== "/admin/login" && (path.startsWith("/admin") || path.startsWith("/cmd"));
+  path !== "/admin/login" &&
+  (path.startsWith("/admin") || path.startsWith("/cmd") || path.startsWith("/api-docs"));
 
 /**
  * Runs on the server before any of these pages render, so a signed-out visitor never
@@ -27,5 +28,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/cmd/:path*", "/account", "/account/orders", "/account/coupons"],
+  matcher: ["/admin/:path*", "/cmd/:path*", "/api-docs/:path*", "/account", "/account/orders", "/account/coupons"],
 };

@@ -7,8 +7,9 @@ export const dynamic = "force-dynamic";
 type OrderRouteContext = { params: Promise<{ id: string }> };
 
 /**
- * Admins can view any order and customers their own. Guest orders (no owner)
- * are viewable by their unguessable id, like a receipt link.
+ * Admins can view any order and customers their own, by id or order number. Guest
+ * orders (no owner) open only by their long random id, like a receipt link: an order
+ * number is short and gets shared, so it must not be enough to see an address.
  */
 export async function GET(request: NextRequest, context: OrderRouteContext) {
   const { id } = await context.params;
@@ -17,7 +18,9 @@ export async function GET(request: NextRequest, context: OrderRouteContext) {
   try {
     const order = await db.getOrderById(id);
     const allowed =
-      order && (user?.role === "ADMIN" || !order.customerId || order.customerId === user?.sub);
+      order &&
+      (user?.role === "ADMIN" ||
+        (order.customerId ? order.customerId === user?.sub : order.id === id));
     if (!order || !allowed) {
       return Response.json({ message: "Order not found." }, { status: 404 });
     }

@@ -51,8 +51,23 @@ const SHELVES: Record<AuthMode, { label: string; image: string }[]> = {
 };
 
 /** Where to send someone after they authenticate. Admins always land in the admin portal. */
+/**
+ * Keeps `?next=` on this site. Browsers read "/\\evil.com" and "/%09/evil.com" as other
+ * websites, so the path is resolved the way the browser would and kept only if it stays here.
+ */
+function sameSitePath(next?: string): string | undefined {
+  if (!next || !next.startsWith("/")) return undefined;
+  try {
+    const base = "https://nutrination.invalid";
+    const url = new URL(next, base);
+    return url.origin === base ? `${url.pathname}${url.search}${url.hash}` : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 function destinationFor(role: string, next?: string): string {
-  const safeNext = next && next.startsWith("/") && !next.startsWith("//") ? next : undefined;
+  const safeNext = sameSitePath(next);
   if (isAdminRole(role)) {
     return safeNext?.startsWith("/admin") || safeNext?.startsWith("/cmd") ? safeNext : "/admin";
   }

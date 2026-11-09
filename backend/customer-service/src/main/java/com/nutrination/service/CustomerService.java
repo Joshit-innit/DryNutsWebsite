@@ -2,10 +2,12 @@ package com.nutrination.service;
 
 import com.nutrination.entity.Customer;
 import com.nutrination.repository.CustomerRepository;
+import com.nutrination.security.LoginAttemptLimiter;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,10 +18,24 @@ import org.springframework.web.server.ResponseStatusException;
 public class CustomerService {
     private final CustomerRepository customerRepository;
     private final PasswordEncoder passwordEncoder;
+    private final LoginAttemptLimiter loginAttempts;
+    /**
+     * Checked against when the email has no account, so a wrong email takes as long as
+     * a wrong password and response times don't reveal who has an account.
+     */
+    private final String unknownAccountHash;
 
-    public CustomerService(CustomerRepository customerRepository, PasswordEncoder passwordEncoder) {
+    public CustomerService(CustomerRepository customerRepository, PasswordEncoder passwordEncoder,
+                           LoginAttemptLimiter loginAttempts) {
         this.customerRepository = customerRepository;
         this.passwordEncoder = passwordEncoder;
+        this.loginAttempts = loginAttempts;
+        this.unknownAccountHash = passwordEncoder.encode(UUID.randomUUID().toString());
+    }
+
+    /** Random, so ids can't be guessed or collide when two people sign up at once. */
+    private static String newCustomerId() {
+        return "cust-" + UUID.randomUUID();
     }
 
     @Transactional(readOnly = true)
@@ -42,7 +58,7 @@ public class CustomerService {
     @Transactional
     public Customer save(Customer customer) {
         if (customer.getId() == null || customer.getId().isBlank()) {
-            customer.setId("cust-" + System.currentTimeMillis());
+            customer.setId(newCustomerId());
         }
         if (customer.getJoinedDate() == null) {
             customer.setJoinedDate(LocalDate.now());
@@ -58,7 +74,7 @@ public class CustomerService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "An account already exists for that email address");
         }
         Customer customer = new Customer();
-        customer.setId("cust-" + System.currentTimeMillis());
+        customer.setId(newCustomerId());
         customer.setName(name.trim());
         customer.setEmail(normalizedEmail);
         customer.setRole("CUSTOMER");
@@ -68,10 +84,23 @@ public class CustomerService {
 
     @Transactional
     public Customer authenticate(String email, String password) {
-        Customer customer = customerRepository.findByEmailIgnoreCase(email.trim())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password"));
-        if (customer.getPasswordHash() == null || !passwordEncoder.matches(password, customer.getPasswordHash())) {
+        if (loginAttempts.isLocked(email)) {
+            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS,
+                    "Too many sign-in attempts. Please wait 15 minutes and try again.");
+        }
+
+        Customer customer = customerRepository.findByEmailIgnoreCase(email.trim()).orElse(null);
+        String hash = customer == null || customer.getPasswordHash() == null ? unknownAccountHash : customer.getPasswordHash();
+        boolean matches = passwordEncoder.matches(password, hash);
+        if (customer == null || customer.getPasswordHash() == null || !matches) {
+            loginAttempts.recordFailure(email);
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password");
+        }
+        loginAttempts.recordSuccess(email);
+
+        if ("suspended".equalsIgnoreCase(customer.getStatus())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "This account has been suspended. Please contact customer support.");
         }
         // Accounts migrated with an older hash move to the current one on first sign-in.
         if (passwordEncoder.upgradeEncoding(customer.getPasswordHash())) {

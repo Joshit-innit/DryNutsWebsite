@@ -9,7 +9,7 @@
 import { getSupabase } from "@/lib/server/supabase";
 import { SUPPORT_EMAIL } from "@/lib/support";
 import { DEFAULT_STORE_SETTINGS } from "@/lib/store-settings";
-import { Product, Category, Order, Coupon, CouponRedemption, Review, Customer, LandingImage, StoreSettings } from "@/types";
+import { Product, Category, Order, Coupon, CouponChanges, CouponRedemption, Review, Customer, LandingImage, StoreSettings } from "@/types";
 
 type Row = Record<string, any>;
 
@@ -156,6 +156,7 @@ function toCoupon(r: Row): Coupon {
     usageCount: num(r.usage_count),
     usageLimit: optNum(r.usage_limit),
     status: r.status,
+    listed: r.listed !== false,
   };
 }
 
@@ -171,6 +172,7 @@ function fromCoupon(c: Coupon): Row {
     usage_count: c.usageCount ?? 0,
     usage_limit: c.usageLimit ?? null,
     status: c.status ?? "active",
+    listed: c.listed !== false,
   };
 }
 
@@ -388,10 +390,11 @@ export const db = {
     return toCoupon(row);
   },
 
-  async updateCoupon(code: string, changes: Pick<Partial<Coupon>, "expiryDate" | "status">): Promise<Coupon | undefined> {
+  async updateCoupon(code: string, changes: CouponChanges): Promise<Coupon | undefined> {
     const row: Row = {};
     if (changes.expiryDate !== undefined) row.expiry_date = changes.expiryDate;
     if (changes.status !== undefined) row.status = changes.status;
+    if (changes.listed !== undefined) row.listed = changes.listed;
     const rows = check(await getSupabase().from("coupons").update(row).eq("code", code).select("*"));
     return rows?.[0] ? toCoupon(rows[0]) : undefined;
   },
@@ -435,12 +438,39 @@ export const db = {
     return (check(await query) ?? []).map(toReview);
   },
 
-  async createReview(review: Omit<Review, "id" | "date" | "likes">): Promise<Review> {
+  /** Whether this account has a delivered order containing the product. */
+  async hasReceivedProduct(customerId: string, productId: string): Promise<boolean> {
+    const rows = check(
+      await getSupabase()
+        .from("orders")
+        .select("id")
+        .eq("customer_id", customerId)
+        .eq("status", "Delivered")
+        .contains("items", [{ productId }])
+        .limit(1)
+    );
+    return (rows ?? []).length > 0;
+  },
+
+  async hasReviewed(customerId: string, productId: string): Promise<boolean> {
+    const rows = check(
+      await getSupabase()
+        .from("reviews")
+        .select("id")
+        .eq("customer_id", customerId)
+        .eq("product_id", productId)
+        .limit(1)
+    );
+    return (rows ?? []).length > 0;
+  },
+
+  async createReview(review: Omit<Review, "id" | "date" | "likes"> & { customerId: string }): Promise<Review> {
     const row = check(
       await getSupabase()
         .from("reviews")
         .insert({
-          id: `rev-${Date.now()}`,
+          id: `rev-${crypto.randomUUID()}`,
+          customer_id: review.customerId,
           product_id: review.productId,
           customer_name: review.customerName,
           location: review.location ?? "",

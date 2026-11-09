@@ -11,7 +11,7 @@
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
-    "@hookform/resolvers": "^3.9.0",
+    "@hookform/resolvers": "^5.9.2",
     "@supabase/supabase-js": "^2.118.0",
     "axios": "^1.7.9",
     "canvas-confetti": "^1.9.3",
@@ -21,14 +21,14 @@
     "jspdf": "^4.2.1",
     "lenis": "^1.1.14",
     "lucide-react": "^0.453.0",
-    "next": "^16.3.2",
+    "next": "^16.4.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.53.0",
     "recharts": "^2.13.0",
     "sonner": "^1.5.0",
     "tailwind-merge": "^2.5.4",
-    "zod": "^3.23.8",
+    "zod": "^4.6.7",
     "zustand": "^5.0.0"
   },
   "devDependencies": {

@@ -50,6 +50,7 @@ export async function POST(request: NextRequest) {
       usageCount: 0,
       usageLimit: body.usageLimit ? Number(body.usageLimit) : undefined,
       status: body.status || "active",
+      listed: body.listed !== false,
     });
     return Response.json({ data: coupon }, { status: 201 });
   } catch {

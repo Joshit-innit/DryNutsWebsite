@@ -2,7 +2,7 @@
 # automatically and serves pages plus the /api/v1 route handlers as functions.
 #
 # Set these in Site configuration → Environment variables (server-side only):
-#   SUPABASE_URL, SUPABASE_SECRET_KEY, ADMIN_EMAIL (public support address),
+#   SUPABASE_URL, SUPABASE_SECRET_KEY,
 #   BACKEND_URL   the Spring gateway, e.g. https://nutrination-gateway.onrender.com
 #   AUTH_SECRET   must equal JWT_SECRET on the customer-service (Render)
 
@@ -14,9 +14,6 @@
 [build.environment]
   NODE_VERSION = "22"
   NEXT_TELEMETRY_DISABLED = "1"
-  # The admin email doubles as the public customer-service address shown on
-  # the contact and policy pages, so it is expected in the build output.
-  SECRETS_SCAN_OMIT_KEYS = "ADMIN_EMAIL"
 
 # Declared explicitly: auto-detection runs at the repo root (no Next.js there)
 # and skipped it, which uploaded .next as static files and 404'd every route.

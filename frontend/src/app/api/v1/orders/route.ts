@@ -5,6 +5,7 @@ import { getRequestUser } from "@/lib/server/auth";
 import { buildBill } from "@/lib/server/billing";
 import { PricingError } from "@/lib/order-pricing";
 import { ONLINE_PAYMENTS_ENABLED } from "@/lib/store-settings";
+import { DAY, HOUR, clientIp, tooManyRequests, withinLimits } from "@/lib/server/rate-limit";
 import { CartItem, Order } from "@/types";
 
 export const dynamic = "force-dynamic";
@@ -39,6 +40,22 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const user = await getRequestUser(request);
+
+  // Every order reserves stock at once, so scripted fake orders could empty the shelves.
+  // Signed-in customers are counted by account, guests by connection.
+  const who = user ? `user:${user.sub}` : `ip:${clientIp(request)}`;
+  const allowed =
+    user?.role === "ADMIN" ||
+    (await withinLimits(
+      { key: `order:${who}`, max: user ? 10 : 5, windowSeconds: HOUR },
+      { key: `order-day:${who}`, max: user ? 30 : 15, windowSeconds: DAY }
+    ));
+  if (!allowed) {
+    return tooManyRequests(
+      `You've placed several orders in a short time. Please try again later, or contact us if you need a bulk order.`,
+      HOUR
+    );
+  }
 
   try {
     const body = await request.json();
@@ -82,10 +99,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const suffix = crypto.randomBytes(4).toString("hex");
+    // The id is a guest's receipt link, so it is long and random and shares nothing
+    // with the order number, which customers read out and share.
     const order: Order = {
-      id: `ord-${Date.now()}-${suffix}`,
-      orderNumber: `NN-${new Date().getFullYear()}-${suffix.toUpperCase()}`,
+      id: `ord-${crypto.randomBytes(16).toString("base64url")}`,
+      orderNumber: `NN-${new Date().getFullYear()}-${crypto.randomBytes(4).toString("hex").toUpperCase()}`,
       date: isoDate(),
       items,
       subtotal,

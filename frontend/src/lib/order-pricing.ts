@@ -49,7 +49,10 @@ export function buildCouponWallet(coupons: Coupon[], redemptions: CouponRedempti
   const usedCodes = new Set(redemptions.map((redemption) => redemption.couponCode));
   const oldestExpiryShown = new Date(Date.now() - EXPIRED_SHOWN_FOR_DAYS * 86_400_000).toISOString().split("T")[0];
 
-  const unused = coupons.filter((coupon) => !usedCodes.has(coupon.code) && coupon.status !== "disabled");
+  // Unlisted coupons are for people handed the code, so a wallet shows them only once used.
+  const unused = coupons.filter(
+    (coupon) => coupon.listed !== false && !usedCodes.has(coupon.code) && coupon.status !== "disabled"
+  );
   const lapsed = (coupon: Coupon) => coupon.status === "expired" || isCouponExpired(coupon);
 
   return {

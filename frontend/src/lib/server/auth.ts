@@ -1,11 +1,15 @@
 /**
  * Who is calling? Accounts, passwords and token issuing all belong to the Spring
- * customer-service. These route handlers only verify the token it signed.
+ * customer-service. These route handlers verify the token it signed, then ask the
+ * database whether that session was signed out or the account suspended since.
  */
 
-import { SESSION_COOKIE, TokenClaims, verifyToken } from "@/lib/server/session";
+import { getSupabase } from "@/lib/server/supabase";
+import { SESSION_COOKIE, TokenClaims, hashToken, verifyToken } from "@/lib/server/session";
 
-function readCookie(request: Request, name: string): string | undefined {
+export type SessionState = "ok" | "revoked" | "suspended";
+
+export function readCookie(request: Request, name: string): string | undefined {
   const cookies = request.headers.get("cookie") || "";
   for (const cookie of cookies.split(";")) {
     const [key, ...value] = cookie.trim().split("=");
@@ -14,8 +18,29 @@ function readCookie(request: Request, name: string): string | undefined {
   return undefined;
 }
 
+/**
+ * A signed token stays valid until it expires, so this is what makes signing out and
+ * suspending an account take effect at once. If the check itself fails the session
+ * is allowed, so a database hiccup doesn't sign everyone out.
+ */
+export async function getSessionState(token: string, claims: TokenClaims): Promise<SessionState> {
+  const { data, error } = await getSupabase().rpc("session_state", {
+    p_token_hash: await hashToken(token),
+    p_customer_id: claims.sub,
+    p_email: claims.email,
+  });
+  if (error) {
+    console.error("[auth] session check failed:", error.message);
+    return "ok";
+  }
+  return data === "revoked" || data === "suspended" ? data : "ok";
+}
+
 export async function getRequestUser(request: Request): Promise<TokenClaims | null> {
-  return verifyToken(readCookie(request, SESSION_COOKIE));
+  const token = readCookie(request, SESSION_COOKIE);
+  const claims = await verifyToken(token);
+  if (!token || !claims) return null;
+  return (await getSessionState(token, claims)) === "ok" ? claims : null;
 }
 
 /** Returns an error Response when the caller is not an authenticated admin. */

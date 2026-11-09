@@ -54,3 +54,9 @@ export async function verifyToken(token: string | undefined): Promise<TokenClaim
     return null;
   }
 }
+
+/** What the database stores for a signed-out token: a SHA-256, never the token itself. */
+export async function hashToken(token: string): Promise<string> {
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(token));
+  return Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
+}

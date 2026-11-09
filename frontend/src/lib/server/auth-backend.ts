@@ -12,7 +12,7 @@ import { SESSION_COOKIE } from "@/lib/server/session";
  */
 const REQUEST_TIMEOUT_MS = 7000;
 
-interface SpringAuthResponse {
+export interface SpringAuthResponse {
   accessToken: string;
   expiresIn: number;
   customerId: string;
@@ -50,15 +50,23 @@ const unavailable = () =>
 /**
  * Forwards a login or registration. The token goes into the cookie and never into the
  * response body. `messages` maps Spring's status codes to words a customer can act on.
+ * `onSuccess` may return a response to refuse the session instead, e.g. a suspended account.
  */
 export async function forwardCredentials(
   path: "/login" | "/register",
   body: Record<string, string>,
   messages: Record<number, string>,
-  onSuccess?: (account: SpringAuthResponse) => Promise<void>
-): Promise<NextResponse> {
+  onSuccess?: (account: SpringAuthResponse) => Promise<Response | void>
+): Promise<Response> {
   const upstream = await callAuthService(path, { method: "POST", body: JSON.stringify(body) });
   if (!upstream) return unavailable();
+
+  if (upstream.status === 429) {
+    return NextResponse.json(
+      { code: "RATE_LIMITED", message: "Too many sign-in attempts. Please wait 15 minutes and try again." },
+      { status: 429, headers: { "Retry-After": upstream.headers.get("Retry-After") ?? "900" } }
+    );
+  }
 
   if (!upstream.ok) {
     const message = messages[upstream.status] ?? "Something went wrong. Please try again.";
@@ -66,7 +74,8 @@ export async function forwardCredentials(
   }
 
   const { data } = (await upstream.json()) as { data: SpringAuthResponse };
-  await onSuccess?.(data);
+  const refused = await onSuccess?.(data);
+  if (refused) return refused;
 
   const { accessToken, expiresIn, customerId, name, email, role } = data;
   const response = NextResponse.json({ data: { customerId, name, email, role } }, { status: upstream.status });
