@@ -50,8 +50,8 @@ export default function ReviewForm({ productId, productName, slug }: { productId
   return (
     <section className="border-t border-brand-border py-12 sm:py-16" aria-labelledby="review-heading">
       <div className="max-w-2xl">
-        <p className="eyebrow mb-3 text-brand-green">Your feedback</p>
-        <h2 id="review-heading" className="text-3xl">Tried the {productName.replace(/\s*\(.*?\)\s*/g, " ").trim()}?</h2>
+        <p className="section-label mb-3">Your feedback</p>
+        <h2 id="review-heading" className="text-3xl font-semibold tracking-[-0.035em]">Tried the {productName.replace(/\s*\(.*?\)\s*/g, " ").trim()}?</h2>
         <p className="mt-3 text-sm leading-relaxed text-brand-muted">
           Tell us what you thought. Your review goes straight to our team and helps us choose what to harvest next.
         </p>

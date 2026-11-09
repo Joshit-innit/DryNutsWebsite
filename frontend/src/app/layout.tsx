@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { Caveat, Fraunces, Inter_Tight } from "next/font/google";
-import localFont from "next/font/local";
+import { Fraunces, Inter_Tight } from "next/font/google";
 import "./globals.css";
 import { StoreProvider } from "@/context/StoreContext";
 import { Toaster } from "sonner";
@@ -21,19 +20,6 @@ const accent = Fraunces({
   style: ["normal", "italic"],
   axes: ["SOFT", "opsz"],
   variable: "--font-accent",
-  display: "swap",
-});
-
-const hand = Caveat({
-  subsets: ["latin"],
-  weight: ["600"],
-  variable: "--font-hand",
-  display: "swap",
-});
-
-const casanova = localFont({
-  src: "../../public/fonts/Casanova.otf",
-  variable: "--font-casanova",
   display: "swap",
 });
 
@@ -69,7 +55,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${sans.variable} ${accent.variable} ${hand.variable} ${casanova.variable}`}>
+    <html lang="en" className={`${sans.variable} ${accent.variable}`}>
       <body className="min-h-screen bg-brand-cream text-brand-dark antialiased font-sans">
         <ImageLoadState />
         <StoreProvider>

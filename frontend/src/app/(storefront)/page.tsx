@@ -12,9 +12,7 @@ import FeaturedHarvest from "@/components/home/FeaturedHarvest";
 import ProductMorph from "@/components/home/ProductMorph";
 import FaqAccordion from "@/components/ui/FaqAccordion";
 import { productService } from "@/services/products";
-import { getProductImage } from "@/lib/product-images";
-import { categoryPhoto, featuredPhoto, heroSlides, lowestPrice, shortName, sized, topProducts } from "@/lib/landing";
-import { formatPrice } from "@/lib/utils";
+import { categoryPhoto, featuredPhoto, heroSlides, sized, topProducts } from "@/lib/landing";
 import { LandingImage, Product } from "@/types";
 
 function SectionHeading({
@@ -42,6 +40,14 @@ function SectionHeading({
   );
 }
 
+const REEL_SIZE = 6;
+
+// Secondary text tinted from each dark surface (sage on forest, linen on ink); both pass 7:1.
+const GIFT_NOTE = "text-[#B9C8B3]";
+const EVERYDAY_NOTE = "text-[#BDB7AC]";
+
+const itemCount = (n: number) => `${String(n).padStart(2, "0")} ${n === 1 ? "item" : "items"}`;
+
 export default function HomePage() {
   const [products, setProducts] = React.useState<Product[]>(PRODUCTS);
   // null until loaded, so the built-in photos never flash before the admin's ones.
@@ -55,12 +61,14 @@ export default function HomePage() {
     landingService.getAll().then(setLanding);
   }, []);
 
-  const ranked = React.useMemo(() => topProducts(products), [products]);
+  const ranked = React.useMemo(() => topProducts(products, 12), [products]);
   const slides = React.useMemo(() => (landing ? heroSlides(landing, ranked) : []), [landing, ranked]);
   const photos = landing ?? [];
-  const featured = ranked[0];
-  const shelf = ranked.slice(0, 4);
-  const directory = ranked.slice(0, 8);
+  // The reel shows the top six, so the featured product and the shelf pick up after it
+  // instead of repeating the same packs; a small catalogue falls back to the top.
+  const featured = ranked[REEL_SIZE] ?? ranked[0];
+  const shelfAfterReel = ranked.slice(REEL_SIZE + 1, REEL_SIZE + 5);
+  const shelf = shelfAfterReel.length === 4 ? shelfAfterReel : ranked.slice(0, 4);
   const coreCategories = CATEGORIES.filter((c) => c.slug !== "combos" && c.slug !== "gift-boxes");
   const countIn = (slug: string) => products.filter((p) => p.category === slug).length;
 
@@ -103,12 +111,12 @@ export default function HomePage() {
                 </div>
                 <div className="mt-4 flex items-baseline justify-between gap-4">
                   <p className="flex min-w-0 items-baseline gap-2">
-                    <span className="text-lg font-semibold tracking-[-0.03em]">{category.name}</span>
+                    <span className="text-lg font-semibold tracking-[-0.03em] transition-colors duration-200 group-hover:text-brand-green-dark">{category.name}</span>
                     <span className="text-xs text-brand-muted">from</span>
                     <span className="link-rule truncate text-[15px] font-medium">{category.originHighlight.split(",")[0]}</span>
                   </p>
                   <span className="shrink-0 text-[13px] text-brand-muted">
-                    {countIn(category.slug) > 0 ? `${String(countIn(category.slug)).padStart(2, "0")} items` : "Explore"}
+                    {countIn(category.slug) > 0 ? itemCount(countIn(category.slug)) : "Explore"}
                   </span>
                 </div>
               </Link>
@@ -137,118 +145,80 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ------------------------------------------------ Gifting (dark cards) */}
-      <section className="mx-auto max-w-[1440px] px-4 pb-24 sm:px-6 sm:pb-32 lg:px-12">
-        <p className="mb-10 text-center text-[17px] text-brand-dark">For celebrations, visits and everyday generosity.</p>
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-          {[
-            { slug: "gift-boxes", label: "Gifting", title: "Gift & Festival Boxes", note: "Wrapped and ready to give" },
-            { slug: "combos", label: "Everyday", title: "Curated Combos", note: "Daily wellness blends" },
-          ].map((card) => (
+      {/* ------------------------------------------------ Gifting: the page's one Deep Forest band */}
+      <section aria-labelledby="gifting-title" className="bg-brand-green-dark text-white">
+        <div className="mx-auto max-w-[1440px] px-4 py-24 sm:px-6 sm:py-32 lg:px-12">
+          <div className="mb-12 flex flex-col gap-6 sm:mb-16 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <p className={`mb-5 text-[15px] font-medium ${GIFT_NOTE}`}>Gifting</p>
+              <h2
+                id="gifting-title"
+                className="max-w-[17ch] text-[clamp(2.5rem,5.6vw,5.25rem)] font-semibold leading-[0.98] tracking-[-0.045em] text-white"
+              >
+                For celebrations, visits and everyday{" "}
+                <span className="font-accent tracking-[-0.02em] text-brand-saffron-light">generosity.</span>
+              </h2>
+            </div>
+            <Link href="/category/gift-boxes" className="group inline-flex shrink-0 items-center gap-2 text-[15px] font-medium text-white">
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+              <span className="link-rule">Shop gift boxes</span>
+            </Link>
+          </div>
+
+          <div className="grid gap-4 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-5">
+            {/* Gift boxes: a tall photo panel, the hero's own motif */}
             <Link
-              key={card.slug}
-              href={`/category/${card.slug}`}
-              className="group relative flex min-h-[26rem] flex-col justify-between overflow-hidden rounded-2xl bg-brand-dark p-7 text-white sm:p-10"
+              href="/category/gift-boxes"
+              className="group relative flex min-h-[30rem] flex-col justify-end overflow-hidden rounded-[22px] bg-[#16261A] p-7 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand-saffron-light sm:min-h-[38rem] sm:p-10"
             >
-              <div className="flex items-start justify-between gap-6">
-                <span className="grid h-12 w-12 place-items-center rounded-full bg-white text-lg font-bold tracking-[-0.06em] text-brand-dark">
-                  <span>
-                    N<span className="text-brand-green">.</span>
-                  </span>
-                </span>
-                <div className="w-[52%] overflow-hidden rounded-xl">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={landing ? sized(categoryPhoto(photos, card.slug), 900) : undefined}
-                    alt=""
-                    className="aspect-[4/3] w-full object-cover transition-transform duration-700 ease-luxury group-hover:scale-[1.05]"
-                    loading="lazy"
-                  />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={landing ? sized(categoryPhoto(photos, "gift-boxes"), 1600) : undefined}
+                alt=""
+                className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-luxury group-hover:scale-[1.04]"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0E1A11]/90 via-[#0E1A11]/30 to-transparent" aria-hidden />
+              <div className="relative flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
+                <div>
+                  <h3 className="text-[clamp(2rem,3.8vw,3.5rem)] font-semibold leading-[0.98] tracking-[-0.045em] text-white">
+                    Gift &amp; Festival Boxes
+                  </h3>
+                  <p className="mt-4 text-[15px] text-white/85">Wrapped and ready to give</p>
                 </div>
+                <span className="inline-flex shrink-0 items-center gap-1.5 text-[15px] font-medium text-white">
+                  {countIn("gift-boxes") > 0 && <span className="tabular-nums text-brand-saffron-light">{itemCount(countIn("gift-boxes"))}</span>}
+                  <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                </span>
+              </div>
+            </Link>
+
+            {/* Everyday combos: the quieter Charcoal Ink companion */}
+            <Link
+              href="/category/combos"
+              className="group flex flex-col justify-between gap-10 overflow-hidden rounded-[22px] bg-brand-dark p-7 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white sm:p-10"
+            >
+              <div className="overflow-hidden rounded-2xl">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={landing ? sized(categoryPhoto(photos, "combos"), 900) : undefined}
+                  alt=""
+                  className="aspect-[4/3] w-full object-cover transition-transform duration-700 ease-luxury group-hover:scale-[1.04]"
+                  loading="lazy"
+                />
               </div>
               <div>
-                <p className="text-[15px] text-white/60">{card.label}</p>
-                <div className="mt-2 flex items-end justify-between gap-6">
-                  <h3 className="text-[clamp(2rem,3.6vw,3.25rem)] font-semibold leading-[0.98] tracking-[-0.045em] text-white">
-                    {card.title}
-                  </h3>
-                  {countIn(card.slug) > 0 && (
-                    <span className="shrink-0 rounded-xl border border-white/25 px-3.5 py-2 text-center">
-                      <span className="block text-xs text-white/60">Packs</span>
-                      <span className="block text-2xl font-semibold leading-none tracking-[-0.03em]">
-                        {String(countIn(card.slug)).padStart(2, "0")}
-                      </span>
-                    </span>
-                  )}
-                </div>
-                <div className="mt-8 flex items-center justify-between text-[15px] text-white/70">
-                  <span>{card.note}</span>
-                  <span className="inline-flex items-center gap-1.5 text-white">
-                    Explore <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+                <p className={`text-[15px] ${EVERYDAY_NOTE}`}>Everyday</p>
+                <h3 className="mt-2 text-[clamp(1.75rem,2.6vw,2.5rem)] font-semibold leading-[1] tracking-[-0.04em] text-white">Curated Combos</h3>
+                <div className={`mt-6 flex items-center justify-between text-[15px] ${EVERYDAY_NOTE}`}>
+                  <span>Daily wellness blends</span>
+                  <span className="inline-flex items-center gap-1.5 font-medium text-white">
+                    {countIn("combos") > 0 && <span className="tabular-nums">{itemCount(countIn("combos"))}</span>}
+                    <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                   </span>
                 </div>
               </div>
             </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* ------------------------------------------------ Pantry directory */}
-      <section className="border-t border-brand-border bg-[#F9F8F5]">
-        <div className="mx-auto max-w-[1440px] px-4 py-24 sm:px-6 sm:py-32 lg:px-12">
-          <SectionHeading
-            label="The pantry list"
-            title={
-              <>
-                Every bestseller,
-                <br />
-                at a glance.
-              </>
-            }
-            action={{ href: "/products", text: "Open the full catalogue" }}
-          />
-
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[620px] text-left">
-              <thead>
-                <tr className="text-[14px] text-brand-dark">
-                  <th className="pb-4 pl-2 font-medium">Name</th>
-                  <th className="pb-4 font-medium">Origin</th>
-                  <th className="pb-4 font-medium">Grade</th>
-                  <th className="pb-4 font-medium">From</th>
-                  <th className="pb-4" aria-label="Actions" />
-                </tr>
-              </thead>
-              <tbody>
-                {directory.map((product) => (
-                  <tr key={product.id} className="rule-dotted group">
-                    <td className="py-4 pl-2">
-                      <Link href={`/products/${product.slug}`} className="flex items-center gap-3">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={getProductImage(product).replace(/([?&])w=\d+/, "$1w=120")}
-                          alt=""
-                          className="h-11 w-11 rounded-full object-cover"
-                          loading="lazy"
-                        />
-                        <span className="link-rule text-[16px] font-semibold tracking-[-0.02em]">{shortName(product.name)}</span>
-                      </Link>
-                    </td>
-                    <td className="py-4 text-[15px] text-brand-muted">{product.origin.split(",")[0]}</td>
-                    <td className="py-4 text-[15px] text-brand-muted">{product.grade || "Premium"}</td>
-                    <td className="py-4 text-[15px] font-semibold">{formatPrice(lowestPrice(product))}</td>
-                    <td className="py-4 pr-2 text-right">
-                      <Link
-                        href={`/products/${product.slug}`}
-                        className="inline-flex h-10 items-center rounded-xl border border-brand-border-dark bg-white px-5 text-sm font-medium transition-colors hover:border-brand-dark hover:bg-brand-dark hover:text-white"
-                      >
-                        View
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
           </div>
         </div>
       </section>

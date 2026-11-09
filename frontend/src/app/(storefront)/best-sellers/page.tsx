@@ -139,10 +139,10 @@ function PriceLine({ price, mrp, dark = false }: { price: number; mrp: number; d
   const off = mrp > price ? Math.round(((mrp - price) / mrp) * 100) : 0;
   return (
     <p className="flex flex-wrap items-baseline gap-x-2">
-      <span className="text-2xl font-semibold tracking-[-0.03em]">{formatPrice(price)}</span>
+      <span className="text-2xl font-semibold tabular-nums tracking-[-0.03em]">{formatPrice(price)}</span>
       {off > 0 && (
         <>
-          <span className={`text-sm line-through ${dark ? "text-white/50" : "text-brand-muted"}`}>{formatPrice(mrp)}</span>
+          <span className={`text-sm tabular-nums line-through ${dark ? "text-white/60" : "text-brand-muted"}`}><span className="sr-only">MRP </span>{formatPrice(mrp)}</span>
           <span className={`text-sm font-semibold ${dark ? "text-brand-saffron-light" : "text-brand-green"}`}>{off}% off</span>
         </>
       )}
@@ -358,7 +358,7 @@ function BestSellersContent() {
         <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="section-label mb-4">Customer favourites</p>
-            <h1 className="text-[clamp(2.75rem,7vw,6rem)] font-bold leading-[0.92] tracking-[-0.055em]">
+            <h1 className="text-[clamp(2.75rem,7vw,6rem)] font-bold leading-[0.92] tracking-[-0.045em]">
               The ones people
               <br />
               <span className="font-accent font-normal text-brand-green">keep coming back for.</span>
@@ -373,7 +373,7 @@ function BestSellersContent() {
               ].map(([label, value]) => (
                 <div key={label} className="bg-white px-4 py-4">
                   <dt className="text-[12px] text-brand-muted">{label}</dt>
-                  <dd className="mt-1 text-xl font-semibold tracking-[-0.03em]">{value}</dd>
+                  <dd className="mt-1 text-xl font-semibold tabular-nums tracking-[-0.03em]">{value}</dd>
                 </div>
               ))}
             </dl>

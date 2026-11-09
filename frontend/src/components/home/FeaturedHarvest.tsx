@@ -52,7 +52,7 @@ export default function FeaturedHarvest({ product, photo }: { product: Product; 
         {/* Copy */}
         <div className="max-w-xl">
           <motion.p
-            className="mb-5 text-[15px] font-medium uppercase tracking-[0.14em] text-brand-green"
+            className="section-label mb-5"
             initial={{ opacity: 0, y: reduced ? 0 : 12 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -63,7 +63,7 @@ export default function FeaturedHarvest({ product, photo }: { product: Product; 
 
           <h2
             id="featured-harvest-title"
-            className="font-accent !not-italic text-[clamp(2.5rem,4.6vw,4.5rem)] !font-medium leading-[1.02] tracking-[-0.025em] text-brand-dark"
+            className="text-[clamp(2.25rem,4.6vw,4.25rem)] font-semibold leading-[0.98] tracking-[-0.045em] text-brand-dark"
           >
             {name.split(" ").map((word, i) => (
               <span key={`${word}-${i}`} className="mr-[0.24em] inline-block overflow-hidden pb-[0.08em] align-bottom last:mr-0">
@@ -86,15 +86,15 @@ export default function FeaturedHarvest({ product, photo }: { product: Product; 
             viewport={{ once: true }}
             transition={{ duration: 0.9, delay: reduced ? 0 : 0.35, ease }}
           >
-            <p className="mt-7 text-[18px] leading-[1.7] text-brand-dark/80 sm:text-[20px]">{product.shortDescription}</p>
+            <p className="mt-7 max-w-[42ch] text-[17px] leading-[1.65] text-brand-dark/80 sm:text-[19px]">{product.shortDescription}</p>
 
             <div className="mt-10 flex flex-wrap items-center gap-x-8 gap-y-5">
               <p className="text-[17px] text-brand-dark">
-                From <span className="text-[2rem] font-semibold tracking-[-0.03em]">{formatPrice(lowestPrice(product))}</span>
+                From <span className="text-[1.75rem] font-semibold tabular-nums tracking-[-0.03em]">{formatPrice(lowestPrice(product))}</span>
               </p>
               <Link
                 href={href}
-                className="group inline-flex h-14 cursor-pointer items-center gap-2.5 rounded-2xl bg-brand-dark px-7 text-[16px] font-medium text-white transition-colors duration-200 hover:bg-brand-green focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-dark"
+                className="group inline-flex h-14 cursor-pointer items-center gap-2.5 rounded-xl bg-brand-green-dark px-7 text-[16px] font-medium text-white transition-colors duration-200 hover:bg-brand-green focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-green-dark"
               >
                 Shop now
                 <ArrowUpRight className="h-[18px] w-[18px] transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />

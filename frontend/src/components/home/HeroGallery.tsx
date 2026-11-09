@@ -3,6 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { Pause, Play } from "lucide-react";
 import { sized } from "@/lib/landing";
 
 /** One panel in the hero: a product or an admin-managed landing photo. */
@@ -21,11 +22,18 @@ const CYCLE_MS = 4200;
  * Hero: an expanding panel gallery. One photo opens wide while the others fold
  * into slim strips; it advances on its own, and pointing at (or focusing) a panel
  * opens it at once. Every panel links to its product. Images and names only.
+ *
+ * Autoplay holds while the pointer or keyboard focus is inside, while the hero is
+ * scrolled away or the tab is hidden, and whenever the visitor presses pause.
  */
 export default function HeroGallery({ slides }: { slides: CarouselSlide[] }) {
   const reduced = useReducedMotion() ?? false;
   const [active, setActive] = React.useState(0);
-  const [paused, setPaused] = React.useState(false);
+  const [hovered, setHovered] = React.useState(false);
+  const [focused, setFocused] = React.useState(false);
+  const [offstage, setOffstage] = React.useState(false);
+  const [stopped, setStopped] = React.useState(false);
+  const sectionRef = React.useRef<HTMLElement>(null);
   const [isPhone, setIsPhone] = React.useState(false);
   const pointerType = React.useRef<string>("mouse");
 
@@ -36,6 +44,25 @@ export default function HeroGallery({ slides }: { slides: CarouselSlide[] }) {
     query.addEventListener("change", update);
     return () => query.removeEventListener("change", update);
   }, []);
+
+  React.useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+    let inView = true;
+    const sync = () => setOffstage(!inView || document.hidden);
+    const observer = new IntersectionObserver(([entry]) => {
+      inView = entry.isIntersecting;
+      sync();
+    });
+    observer.observe(section);
+    document.addEventListener("visibilitychange", sync);
+    return () => {
+      observer.disconnect();
+      document.removeEventListener("visibilitychange", sync);
+    };
+  }, []);
+
+  const paused = hovered || focused || offstage || stopped;
 
   const panels = slides.slice(0, isPhone ? 5 : 7);
   const count = panels.length;
@@ -51,20 +78,27 @@ export default function HeroGallery({ slides }: { slides: CarouselSlide[] }) {
   }, [active, count]);
 
   return (
-    <section aria-labelledby="hero-gallery-title" className="mx-auto w-full max-w-[1600px] px-2 pb-6 pt-3 sm:px-4 lg:px-6">
+    <section ref={sectionRef} aria-labelledby="hero-gallery-title" className="mx-auto w-full max-w-[1600px] px-2 pb-6 pt-3 sm:px-4 lg:px-6">
       <h1 id="hero-gallery-title" className="sr-only">
         NutriNation premium dry fruits
       </h1>
 
       <div
         className="flex h-[calc(100svh-13rem)] max-h-[880px] min-h-[460px] flex-col md:h-[calc(100svh-7.5rem)] md:min-h-[520px] gap-2 md:flex-row md:gap-3"
-        onMouseEnter={() => setPaused(true)}
-        onMouseLeave={() => setPaused(false)}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        onFocus={(e) => {
+          // Only keyboard focus holds the cycle; a click also focuses the link.
+          if ((e.target as HTMLElement).matches(":focus-visible")) setFocused(true);
+        }}
+        onBlur={(e) => {
+          if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setFocused(false);
+        }}
       >
         {count === 0
           ? // Placeholders while the photos load, so the page doesn't jump.
             Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="flex-1 animate-pulse rounded-[22px] bg-brand-beige" style={{ flexGrow: i === 0 ? 5 : 1 }} />
+              <div key={i} className="skeleton flex-1 !rounded-[22px]" style={{ flexGrow: i === 0 ? 5 : 1 }} />
             ))
           : panels.map((slide, index) => {
               const on = index === active;
@@ -110,11 +144,12 @@ export default function HeroGallery({ slides }: { slides: CarouselSlide[] }) {
                       loading={index < 3 ? "eager" : "lazy"}
                       initial={false}
                       animate={{
-                        scale: reduced ? 1 : on ? 1.08 : 1.22,
+                        scale: reduced ? 1 : on ? (paused ? 1.14 : 1.08) : 1.22,
                         filter: on ? "saturate(1.05) brightness(1)" : "saturate(0.75) brightness(0.8)",
                       }}
                       transition={{
-                        scale: { duration: on ? CYCLE_MS / 1000 + 1 : 1, ease: on ? "linear" : ease },
+                        // Open: a slow push-in across the cycle; held, it settles midway and waits.
+                        scale: { duration: on && !paused ? CYCLE_MS / 1000 + 1 : 1, ease: on && !paused ? "linear" : ease },
                         filter: { duration: 0.8, ease },
                       }}
                     />
@@ -150,14 +185,15 @@ export default function HeroGallery({ slides }: { slides: CarouselSlide[] }) {
                             ))}
                           </span>
                           {/* Time until the next panel opens */}
-                          {!paused && !reduced && (
+                          {!reduced && count > 1 && (
                             <span className="mt-5 block h-[3px] w-28 overflow-hidden rounded-full bg-white/25" aria-hidden>
                               <motion.span
-                                key={`bar-${active}`}
+                                // Restarts with each panel, and from empty when play resumes.
+                                key={`bar-${active}-${paused ? "held" : "run"}`}
                                 className="block h-full origin-left rounded-full bg-white"
                                 initial={{ scaleX: 0 }}
-                                animate={{ scaleX: 1 }}
-                                transition={{ duration: CYCLE_MS / 1000, ease: "linear" }}
+                                animate={{ scaleX: paused ? 0 : 1 }}
+                                transition={{ duration: paused ? 0 : CYCLE_MS / 1000, ease: "linear" }}
                               />
                             </span>
                           )}
@@ -177,6 +213,33 @@ export default function HeroGallery({ slides }: { slides: CarouselSlide[] }) {
                       )}
                     </AnimatePresence>
                   </Link>
+
+                  {on && !reduced && count > 1 && (
+                    <motion.button
+                      type="button"
+                      onClick={() => setStopped((s) => !s)}
+                      aria-label={stopped ? "Play the gallery" : "Pause the gallery"}
+                      aria-pressed={stopped}
+                      className="absolute right-4 top-4 grid h-10 w-10 cursor-pointer place-items-center rounded-full bg-black/30 text-white backdrop-blur-md transition-colors duration-200 hover:bg-black/50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white sm:right-6 sm:top-6"
+                      initial={{ opacity: 0, scale: 0.85 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ duration: 0.4, delay: 0.5, ease }}
+                      whileTap={{ scale: 0.92 }}
+                    >
+                      <AnimatePresence mode="popLayout" initial={false}>
+                        <motion.span
+                          key={stopped ? "play" : "pause"}
+                          className="grid place-items-center"
+                          initial={{ opacity: 0, scale: 0.6 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.6, transition: { duration: 0.1 } }}
+                          transition={{ duration: 0.18, ease }}
+                        >
+                          {stopped ? <Play className="ml-0.5 h-4 w-4 fill-current" /> : <Pause className="h-4 w-4 fill-current" />}
+                        </motion.span>
+                      </AnimatePresence>
+                    </motion.button>
+                  )}
                 </motion.div>
               );
             })}

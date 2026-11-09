@@ -86,8 +86,8 @@ export default function AuthPanel({ initialMode = "signin", next }: { initialMod
     <div className="mx-auto grid w-full max-w-[1600px] grid-cols-1 gap-8 px-2 pb-10 pt-2 sm:px-3 lg:min-h-[calc(100vh-101px)] lg:grid-cols-[minmax(0,1fr)_minmax(460px,0.72fr)] lg:gap-0 lg:pb-3">
       <Shelf key={mode} panels={SHELVES[mode]} active={activePanel} />
 
-      <div className="flex items-center justify-center px-2 sm:px-6 lg:px-12 xl:px-20">
-        <div className="w-full max-w-[420px]">
+      <div className="flex items-center justify-center px-2 py-6 sm:px-6 lg:px-12 lg:py-10">
+        <div className="mx-auto w-full max-w-[420px]">
           {user ? (
             <SignedInNotice
               name={user.name}
@@ -121,12 +121,25 @@ function Shelf({ panels, active }: { panels: { label: string; image: string }[];
           style={{ flexGrow: index === active ? 3.4 : 1 }}
           className="relative min-w-0 flex-1 overflow-hidden rounded-[22px] bg-brand-beige transition-[flex-grow] duration-[900ms] ease-luxury motion-reduce:transition-none"
         >
-          <img src={panel.image} alt="" className="absolute inset-0 h-full w-full object-cover" />
-          <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/45 to-transparent" />
+          <img
+            src={panel.image}
+            alt=""
+            className={cn(
+              "absolute inset-0 h-full w-full object-cover transition-[transform,filter] duration-[1200ms] ease-luxury motion-reduce:transition-none",
+              index === active ? "scale-100 saturate-100" : "scale-110 saturate-[0.8] brightness-[0.85]"
+            )}
+          />
+          <div
+            className={cn(
+              "absolute inset-0 transition-opacity duration-700",
+              index === active ? "bg-gradient-to-t from-black/60 via-black/5 to-transparent" : "bg-black/20"
+            )}
+          />
+          {/* Open panel: the harvest's name at Display weight. Folded panels: nothing but photo. */}
           <span
             className={cn(
-              "absolute bottom-3.5 left-4 whitespace-nowrap font-accent text-lg italic text-white transition-opacity duration-500 sm:bottom-5 sm:left-5 sm:text-2xl",
-              index === active ? "opacity-100" : "opacity-0"
+              "absolute bottom-5 left-5 whitespace-nowrap text-[clamp(1.75rem,4.2vw,4.25rem)] font-bold leading-[0.95] tracking-[-0.045em] text-white transition-[opacity,transform] duration-700 ease-luxury motion-reduce:transition-none sm:bottom-8 sm:left-8",
+              index === active ? "translate-y-0 opacity-100 delay-300" : "translate-y-3 opacity-0"
             )}
           >
             {panel.label}
@@ -218,9 +231,7 @@ function SignInView({ onAuthenticated, onSwitch, onPanel }: ViewProps) {
 
   return (
     <>
-      <Heading lead="Good to see you" accent="again.">
-        Sign in to reorder, follow a delivery or pick up your wishlist.
-      </Heading>
+      <h1 className="sr-only">Sign in to NutriNation</h1>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-3.5" noValidate>
         <FloatingInput

@@ -102,9 +102,9 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
         <div className="flex items-center justify-between gap-3 border-t border-brand-border px-5 py-3.5">
           <div className="min-w-0">
             <div className="flex items-baseline gap-2">
-              <span className="text-[17px] font-semibold tracking-[-0.02em] text-brand-dark">{formatPrice(currentVariant.price)}</span>
+              <span className="text-[17px] font-semibold tabular-nums tracking-[-0.02em] text-brand-dark">{formatPrice(currentVariant.price)}</span>
               {currentVariant.mrp > currentVariant.price && (
-                <span className="text-xs text-brand-muted line-through">{formatPrice(currentVariant.mrp)}</span>
+                <span className="text-xs tabular-nums text-brand-muted line-through"><span className="sr-only">MRP </span>{formatPrice(currentVariant.mrp)}</span>
               )}
             </div>
             <p className="text-[12px] text-brand-muted">

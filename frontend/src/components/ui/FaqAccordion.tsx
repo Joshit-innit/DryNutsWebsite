@@ -6,7 +6,6 @@
  */
 import React from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Minus, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export interface FaqAccordionItem {
@@ -52,11 +51,19 @@ export default function FaqAccordion({
                 </span>
                 <span
                   className={cn(
-                    "grid h-8 w-8 shrink-0 place-items-center rounded-full transition-colors",
-                    isOpen ? "bg-brand-dark text-white" : "bg-white text-brand-muted"
+                    "grid h-8 w-8 shrink-0 place-items-center rounded-full transition-colors duration-200",
+                    isOpen ? "bg-brand-green-dark text-white" : "bg-white text-brand-muted"
                   )}
                 >
-                  {isOpen ? <Minus className="h-3.5 w-3.5" /> : <Plus className="h-3.5 w-3.5" />}
+                  {/* One plus sign whose upright folds away into a minus. */}
+                  <svg viewBox="0 0 14 14" className="h-3.5 w-3.5" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" aria-hidden>
+                    <path d="M2 7h10" />
+                    <path
+                      d="M7 2v10"
+                      className="origin-center transition-transform duration-200 ease-luxury"
+                      style={{ transform: isOpen ? "scaleY(0)" : "scaleY(1)", transformBox: "fill-box" }}
+                    />
+                  </svg>
                 </span>
               </button>
             </h3>
@@ -67,8 +74,8 @@ export default function FaqAccordion({
                   key="panel"
                   initial={{ height: 0, opacity: 0 }}
                   animate={{ height: "auto", opacity: 1 }}
-                  exit={{ height: 0, opacity: 0 }}
-                  transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                  exit={{ height: 0, opacity: 0, transition: { duration: 0.22, ease: [0.16, 1, 0.3, 1] } }}
+                  transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
                   className="overflow-hidden"
                 >
                   <p className="max-w-3xl pb-6 text-[15px] leading-relaxed text-brand-muted">{item.answer}</p>

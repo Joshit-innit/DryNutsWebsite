@@ -19,7 +19,7 @@
 @tailwind utilities;
 
 :root {
-  /* --font-sans (Inter Tight), --font-accent (Fraunces) and --font-hand (Caveat) come from next/font in app/layout.tsx. */
+  /* --font-sans (Inter Tight) and --font-accent (Fraunces) come from next/font in app/layout.tsx. */
   --font-display: var(--font-sans);
   --font-serif: var(--font-sans);
   --font-marcellus: var(--font-sans);
@@ -52,7 +52,12 @@ body {
   letter-spacing: 0;
 }
 
+p {
+  text-wrap: pretty;
+}
+
 h1, h2, h3, h4 {
+  text-wrap: balance;
   font-family: var(--font-sans);
   letter-spacing: -0.035em;
   line-height: 1.04;
@@ -73,11 +78,6 @@ h1, h2, h3, h4 {
   letter-spacing: -0.01em;
 }
 
-.font-hand {
-  font-family: var(--font-hand), cursive;
-  font-weight: 600;
-}
-
 /* Tabular numbers for clean prices and metrics */
 .font-mono, .price-num {
   font-variant-numeric: tabular-nums;
@@ -88,19 +88,8 @@ a, button, input, select, textarea, .transition-smooth {
   transition-duration: 180ms;
 }
 
-.font-casanova {
-  font-family: var(--font-casanova), "Casanova", Georgia, serif;
-}
-
 .font-marcellus {
   font-family: var(--font-marcellus);
-}
-
-.brand-logo-text {
-  font-family: var(--font-casanova), "Casanova", Georgia, serif;
-  letter-spacing: 0.035em;
-  font-weight: 400;
-  text-rendering: optimizeLegibility;
 }
 
 .product-name,
@@ -260,7 +249,8 @@ a, button, input, select, textarea, .transition-smooth {
 /* Underlined link with a soft, thick rule that darkens on hover. */
 .link-rule {
   text-decoration: underline;
-  text-decoration-color: rgba(29, 28, 26, 0.25);
+  /* The underline carries the house green; the text keeps its own colour. */
+  text-decoration-color: rgba(45, 74, 51, 0.35);
   text-decoration-thickness: 2px;
   text-underline-offset: 4px;
   transition: text-decoration-color 0.2s ease;
@@ -275,7 +265,7 @@ a, button, input, select, textarea, .transition-smooth {
   font-size: 0.875rem;
   font-weight: 500;
   letter-spacing: -0.005em;
-  color: #6B675F;
+  color: #2D4A33;
 }
 
 /* Large, tight section heading. */

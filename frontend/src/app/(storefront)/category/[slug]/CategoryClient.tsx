@@ -41,8 +41,8 @@ export default function CategoryPage() {
   if (!loading && !category) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-20 text-center">
-        <h1 className="font-serif font-bold text-3xl text-brand-dark mb-4">Category Not Found</h1>
-        <p className="text-sm text-brand-muted mb-6">The dry fruit category you requested could not be located.</p>
+        <h1 className="mb-4 text-3xl font-semibold tracking-[-0.035em] text-brand-dark">Category not found</h1>
+        <p className="mb-6 text-[15px] leading-relaxed text-brand-muted">The dry fruit category you requested could not be located.</p>
         <Link href="/products" className="btn-primary">
           Explore All Dry Fruits
         </Link>
@@ -65,34 +65,41 @@ export default function CategoryPage() {
       )}
 
       {/* Products Grid & Sorting Bar */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between pb-6 border-b border-brand-border mb-8">
-          <div>
-            <span className="text-xs text-brand-muted">
-              Showing <strong>{products.length}</strong> varieties of {category?.name}
-            </span>
-          </div>
+      <section className="mx-auto max-w-[1440px] px-4 sm:px-6 lg:px-12">
+        <div className="mb-8 flex items-center justify-between gap-4 border-b border-brand-border pb-6">
+          {/* The banner carries no text, so this line names the shelf in readable type. */}
+          <p className="min-w-0 text-[15px] text-brand-muted" aria-live="polite">
+            {loading ? (
+              <span className="skeleton inline-block h-4 w-40 align-middle" aria-label="Loading products" />
+            ) : (
+              <>
+                <span className="font-semibold text-brand-dark">{category?.name}</span>
+                <span className="mx-2 text-brand-border-dark" aria-hidden>·</span>
+                <span className="tabular-nums">{products.length}</span> {products.length === 1 ? "variety" : "varieties"}
+              </>
+            )}
+          </p>
 
-          <div className="flex items-center gap-2 text-xs">
-            <span className="text-brand-muted hidden sm:inline">Sort by:</span>
+          <label className="flex shrink-0 items-center gap-3 text-[14px]">
+            <span className="hidden text-brand-muted sm:inline">Sort by</span>
             <select
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as any)}
-              className="bg-white border border-brand-border rounded-xl px-3 py-1.5 text-xs font-semibold text-brand-dark focus:outline-none focus:border-brand-green cursor-pointer"
+              onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
+              className="h-10 cursor-pointer rounded-xl border border-brand-border bg-white px-3 text-[14px] font-medium text-brand-dark focus:border-brand-green focus:outline-none"
             >
-              <option value="popularity">Most Popular</option>
-              <option value="price-asc">Price: Low to High</option>
-              <option value="price-desc">Price: High to Low</option>
+              <option value="popularity">Most popular</option>
+              <option value="price-asc">Price: low to high</option>
+              <option value="price-desc">Price: high to low</option>
             </select>
-          </div>
+          </label>
         </div>
 
         {loading ? (
           <ProductGridSkeleton count={6} className="gap-6 lg:grid-cols-3" />
         ) : products.length === 0 ? (
-          <div className="border-l-2 border-brand-saffron py-4 pl-5">
-            <h3 className="text-xl text-brand-dark">No products in this category yet.</h3>
-            <p className="mt-2 text-sm text-brand-muted">
+          <div className="py-4">
+            <h2 className="text-2xl font-semibold tracking-[-0.03em] text-brand-dark">No products in this category yet.</h2>
+            <p className="mt-2 text-[15px] text-brand-muted">
               Browse the full collection to explore other dry fruits.
             </p>
             <Link href="/products" className="btn-primary mt-5">

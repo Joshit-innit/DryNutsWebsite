@@ -25,6 +25,7 @@ import { Product } from "@/types";
  */
 
 const ease = [0.16, 1, 0.3, 1] as const;
+const REEL_SIZE = 6;
 
 // Organic frames the photo morphs between (border-radius blobs).
 const BLOBS = [
@@ -60,7 +61,7 @@ function MorphingName({ text, reduced }: { text: string; reduced: boolean }) {
     <AnimatePresence mode="popLayout" initial={false}>
       <motion.h3
         key={text}
-        className="font-accent !not-italic text-[clamp(2.4rem,5vw,4.75rem)] !font-medium leading-[1] tracking-[-0.025em] text-brand-dark"
+        className="text-[clamp(2.25rem,4.6vw,4.25rem)] font-semibold leading-[0.98] tracking-[-0.045em] text-brand-dark"
         aria-label={text}
       >
         {words.map((word, w) => (
@@ -88,7 +89,7 @@ function MorphingName({ text, reduced }: { text: string; reduced: boolean }) {
 }
 
 export default function ProductMorph({ products }: { products: Product[] }) {
-  const items = products.slice(0, 6);
+  const items = products.slice(0, REEL_SIZE);
   const count = items.length;
   const sectionRef = React.useRef<HTMLElement>(null);
   const reduced = useReducedMotion() ?? false;
@@ -196,17 +197,18 @@ export default function ProductMorph({ products }: { products: Product[] }) {
                 animate={{ opacity: 1, y: 0, transition: { duration: 0.5, delay: reduced ? 0 : 0.15, ease } }}
                 exit={{ opacity: 0, y: reduced ? 0 : -10, transition: { duration: 0.25, ease } }}
               >
-                <p className="mt-5 max-w-[38ch] text-[17px] leading-[1.65] text-brand-dark/80 sm:text-[19px]">
+                {/* Clamped on phones so the photo keeps its share of the stage. */}
+                <p className="mt-5 line-clamp-2 max-w-[38ch] text-[17px] leading-[1.65] text-brand-dark/80 sm:line-clamp-none sm:text-[19px]">
                   {product.shortDescription}
                 </p>
                 <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
                   <span className="text-[17px] text-brand-dark">
-                    From <span className="text-[1.75rem] font-semibold tracking-[-0.03em]">{formatPrice(lowestPrice(product))}</span>
+                    From <span className="text-[1.75rem] font-semibold tabular-nums tracking-[-0.03em]">{formatPrice(lowestPrice(product))}</span>
                   </span>
                 </div>
                 <Link
                   href={`/products/${product.slug}`}
-                  className="group mt-7 inline-flex h-12 cursor-pointer items-center gap-2 rounded-xl bg-brand-dark px-6 text-[15px] font-medium text-white transition-colors duration-200 hover:bg-brand-green focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-dark"
+                  className="group mt-7 inline-flex h-12 cursor-pointer items-center gap-2 rounded-xl bg-brand-green-dark px-6 text-[15px] font-medium text-white transition-colors duration-200 hover:bg-brand-green focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-green-dark"
                 >
                   View this harvest
                   <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
@@ -235,7 +237,7 @@ export default function ProductMorph({ products }: { products: Product[] }) {
                           transition={{ type: "spring", stiffness: 380, damping: 32 }}
                         />
                       )}
-                      <span className={`relative min-w-0 ${on ? "font-semibold text-brand-dark" : "text-brand-muted"}`}>
+                      <span className={`relative min-w-0 ${on ? "font-semibold text-brand-green-dark" : "text-brand-muted"}`}>
                         <span className="block truncate">{shortName(item.name)}</span>
                       </span>
                     </button>
@@ -248,8 +250,8 @@ export default function ProductMorph({ products }: { products: Product[] }) {
 
         {/* Progress bar + phone dots */}
         <div className="mx-auto flex w-full max-w-[1440px] items-center gap-4 px-4 pb-24 sm:px-6 lg:px-12 lg:pb-6">
-          <div className="h-[2px] flex-1 overflow-hidden rounded-full bg-brand-dark/10">
-            <motion.div className="h-full origin-left bg-brand-dark" style={{ scaleX: progress }} />
+          <div className="h-[2px] flex-1 overflow-hidden rounded-full bg-brand-green-dark/15">
+            <motion.div className="h-full origin-left bg-brand-green-dark" style={{ scaleX: progress }} />
           </div>
           <div className="flex gap-1.5 lg:hidden">
             {items.map((item, index) => (
@@ -261,7 +263,7 @@ export default function ProductMorph({ products }: { products: Product[] }) {
                 className="grid h-11 w-6 cursor-pointer place-items-center"
               >
                 <span
-                  className={`block h-1.5 rounded-full transition-all duration-300 ${index === active ? "w-5 bg-brand-dark" : "w-1.5 bg-brand-dark/30"}`}
+                  className={`block h-1.5 rounded-full transition-all duration-300 ${index === active ? "w-5 bg-brand-green-dark" : "w-1.5 bg-brand-green-dark/30"}`}
                 />
               </button>
             ))}

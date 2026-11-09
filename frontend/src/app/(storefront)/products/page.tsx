@@ -8,6 +8,7 @@ import { CATEGORIES } from "@/data/mockData";
 import { CategorySlug, Product } from "@/types";
 import ProductCard from "@/components/products/ProductCard";
 import { ProductGridSkeleton } from "@/components/ui/Skeleton";
+import { formatPrice } from "@/lib/utils";
 
 function ProductsContent() {
   const searchParams = useSearchParams();
@@ -53,9 +54,9 @@ function ProductsContent() {
   return (
     <div className="mx-auto max-w-7xl px-5 py-12 sm:px-8 sm:py-16 lg:px-10">
       <header className="max-w-3xl">
-        <p className="eyebrow mb-4 text-brand-green">The complete collection</p>
-        <h1 className="text-4xl leading-tight sm:text-5xl">Dry fruits for the everyday table.</h1>
-        <p className="mt-4 max-w-2xl text-base leading-relaxed text-brand-muted">
+        <p className="section-label mb-4">The complete collection</p>
+        <h1 className="section-title">Dry fruits for the everyday table.</h1>
+        <p className="mt-5 max-w-[60ch] text-base leading-relaxed text-brand-muted">
           Browse the core collection, combinations, and gift boxes. Select a product to see its available sizes and details.
         </p>
       </header>
@@ -119,7 +120,7 @@ function ProductsContent() {
               Available now
             </label>
             <label className="flex items-center gap-3 text-sm text-brand-dark">
-              <span className="whitespace-nowrap">Up to ₹{priceRange}</span>
+              <span className="min-w-[6.5rem] whitespace-nowrap tabular-nums">Up to {formatPrice(priceRange)}</span>
               <input
                 type="range"
                 min="200"
@@ -140,14 +141,14 @@ function ProductsContent() {
       </section>
 
       <div className="mt-8 flex items-baseline justify-between">
-        <p className="text-sm text-brand-muted">{loading ? "Loading products" : `${products.length} products`}</p>
+        <p className="text-sm tabular-nums text-brand-muted" aria-live="polite">{loading ? "Loading products" : `${products.length} ${products.length === 1 ? "product" : "products"}`}</p>
       </div>
 
       {loading ? (
         <ProductGridSkeleton className="mt-8" />
       ) : products.length === 0 ? (
-        <div className="my-20 max-w-xl border-l-2 border-brand-saffron pl-6">
-          <h2 className="text-2xl">No products match those filters.</h2>
+        <div className="my-20 max-w-xl">
+          <h2 className="text-2xl font-semibold tracking-[-0.03em]">No products match those filters.</h2>
           <p className="mt-3 text-sm leading-relaxed text-brand-muted">Try a different category, a larger price range, or clear the current filters.</p>
           <button type="button" onClick={resetFilters} className="btn-primary mt-6">Reset collection</button>
         </div>

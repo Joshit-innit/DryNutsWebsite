@@ -132,7 +132,7 @@ components:
 
 NutriNation is a quiet gallery where the produce is the artwork and the interface is the wall. The mood is refined, spare and premium. A warm off-white canvas, tight charcoal headlines and very little colour step back so that large food photography, price and weight can carry the page.
 
-Restraint is what makes it feel premium. Hierarchy comes from scale and tight tracking rather than colour or decoration, and detail shows up in small things: thin warm hairlines, dotted dividers, tabular prices and a soft underline on links.
+Restraint is what makes it feel premium. Hierarchy comes from scale and tight tracking rather than colour or decoration, and detail shows up in small things: thin warm hairlines, dotted dividers, tabular prices and a soft green underline on links.
 
 The storefront is expressive where it persuades, mainly on the home page. The admin console uses the same palette and type at a working density, with a dark charcoal sidebar. The CMD console is a separate staff-only theme (see Colors).
 
@@ -150,7 +150,7 @@ A warm neutral palette, with forest green and honey tones drawn from the produce
 
 ### Primary
 - **Pistachio Forest** (`primary`): The one main accent. Used for links in text, selection, badges, the wordmark dot and keyboard focus outlines on buttons. It is an accent, not the action colour.
-- **Deep Forest** (`primary-deep`): The darker green for rich dark panels and sections on the storefront.
+- **Deep Forest** (`primary-deep`): The storefront's third colour beside canvas and ink. It owns the announcement bar, the gifting band on the home page and the product spotlight actions (the reel's "View this harvest" and Harvest of the Day's "Shop now"), with the reel's progress, the open FAQ toggle and category-name hovers as small echoes. Its hover lifts to Pistachio Forest.
 - **Orchard Olive** (`orchard-olive`): A lighter green that replaces Pistachio Forest on dark surfaces, such as the active admin sidebar icon and the wordmark dot on charcoal.
 
 ### Secondary
@@ -165,7 +165,7 @@ A warm neutral palette, with forest green and honey tones drawn from the produce
 - **Gallery Canvas** (`gallery-canvas`): The page background everywhere on the storefront and admin. Never plain white.
 - **Surface White** (`surface-white`): Cards, panels and forms sitting on the canvas.
 - **Warm Linen** (`warm-linen`): Recessed surfaces such as the search field, image placeholders and skeletons.
-- **Charcoal Ink** (`charcoal-ink`): All headings and main text, primary buttons, the announcement bar and the admin sidebar.
+- **Charcoal Ink** (`charcoal-ink`): All headings and main text, buying actions (add to bag, checkout) and the admin sidebar.
 - **Stone** (`stone-muted`): Secondary text, captions and struck-through MRP.
 - **Hairline** (`hairline`): Default borders and dividers.
 - **Strong Hairline** (`hairline-strong`): Hover borders and scrollbar thumbs.
@@ -174,7 +174,7 @@ A warm neutral palette, with forest green and honey tones drawn from the produce
 The `cmd-*` tokens belong to the CMD console only: a near-black background, a blue accent and monospace type, with its own green, amber and red status colours. It is a deliberate sibling theme for staff.
 
 ### Named Rules
-**The Ink Acts Rule.** Primary actions are Charcoal Ink, not green. Pistachio Forest marks selection and brand; if green is doing the selling, the screen has too much of it.
+**The Ink Acts Rule.** Buying actions are Charcoal Ink. Deep Forest is reserved for actions that lead to a product (spotlights) and for framing regions; it never replaces ink on add-to-bag or checkout. Pistachio Forest marks selection and brand. If green appears in more than a few deliberate places on one screen, it has stopped being an accent.
 
 **The Produce Is the Colour Rule.** Saturated colour comes from photography. Interface colour stays small enough that it never competes with the food.
 
@@ -192,7 +192,7 @@ The `cmd-*` tokens belong to the CMD console only: a near-black background, a bl
 - **Headline** (`headline`): Section headings. Page headings (`h1`–`h4`) default to weight 600 with -0.035em tracking and a 1.04 line height.
 - **Title** (`title`): Product names on cards, clamped to two lines.
 - **Body** (`body`): Default reading text. Product descriptions use a 1.65 line height.
-- **Label** (`label`): Buttons, navigation (15px on desktop) and sentence-case section labels in Stone.
+- **Label** (`label`): Buttons, navigation (15px on desktop) and sentence-case section labels in Pistachio Forest.
 - **Eyebrow** (`eyebrow`): Small uppercase labels, such as the category above a product name. Use it for metadata only.
 - **Prices**: Weight 600 with -0.02em tracking (17px on cards) and tabular numbers.
 
@@ -279,7 +279,7 @@ Order totals read like a till receipt: a white 20px-radius panel, dotted rules b
 The signature component: tall 22px-radius photo panels in a row. The active panel expands to about five times its neighbours, showing its name in Display type and a thin progress line, while the others show a vertical label over a dark fade.
 
 ### Shelf (Sign-in)
-Three tall 22px-radius photo panels beside the form, a quieter relative of the Harvest Gallery Hero. Each field widens its own panel as the customer moves down the form, over 900ms, with the product name in Fraunces italic on the active panel. On phones the panels become a short strip above the form.
+Three tall 22px-radius photo panels beside the form, a quieter relative of the Harvest Gallery Hero. The form sits on Gallery Canvas, centred in its column. Each field widens its own panel as the customer moves down the form, over 900ms; the open panel shows the harvest's name at Display weight, while folded panels show only the photo, slightly dimmed. Sign-in has no visible heading (a visually hidden `h1` remains); registration keeps its "Start your *pantry.*" heading. On phones the panels become a short strip above the form.
 
 ### Category Banner
 Category pages open on the banner image alone, with no text over it. The page keeps a visually hidden `h1` for screen readers and search.
