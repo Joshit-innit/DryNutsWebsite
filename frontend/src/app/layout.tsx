@@ -8,6 +8,7 @@ import SmoothScroll from "@/components/animations/SmoothScroll";
 import CartDrawer from "@/components/cart/CartDrawer";
 import ProductQuickView from "@/components/products/ProductQuickView";
 import ImageLoadState from "@/components/ui/ImageLoadState";
+import BackendWarmup from "@/components/BackendWarmup";
 
 const sans = Inter_Tight({
   subsets: ["latin"],
@@ -58,6 +59,7 @@ export default function RootLayout({
     <html lang="en" className={`${sans.variable} ${accent.variable}`}>
       <body className="min-h-screen bg-brand-cream text-brand-dark antialiased font-sans">
         <ImageLoadState />
+        <BackendWarmup />
         <StoreProvider>
           <SmoothScroll>
             <PortalSwitcher />

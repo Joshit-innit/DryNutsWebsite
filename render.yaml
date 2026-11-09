@@ -44,6 +44,10 @@ services:
       # doesn't trip the breaker.
       - key: GATEWAY_TIMEOUT
         value: 120s
+      # A breaker that opened during a cold start retries after 5s instead of 20s, so
+      # sign-in works within seconds of the customer service finishing its wake-up.
+      - key: CIRCUIT_OPEN_DURATION
+        value: 5s
       - key: FRONTEND_ORIGINS # e.g. https://your-site.netlify.app
         sync: false
       - key: PRODUCT_SERVICE_URL # https://nutrination-product.onrender.com
