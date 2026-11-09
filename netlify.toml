@@ -14,6 +14,10 @@
 [build.environment]
   NODE_VERSION = "22"
   NEXT_TELEMETRY_DISABLED = "1"
+  # The site no longer reads ADMIN_EMAIL, but the variable is still set on Netlify
+  # and its value is the public support address printed on the contact and policy
+  # pages, which the secret scanner would otherwise flag.
+  SECRETS_SCAN_OMIT_KEYS = "ADMIN_EMAIL"
 
 # Declared explicitly: auto-detection runs at the repo root (no Next.js there)
 # and skipped it, which uploaded .next as static files and 404'd every route.
