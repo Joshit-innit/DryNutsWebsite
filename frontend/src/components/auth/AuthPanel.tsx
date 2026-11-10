@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -81,6 +81,8 @@ function destinationFor(role: string, next?: string): string {
 export default function AuthPanel({ initialMode = "signin", next }: { initialMode?: AuthMode; next?: string }) {
   const [mode, setMode] = useState<AuthMode>(initialMode);
   const [activePanel, setActivePanel] = useState(0);
+  // Whether a form field has focus: then the shelf holds that field's harvest open.
+  const [fieldFocused, setFieldFocused] = useState(false);
   const router = useRouter();
   const { user, setUser, logout } = useStore();
 
@@ -100,10 +102,14 @@ export default function AuthPanel({ initialMode = "signin", next }: { initialMod
 
   return (
     <div className="mx-auto grid w-full max-w-[1600px] grid-cols-1 gap-8 px-2 pb-10 pt-2 sm:px-3 lg:min-h-[calc(100vh-101px)] lg:grid-cols-[minmax(0,1fr)_minmax(460px,0.72fr)] lg:gap-0 lg:pb-3">
-      <Shelf key={mode} panels={SHELVES[mode]} active={activePanel} />
+      <Shelf key={mode} panels={SHELVES[mode]} pinned={fieldFocused ? activePanel : null} />
 
       <div className="flex items-center justify-center px-2 py-6 sm:px-6 lg:px-12 lg:py-10">
-        <div className="mx-auto w-full max-w-[420px]">
+        <div
+          className="mx-auto w-full max-w-[420px]"
+          onFocus={(event) => setFieldFocused(event.target instanceof HTMLInputElement)}
+          onBlur={() => setFieldFocused(false)}
+        >
           {user ? (
             <SignedInNotice
               name={user.name}
@@ -128,40 +134,106 @@ export default function AuthPanel({ initialMode = "signin", next }: { initialMod
 
 /* -------------------------------------------------------------------------- */
 
-function Shelf({ panels, active }: { panels: { label: string; image: string }[]; active: number }) {
+/** How long each harvest stays open before the next one unfolds, in ms. */
+const SHELF_DWELL = 6000;
+
+/**
+ * Three harvests on a shelf. They unfold upward on arrival, then take turns opening on
+ * their own: the open photo drifts, and its name rises in letter by letter. Focusing a
+ * form field opens that field's harvest and holds it; hovering pauses the turn. Reduced motion keeps the first harvest open and still.
+ */
+function Shelf({ panels, pinned }: { panels: { label: string; image: string }[]; pinned: number | null }) {
+  const [auto, setAuto] = useState(0);
+  const [turn, setTurn] = useState(0);
+  const [hovered, setHovered] = useState(false);
+  const [still, setStill] = useState(true);
+
+  useEffect(() => {
+    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setStill(query.matches);
+    update();
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
+  }, []);
+
+  // When a field lets go, the turn carries on from the harvest it held open.
+  useEffect(() => {
+    if (pinned !== null) setAuto(pinned);
+  }, [pinned]);
+
+  const active = pinned ?? auto;
+  const cycling = pinned === null && !still;
+
+  useEffect(() => {
+    if (!cycling || hovered) return;
+    const timer = window.setTimeout(() => {
+      setAuto((current) => (current + 1) % panels.length);
+      setTurn((current) => current + 1);
+    }, SHELF_DWELL);
+    return () => window.clearTimeout(timer);
+  }, [cycling, hovered, auto, panels.length]);
+
   return (
-    <div aria-hidden className="flex h-40 min-w-0 gap-1.5 sm:h-56 sm:gap-2 lg:h-auto">
-      {panels.map((panel, index) => (
-        <div
-          key={panel.label}
-          style={{ flexGrow: index === active ? 3.4 : 1 }}
-          className="relative min-w-0 flex-1 overflow-hidden rounded-[22px] bg-brand-beige transition-[flex-grow] duration-[900ms] ease-luxury motion-reduce:transition-none"
-        >
-          <img
-            src={panel.image}
-            alt=""
-            className={cn(
-              "absolute inset-0 h-full w-full object-cover transition-[transform,filter] duration-[1200ms] ease-luxury motion-reduce:transition-none",
-              index === active ? "scale-100 saturate-100" : "scale-110 saturate-[0.8] brightness-[0.85]"
-            )}
-          />
+    <div
+      aria-hidden
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      className="flex h-40 min-w-0 gap-1.5 sm:h-56 sm:gap-2 lg:h-auto"
+    >
+      {panels.map((panel, index) => {
+        const open = index === active;
+        return (
           <div
-            className={cn(
-              "absolute inset-0 transition-opacity duration-700",
-              index === active ? "bg-gradient-to-t from-black/60 via-black/5 to-transparent" : "bg-black/20"
-            )}
-          />
-          {/* Open panel: the harvest's name at Display weight. Folded panels: nothing but photo. */}
-          <span
-            className={cn(
-              "absolute bottom-5 left-5 whitespace-nowrap text-[clamp(1.75rem,4.2vw,4.25rem)] font-bold leading-[0.95] tracking-[-0.045em] text-white transition-[opacity,transform] duration-700 ease-luxury motion-reduce:transition-none sm:bottom-8 sm:left-8",
-              index === active ? "translate-y-0 opacity-100 delay-300" : "translate-y-3 opacity-0"
-            )}
+            key={panel.label}
+            style={{ flexGrow: open ? 3.4 : 1, animationDelay: `${index * 140}ms` }}
+            className="shelf-panel relative min-w-0 flex-1 overflow-hidden rounded-[22px] bg-brand-beige transition-[flex-grow] duration-[900ms] ease-luxury motion-reduce:transition-none"
           >
-            {panel.label}
-          </span>
-        </div>
-      ))}
+            <div className="shelf-photo absolute inset-0">
+              <img
+                src={panel.image}
+                alt=""
+                style={{
+                  // The open photo creeps in for as long as it is on show; folded ones ease back.
+                  transitionDuration: open && cycling ? `${SHELF_DWELL + 1500}ms, 1200ms` : "1200ms, 1200ms",
+                  transitionTimingFunction: open && cycling ? "linear, ease" : undefined,
+                }}
+                className={cn(
+                  "absolute inset-0 h-full w-full object-cover transition-[transform,filter] ease-luxury motion-reduce:transition-none",
+                  open
+                    ? cycling
+                      ? "translate-x-[-2%] translate-y-[-2%] scale-[1.14] saturate-100"
+                      : "scale-100 saturate-100"
+                    : "scale-110 saturate-[0.8] brightness-[0.85]"
+                )}
+              />
+            </div>
+            <div
+              className={cn(
+                "absolute inset-0 transition-opacity duration-700",
+                open ? "bg-gradient-to-t from-black/60 via-black/5 to-transparent" : "bg-black/20"
+              )}
+            />
+
+            {/* Open panel: the harvest's name at Display weight, rising in. Folded panels: only photo. */}
+            <span
+              key={open ? `${turn}-${pinned}` : "folded"}
+              className={cn(
+                "absolute bottom-5 left-5 flex whitespace-nowrap text-[clamp(1.75rem,4.2vw,4.25rem)] font-bold leading-[1.05] tracking-[-0.045em] text-white transition-opacity duration-300 sm:bottom-9 sm:left-8",
+                open ? "opacity-100" : "opacity-0"
+              )}
+            >
+              {Array.from(panel.label).map((letter, i) => (
+                <span key={i} className="overflow-hidden pb-[0.04em]">
+                  <span className="shelf-letter" style={{ animationDelay: `${(turn === 0 && pinned === null ? 650 : 300) + i * 38}ms` }}>
+                    {letter}
+                  </span>
+                </span>
+              ))}
+            </span>
+
+          </div>
+        );
+      })}
     </div>
   );
 }
