@@ -10,6 +10,9 @@ const warmUrls = (
   .filter(Boolean)
   .map((url) => new URL(url).origin);
 
+// Google's sign-in button: its script, its stylesheet, and the frame it draws in.
+const GOOGLE_SIGN_IN = "https://accounts.google.com/gsi/";
+
 /**
  * What the browser may load. Next.js inlines small scripts and styles, hence
  * 'unsafe-inline'; everything else must come from this site or the named hosts.
@@ -17,11 +20,12 @@ const warmUrls = (
  */
 const contentSecurityPolicy = [
   "default-src 'self'",
-  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
-  "style-src 'self' 'unsafe-inline'",
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} ${GOOGLE_SIGN_IN}client`,
+  `style-src 'self' 'unsafe-inline' ${GOOGLE_SIGN_IN}style`,
   "img-src 'self' blob: data: https://images.unsplash.com https://*.supabase.co",
   "font-src 'self' data:",
-  `connect-src 'self' ${warmUrls.join(" ")}`,
+  `connect-src 'self' ${warmUrls.join(" ")} ${GOOGLE_SIGN_IN}`,
+  `frame-src ${GOOGLE_SIGN_IN}`,
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",

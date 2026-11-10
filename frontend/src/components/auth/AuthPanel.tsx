@@ -12,6 +12,7 @@ import { useStore } from "@/context/StoreContext";
 import { AuthResponse, apiErrorMessage, isAdminRole, submitCredentials, toSessionUser } from "@/lib/auth-session";
 import { CATEGORY_IMAGE_SETS } from "@/lib/product-images";
 import { FloatingInput } from "@/components/watermelon/floating-input";
+import GoogleSignIn from "@/components/auth/GoogleSignIn";
 import { cn } from "@/lib/utils";
 
 export type AuthMode = "signin" | "register";
@@ -275,6 +276,8 @@ function SignInView({ onAuthenticated, onSwitch, onPanel }: ViewProps) {
         <SubmitButton busy={isSubmitting} waking={waking} idle="Sign in" working="Signing you in" />
       </form>
 
+      <GoogleSignIn mode="signin" onAuthenticated={onAuthenticated} />
+
       <SwitchPrompt question="New to NutriNation?" action="Create an account" onClick={onSwitch} />
     </>
   );
@@ -354,6 +357,8 @@ function RegisterView({ onAuthenticated, onSwitch, onPanel }: ViewProps) {
         <FormError message={formError} />
         <SubmitButton busy={isSubmitting} waking={waking} idle="Create account" working="Creating your account" />
       </form>
+
+      <GoogleSignIn mode="signup" onAuthenticated={onAuthenticated} />
 
       <SwitchPrompt question="Already have an account?" action="Sign in" onClick={onSwitch} />
     </>

@@ -52,7 +52,7 @@ const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
  * backend asleep: wait for it to answer, then send the same request once more.
  */
 export async function submitCredentials(
-  path: "/auth/login" | "/auth/register",
+  path: "/auth/login" | "/auth/register" | "/auth/google",
   body: Record<string, string>,
   onWaking: () => void
 ): Promise<AuthResponse> {

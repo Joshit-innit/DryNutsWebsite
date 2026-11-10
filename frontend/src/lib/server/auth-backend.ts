@@ -53,7 +53,7 @@ const unavailable = () =>
  * `onSuccess` may return a response to refuse the session instead, e.g. a suspended account.
  */
 export async function forwardCredentials(
-  path: "/login" | "/register",
+  path: "/login" | "/register" | "/google",
   body: Record<string, string>,
   messages: Record<number, string>,
   onSuccess?: (account: SpringAuthResponse) => Promise<Response | void>

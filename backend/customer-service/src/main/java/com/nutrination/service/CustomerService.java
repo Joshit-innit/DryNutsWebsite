@@ -2,6 +2,7 @@ package com.nutrination.service;
 
 import com.nutrination.entity.Customer;
 import com.nutrination.repository.CustomerRepository;
+import com.nutrination.security.GoogleTokenVerifier;
 import com.nutrination.security.LoginAttemptLimiter;
 import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDate;
@@ -79,6 +80,35 @@ public class CustomerService {
         customer.setEmail(normalizedEmail);
         customer.setRole("CUSTOMER");
         customer.setPasswordHash(passwordEncoder.encode(password));
+        return customerRepository.save(customer);
+    }
+
+    /**
+     * Signs in with an identity Google has verified. Finds the account by Google id,
+     * then by email (Google has confirmed the person owns that address, so an existing
+     * password account is linked rather than duplicated), and otherwise creates one.
+     */
+    @Transactional
+    public Customer signInWithGoogle(GoogleTokenVerifier.GoogleIdentity identity) {
+        String email = identity.email().trim().toLowerCase(Locale.ROOT);
+        Customer customer = customerRepository.findByGoogleSubject(identity.subject())
+                .or(() -> customerRepository.findByEmailIgnoreCase(email))
+                .orElse(null);
+
+        if (customer == null) {
+            customer = new Customer();
+            customer.setId(newCustomerId());
+            customer.setName(identity.name().trim());
+            customer.setEmail(email);
+            customer.setRole("CUSTOMER");
+        }
+        if ("suspended".equalsIgnoreCase(customer.getStatus())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "This account has been suspended. Please contact customer support.");
+        }
+        if (customer.getGoogleSubject() == null) {
+            customer.setGoogleSubject(identity.subject());
+        }
         return customerRepository.save(customer);
     }
 

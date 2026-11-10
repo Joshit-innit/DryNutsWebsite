@@ -108,6 +108,10 @@ services:
         value: admin@nutrination.in
       - key: ADMIN_PASSWORD
         sync: false
+      # Google sign-in: the web OAuth client id (not a secret). Same value as the
+      # site's NEXT_PUBLIC_GOOGLE_CLIENT_ID in netlify.toml.
+      - key: GOOGLE_CLIENT_ID
+        value: 471875580309-tusnlkshtq86mui2hf24gsiaiolhq3pd.apps.googleusercontent.com
       - key: FRONTEND_ORIGINS
         sync: false
 

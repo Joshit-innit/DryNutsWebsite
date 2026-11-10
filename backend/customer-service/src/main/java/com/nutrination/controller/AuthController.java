@@ -2,10 +2,12 @@ package com.nutrination.controller;
 
 import com.nutrination.dto.ApiResponse;
 import com.nutrination.dto.AuthResponse;
+import com.nutrination.dto.GoogleLoginRequest;
 import com.nutrination.dto.LoginRequest;
 import com.nutrination.dto.RegisterRequest;
 import com.nutrination.entity.Customer;
 import com.nutrination.security.AuthenticatedUser;
+import com.nutrination.security.GoogleTokenVerifier;
 import com.nutrination.security.JwtService;
 import com.nutrination.service.CustomerService;
 import jakarta.validation.Valid;
@@ -23,10 +25,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
     private final CustomerService customerService;
     private final JwtService jwtService;
+    private final GoogleTokenVerifier googleTokenVerifier;
 
-    public AuthController(CustomerService customerService, JwtService jwtService) {
+    public AuthController(CustomerService customerService, JwtService jwtService, GoogleTokenVerifier googleTokenVerifier) {
         this.customerService = customerService;
         this.jwtService = jwtService;
+        this.googleTokenVerifier = googleTokenVerifier;
     }
 
     /** Lets callers tell a sleeping service from a wrong password; touches no data. */
@@ -56,6 +60,13 @@ public class AuthController {
     @PostMapping("/admin-logout")
     public ApiResponse<Map<String, Object>> adminLogout() {
         return ApiResponse.ok(Map.of("authenticated", false));
+    }
+
+    /** Signs in, or signs up, with the ID token from Google's sign-in button. */
+    @PostMapping("/google")
+    public ApiResponse<AuthResponse> google(@Valid @RequestBody GoogleLoginRequest request) {
+        Customer customer = customerService.signInWithGoogle(googleTokenVerifier.verify(request.credential()));
+        return ApiResponse.ok(tokenFor(customer));
     }
 
     @PostMapping("/register")

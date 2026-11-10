@@ -35,6 +35,10 @@ public class Customer {
     private String role = "customer";
     @JsonIgnore
     private String passwordHash;
+    /** Google's permanent id for the person, set once they sign in with Google. */
+    @JsonIgnore
+    @jakarta.persistence.Column(unique = true)
+    private String googleSubject;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @Fetch(FetchMode.SUBSELECT)
@@ -66,6 +70,8 @@ public class Customer {
     public void setStatus(String status) { this.status = status; }
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
+    public String getGoogleSubject() { return googleSubject; }
+    public void setGoogleSubject(String googleSubject) { this.googleSubject = googleSubject; }
     public String getPasswordHash() { return passwordHash; }
     public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
     public List<Address> getAddresses() { return addresses; }

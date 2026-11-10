@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { forwardCredentials } from "@/lib/server/auth-backend";
-import { getSessionState } from "@/lib/server/auth";
+import { refuseIfSuspended } from "@/lib/server/account-hooks";
 import { MINUTE, clientIp, tooManyRequests, withinLimits } from "@/lib/server/rate-limit";
 
 export const dynamic = "force-dynamic";
@@ -32,20 +32,6 @@ export async function POST(request: NextRequest) {
       401: "Invalid email or password.",
       403: "This account has been suspended. Please contact customer support.",
     },
-    async (account) => {
-      const state = await getSessionState(account.accessToken, {
-        sub: account.customerId,
-        email: account.email,
-        name: account.name,
-        role: account.role === "ADMIN" ? "ADMIN" : "CUSTOMER",
-        exp: 0,
-      });
-      if (state === "suspended") {
-        return Response.json(
-          { message: "This account has been suspended. Please contact customer support." },
-          { status: 403 }
-        );
-      }
-    }
+    refuseIfSuspended
   );
 }

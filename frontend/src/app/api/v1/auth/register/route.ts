@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { forwardCredentials } from "@/lib/server/auth-backend";
-import { getSupabase } from "@/lib/server/supabase";
+import { mirrorCustomer } from "@/lib/server/account-hooks";
 import { HOUR, clientIp, tooManyRequests, withinLimits } from "@/lib/server/rate-limit";
 
 export const dynamic = "force-dynamic";
@@ -34,15 +34,6 @@ export async function POST(request: NextRequest) {
       400: "Please check your details and try again.",
       409: "An account already exists for that email address.",
     },
-    async (account) => {
-      // Mirror the account into the admin CRM list; failures here must not block sign-up.
-      const { error } = await getSupabase()
-        .from("customers")
-        .upsert(
-          { id: account.customerId, name: account.name, email: account.email },
-          { onConflict: "email", ignoreDuplicates: true }
-        );
-      if (error) console.error("[auth/register] CRM mirror failed:", error.message);
-    }
+    mirrorCustomer
   );
 }
